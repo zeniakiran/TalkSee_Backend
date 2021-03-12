@@ -1,5 +1,5 @@
 import './App.css';
-/* import { Route, Switch,BrowserRouter as Router,Redirect } from "react-router-dom";
+import { Route, Switch,BrowserRouter as Router,Redirect } from "react-router-dom";
 import UserDashboard from "./components/FrontendComponents/components/userDashboard";
 import SignUp from "./components/FrontendComponents/components/SignUp";
 import LogIn from "./components/FrontendComponents/components/LogIn";
@@ -10,12 +10,12 @@ import resetPassword from "./components/FrontendComponents/components/resetPassw
 import Chat from "./components/ChatComponents/Chat";
 import ChatPage from "./components/ChatComponents/ChatPage";
 import Users from "./components/ChatComponents/Users";
-import GroupChat from "./components/ChatComponents/GroupChat"; */
+import GroupChat from "./components/ChatComponents/GroupChat";
 const App =() =>{
   return (
     <div className="App">
     hello
-    {/* <Router>
+    <Router>
       <Switch>
             <Route path="/" exact><Login/></Route>
             <Route exact path="/signup" component={SignUp} />
@@ -36,7 +36,7 @@ const App =() =>{
             <Route path="/mychats" exact><ChatPage/></Route>
             {<Redirect to="/notfound" /> }     
       </Switch>
-      </Router>*/ }
+      </Router>
     </div>
   );
 }
