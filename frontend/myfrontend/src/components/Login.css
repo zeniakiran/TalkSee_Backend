@@ -1,0 +1,31 @@
+#bigdiv{
+    height: 660px;
+    
+}
+
+.containerlogin{
+    display: "flex";
+    position: fixed;
+    margin-left: 470px;
+    margin-top: 140px;
+    height: 420px;
+    background-color: #05728f;
+    border-radius: 10%;
+    width: 400px;;
+  }
+  #btnlogin{
+    margin-left: 150px;
+    margin-top: 50px;
+    color: #05728f;
+    font-weight: bold;
+    font-size: 14px;
+  }
+.usericon{
+    font-size:large;
+    margin-left:180px;;
+    margin-top: 50px;
+    color:rgb(252, 250, 250);
+}
+.tf1{
+    margin-top:20px;
+}
