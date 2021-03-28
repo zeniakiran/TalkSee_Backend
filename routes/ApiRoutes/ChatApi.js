@@ -1,3 +1,4 @@
+require('dotenv').config();
 var express = require('express');
 var router = express.Router();
 //const validateProducts = require("../../Middlewares/validation");
@@ -5,6 +6,7 @@ var { Messages } = require("../../models/MessageModel");
 //const auth = require("../../Middlewares/auth");
 //const admin = require("../../Middlewares/admin");
 var cors = require("cors")
+let Pusher = require('pusher');
 const corsOptions = {
     origin: 'https://localhost:4000',
   }
@@ -60,6 +62,12 @@ router.get("/msgbyuserid/:email",async (req, res) => {
 }); 
 
 router.post("/",async (req,res)=>{
+    let pusher = new Pusher({
+        appId: process.env.PUSHER_APP_ID,
+        key: process.env.PUSHER_APP_KEY,
+        secret: process.env.PUSHER_APP_SECRET,
+        cluster: process.env.PUSHER_APP_CLUSTER
+    });
     let message= new Messages();
     message.from= req.body.from;
     message.to= req.body.to;
@@ -68,6 +76,7 @@ router.post("/",async (req,res)=>{
     message.time = req.body.time ;
     message.type = req.body.type;
     await message.save();
+    pusher.trigger('notifications', 'post_updated', post, req.headers['x-socket-id']);
     return res.send("Message has been added to database successfully!");
 
 });
