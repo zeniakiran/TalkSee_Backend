@@ -7,9 +7,8 @@ var { Messages } = require("../../models/MessageModel");
 //const admin = require("../../Middlewares/admin");
 let Pusher = require('pusher');
 var cors = require("cors")
-const corsOptions = {
-    origin: 'https://localhost:4000',
-  }
+let Pusher = require('pusher');
+
 
   let pusher = new Pusher({
     appId: process.env.PUSHER_APP_ID,
@@ -69,8 +68,18 @@ router.get("/msgbyuserid/:email",async (req, res) => {
 }); 
 
 router.post("/",async (req,res)=>{
+<<<<<<< HEAD
     try{
         let message= new Messages();
+=======
+    let pusher = new Pusher({
+        appId: process.env.PUSHER_APP_ID,
+        key: process.env.PUSHER_APP_KEY,
+        secret: process.env.PUSHER_APP_SECRET,
+        cluster: process.env.PUSHER_APP_CLUSTER
+    });
+    let message= new Messages();
+>>>>>>> 9e8680160ff6dc78612bcaa6305088b19d898d6f
     message.from= req.body.from;
     message.to= req.body.to;
     message.roomId= req.body.roomId;
@@ -79,6 +88,7 @@ router.post("/",async (req,res)=>{
     message.time = req.body.time ;
     message.type = req.body.type;
     await message.save();
+<<<<<<< HEAD
     /* pusher.trigger('private-my-channel', 'my-event', {
         data: req.body.messageBody,
       }//, {socket_id: req.headers['x-socket-id']}
@@ -90,6 +100,10 @@ router.post("/",async (req,res)=>{
         console.log(err)
     }
     
+=======
+    pusher.trigger('notifications', 'post_updated', post, req.headers['x-socket-id']);
+    return res.send("Message has been added to database successfully!");
+>>>>>>> 9e8680160ff6dc78612bcaa6305088b19d898d6f
 
 });
 router.post("/pusher/auth", function(req, res) {
