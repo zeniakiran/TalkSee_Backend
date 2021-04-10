@@ -5,57 +5,72 @@ import io from "socket.io-client";
 import chatservice from "../../services/ChatService";
 import userservice from "../../services/UserService";
 import "./chat.css"
+import "./logout.css"
+import Pusher from 'pusher-js';
 import SettingMessage from "./SettingMessage"
+import CircularProgress from '@material-ui/core/CircularProgress'
+import { isAuthenticated, logout } from "../FrontendComponents/clientStorages/auth";
+import { useHistory } from 'react-router-dom';
+import { PromiseProvider } from "mongoose";
 export default function SingleChat(props) {
   
   console.log("Pr",props)
   const [chat, setChat] = useState([{ from: "", to: "", messages: [] }]);
-  /* const [recipientName, setRecName]=useState("")
-  const [recipientLang, setRecLang]=useState("") */
+  const [loading,setLoading] = useState(false)
   let chats = useRef([])
   let x = [];
   let dummy = [];
-  let userId = useRef("");
+  //const [user,setUser]= useState({uId:"",uImg:""})
+  let user = useRef({uId:"",uImg:""})
   let recipient = useRef("");
-  let recipientName = useRef("");
-  let recipientLang = useRef("")
+  let recipientInfo = useRef({name:"",lang:"",url:""})
   let roomId = useRef("");
   let clientSocket = useRef(null);
-  let indexOfChat = useRef(0);
   let data;
   let returndata;
+  let history = useHistory();
+  let pusher=""
 
-  let elem1;
   useEffect (()=>{
-    /* userservice.getUserByEmail(recipient.current).
-    then((data) =>{
-    recipientName.current = data[0].firstName+' '+data[0].lastName
-    recipientLang.current = data[0].langPreference
-    elem1 =(<div className="recName">
-    {recipientName.current}
-    <br/>
-    </div>)
-    console.log(recipientName.current)
-    console.log(recipientLang.current)
-  },[recipientName])
-  .catch((err)=>console.log(err)) */
-  recipientName.current= localStorage.getItem("recName")
-  recipientLang.current = localStorage.getItem("recLang")
+  recipientInfo.current.name= localStorage.getItem("recName")
+  recipientInfo.current.lang = localStorage.getItem("recLang")
+  recipientInfo.current.url = localStorage.getItem("profileUrl")
+  //console.log("vghbjn in Chat",props.child)
   },[])
+
+  /* useEffect (()=>{
+      pusher = new Pusher('f99dc5faffa906c52c32', {
+      secret: 'b525f9548e7daffdcb76',
+      cluster: 'ap2',
+      encrypted: true
+    });
+    pusher.connection.bind('connected', function () {
+      // attach the socket ID to all outgoing Axios requests
+      axios.defaults.headers.common['X-Socket-Id'] = pusher.connection.socket_id;
+  });
+  },[]) */
 useEffect(() => {
 
  const getData = () => { 
-  
-  let recaddress = props.match.params.id
-  console.log(recaddress)
-  recipient.current = recaddress
-  userId.current = localStorage.getItem("userId");   
-    chatservice.getMessagesbyEmail(userId.current,recipient.current)
-   .then((data) => { 
+  recipient.current = props.match.params.id
+  //setUser((u)=>{u.uId=localStorage.getItem("userId")}); 
+  user.current.uId = localStorage.getItem("userId")
+  userservice.getUserByEmail(user.current.uId).
+    then((data) =>{
+        /* setUser((u) => {
+          u.uImg=data[0].profileImg
+          console.log("U",u)
+          return u
+        }) */
+        user.current.uImg= data[0].profileImg
+  }).catch((err)=>console.log("Err in UserService",err))
+  console.log(user.current.uId)
+  chatservice.getMessagesbyEmail(user.current.uId,recipient.current)
+  .then((data) => { 
               chats.current = data;
               console.log("Data",chats.current)
               if (chats) {
-                console.log("in Chat",chats.current)
+                //console.log("in Chat",chats.current)
                 chats.current.map((chat, index) => {
                    dummy.push(chat)
                });
@@ -66,10 +81,12 @@ useEffect(() => {
               console.log("dummy",dummy)
               setChat({messages:dummy})
               console.log("chat again",chat)
-              clientSocket.current = io("http://127.0.0.1:5000");
-              clientSocket.current.emit(
+              //props.clientSocket.current = io("http://127.0.0.1:5000");
+              console.log("ghj",props.clientSocket.current.id)
+              /* props.clientSocket.current.emit("adduser",{id:props.clientSocket.current.id, name: user.current.uId}) */
+              props.clientSocket.current.emit(
                 "roomJoin",
-                { from: userId.current, to: recipient.current },
+                { from: user.current.uId, to: recipient.current },
                 ({ error, room }) => {
                   if (!error) {
                     roomId.current = room;
@@ -80,9 +97,11 @@ useEffect(() => {
                 }
               );
 
-              clientSocket.current.on("messageReceived", (payload) => {
-                console.log("Payload",payload)
-              
+              props.clientSocket.current.on("messageReceived", (payload) => {
+                console.log("in receive")
+                /* chatservice.createMessage(payload)
+                .then((response)=>console.log(response))
+                .catch((err)=>console.log(err)) */
                 setChat((chatState) => {
                   if(chatState.messages){
                     let newMessages = [...chatState.messages];
@@ -95,7 +114,14 @@ useEffect(() => {
                   
                 });     
                 console.log("Received chat",chat)
+
+                //props.child()
+                
               });
+              props.clientSocket.current.on("newMessage", (payload) => {
+                console.log("IN NEW MSG")
+                props.appFunc(payload.notification)
+              })
 
               
     })
@@ -105,44 +131,60 @@ getData();
     
 }, []);
 
-
+const handleLogOut = (evt) => {
+  logout(() => {
+    history.push("/login");
+  });
+};
 
   const sendMessage = (message) => {
-    data = { 'msg' : message, 'lang':recipientLang};
-          //axios.post('http://127.0.0.1:80/',data) // flask ka post method call kre ga
-     // .then(response => {
-          //console.log(" Response" ,response.data);
-          //returndata = response.data
-          let messageS = {
-            from: userId.current,
+            setLoading(true)
+            data = { 'msg' : message, 
+                    'lang': recipientInfo.current.lang,
+                    'userImgUrl': user.current.uImg
+                    };
+            console.log(data)
+            //axios.post('http://127.0.0.1:80/',data) // flask ka post method call kre ga
+            //.then(response => {
+            /* pusher.subscribe('my-channel')
+            .bind('my-event', data => {
+              alert("new message!",data)
+            }); */
+            setLoading(false)
+           // console.log(" Response" ,response.data);
+            //returndata = response.data
+            let messageS = {
+            from: user.current.uId,
             to: recipient.current,
             room: roomId.current,
             messageBody: message,
+            //messageVideo: returndata,
             //translated: returndata,
             time: new Date().toLocaleString(),
             type: "sent"
           };
-          clientSocket.current.emit("messageSend", messageS, (err) => {
-            if (!err) {
-                    console.log("message sent successfully");
-                    chatservice.createMessage(messageS)
-                    .then((response)=>console.log(response))
-                    .catch((err)=>console.log(err))
-                    //console.log("MsgS",messageS)
-                  if(chat.messages){
-                    setChat({messages : [...chat.messages,messageS]});
-                    console.log("sent chat",chat)
-                  }
-                  else{
-                    setChat({messages : [messageS]})
-                    console.log("first message "+ chat)
-                  }
-             
-            } 
-            else {
-                    console.log("error sending message:", err);
-            }
+          props.clientSocket.current.emit("messageSend", messageS, (err) => {
+              if (!err) {
+                      console.log("message sent successfully",props.clientSocket.current.id);
+                      /* chatservice.createMessage(messageS)
+                      .then((response)=>console.log(response))
+                      .catch((err)=>console.log(err)) */
+                      //console.log("MsgS",messageS)
+                    if(chat.messages){
+                      setChat({messages : [...chat.messages,messageS]});
+                      console.log("sent chat",chat)
+                    }
+                    else{
+                      setChat({messages : [messageS]})
+                      console.log("first message "+ chat)
+                    }
+              //console.log(" Type : ", messageS.type)
+              } 
+              else {
+                      console.log("error sending message:", err);
+              }
             })
+         
          //})
       
     
@@ -156,20 +198,31 @@ getData();
   else{
     console.log("in else")
       elem = (
-        <SettingMessage chat={chat}/>
+        <SettingMessage chat={chat} user={user.current.uId}/>
       )
   }
   return (
     <React.Fragment>
+      <button
+        className="btn text-decoration-none btn-link   pl-0"
+        style={{textDecoration:"none"}}
+        onClick={handleLogOut}
+      >
+        <i className="fa fa-sign-out" aria-hidden="true"></i> Logout
+      </button>
       <div className="singleChatContainer">
         <div className="mesgs">
           <div className="msg_history">
+          <div className="profilediv">
+            <img className="profile" src= {recipientInfo.current.url} alt="dp"/>
+          </div>
           <div className="recName">
-            {recipientName.current}
+          
+            {recipientInfo.current.name}
             <br/>
             </div>
-            <hr/>
             {elem}
+            {loading ? <div className = "load"><CircularProgress color="secondary" /></div>:null}
           </div>
           <TypeMessage sendMessage={sendMessage} />
         </div>

@@ -2,8 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import "./chat.css";
 import {Grid} from "@material-ui/core";
 import { useSelector, useDispatch } from 'react-redux'
-import  getChats from "../../Redux/actions/chat_actions"
+//import  getChats from "../../Redux/actions/chat_actions"
 import chatservice from "../../services/ChatService";
+import userservice from "../../services/UserService";
 import Chats from "./Chats"
 import SingleChat from "./SingleChat"
 import SettingMessage from "./SettingMessage"
@@ -57,7 +58,7 @@ export default function ChatPage(props) {
   const classes = useStyles();
   const [show,setShow] = useState(false)
   const [flag,setFlag] = useState(false)
-  let recipientId = useRef("")
+  let recipientInfo = useRef({id: "",name:"",lang:"",url:""})
   const [message, setMessage] = useState("");
   let roomId = useRef("");
   let clientSocket = useRef(null);
@@ -65,98 +66,102 @@ export default function ChatPage(props) {
   const activeChatHandler = (rid) => {
     setShow(true)
     console.log("active chat handler called with", rid);
-    recipientId.current=rid
+    recipientInfo.current.id=rid
+
+    userservice.getUserByEmail(rid).
+    then((data) =>{
+      recipientInfo.current.lang = data.langPreference
+      recipientInfo.current.url = data.profileImg
+    }).catch((err)=>console.log(err))
+
     chatservice.getMessagesbyEmail(userId,rid).
     then((data)=> {
       console.log(data)
       chatsfromdb1.current = data;
-              console.log("Data",chatsfromdb1.current)
-              if (chatsfromdb1) {
-                //console.log("in Chat",chatsfromdb1.current)
-                chatsfromdb1.current.map((chat, index) => {
-                   dummy1.push(chat)
-                   
-               });
-              }
-              else{
-                console.log("No chats or some error")
-              }
-              setActiveChat({messages:dummy1})
-              //activeCht.current.messages = dummy1
-              console.log("dummy",dummy1)
-              //console.log("activechat",activeChat)
-              console.log("activechat",activeChat)
-              /* console.log("dummy",dummy1)
-              setActiveChat({messages:dummy1}) */
+      console.log("Data",chatsfromdb1.current)
+      if (chatsfromdb1) {
+        chatsfromdb1.current.map((chat, index) => {
+            dummy1.push(chat)   
+        });
+      }
+      else{
+        console.log("No chats or some error")
+      }
+      setActiveChat({messages:dummy1})
+      console.log("activechat",activeChat)
     }).
     catch((err)=>console.log(err))
-    /* chats.map((chat) => {
-      if (chat.to === rid) {
-        console.log("true");
-        setActiveChat(chat);
-      }
-    }); */
     clientSocket.current = io("http://127.0.0.1:5000");
-            clientSocket.current.emit(
-              "roomJoin",
-              { from: userId, to: recipientId.current },
-              ({ error, room }) => {
-                if (!error) {
-                  roomId.current = room;
-                  console.log("joined room with id", room);
-                } else {
-                  console.log("error joining room", error);
-                }
-              }
-            );
+    clientSocket.current.emit(
+      "roomJoin",
+      { from: userId, to: recipientInfo.current.id },
+      ({ error, room }) => {
+        if (!error) {
+          roomId.current = room;
+          console.log("joined room with id", room);
+        } else {
+          console.log("error joining room", error);
+        }
+      }
+    );
 
-            clientSocket.current.on("messageReceived", (payload) => {
-              console.log("Payload",payload)
-              setChat((chatState) => {
-                if(chatState.messages){
-                  let newMessages = [...chatState.messages];
-                newMessages = [...newMessages, payload];
-                return { ...chatState, messages: newMessages };
-                }
-                else{
-                  return {messages: [payload] };  
-                }
-                
-              });     
-              console.log("Received chat",chat)
-              
-            });
+    clientSocket.current.on("messageReceived", (payload) => {
+      console.log("Payload",payload)
+      chatservice.createMessage(payload)
+      .then((response)=>console.log(response))
+      .catch((err)=>console.log(err))
+      setChat((chatState) => {
+        if(chatState.messages){
+          let newMessages = [...chatState.messages];
+        newMessages = [...newMessages, payload];
+        return { ...chatState, messages: newMessages };
+        }
+        else{
+          return {messages: [payload] };  
+        }
+        
+      });     
+      console.log("Received chat",chat)
+      
+    });
 
   };
  
   useEffect(() => {
-          chatservice.getMessagesbyUserId(userId).
-          then((response) => {
-                if(response){
-                chatsfromdb.current = response
-                chatsfromdb.current.map((chat)=>{
-                      dummy.push(chat.to)
-                      dummy.push(chat.from)
-                })
-                const array = Array.from(new Set(dummy));
-                array.map((r)=>{
-                    if(r === userId)
-                      console.log("matched")
-                    else
-                      recipients.push(r)
-                })
-                setRec({recipients:recipients})
-                localStorage.setItem("recipients",rec.recipients)
-                
-                }
-          }).
-          catch(err => console.log(err));
+          
 
 //console.log("Chats",dispatch(getChats()))
     //console.log(activeCht)
-                
+     getRecipients()   
+     //props.child("getRecipients")        
   
   },[]);   
+  const getRecipients=()=>{
+    console.log("in recipients")
+    chatservice.getMessagesbyUserId(userId).
+    then((response) => {
+      console.log("Res",response)
+          if(response){
+            
+          chatsfromdb.current = response
+          chatsfromdb.current.map((chat)=>{
+                dummy.push(chat.to)
+                dummy.push(chat.from)
+          })
+          const array = Array.from(new Set(dummy));
+          array.map((r)=>{
+              if(r === userId)
+                console.log("matched")
+              else
+                recipients.push(r)
+          })
+          setRec({recipients:recipients})
+          localStorage.setItem("recipients",rec.recipients)
+          
+          }
+    }).
+    catch(err => console.log(err));
+  }
 
   useEffect(() => {
     
@@ -167,7 +172,7 @@ export default function ChatPage(props) {
   const sendMessage = (message)=>{
       let messageS = {
         from: userId,
-        to: recipientId.current,
+        to: recipientInfo.current.id,
         room: roomId.current,
         messageBody: message,
         //translated: returndata,
@@ -178,20 +183,6 @@ export default function ChatPage(props) {
         if (!err) {
                 console.log("message sent successfully");
                 setFlag(true)
-                //chatservice.createMessage(messageS)
-                //.then((response)=>{
-               /*  setElem (
-                  <div class="outgoing_msg">
-                    {console.log("type",messageS.type,messageS.messageBody)}
-                    <div class="sent_msg">
-                      <p>{messageS.messageBody}</p>
-                      <span class="time_date"> {messageS.time}</span>
-                    </div>
-                  </div>
-                  ) */
-               // })
-                //.catch((err)=>console.log(err))
-                //console.log("MsgS",messageS)
                if(chat.messages){
                 setChat({messages : [...chat.messages,messageS]});
                 console.log("sent chat",chat)
@@ -200,7 +191,8 @@ export default function ChatPage(props) {
                 setChat({messages : [messageS]})
                 console.log("first message "+ chat)
               } 
-              
+              getRecipients()
+              console.log("after get chats")   
          
         } 
         else {
@@ -216,7 +208,7 @@ export default function ChatPage(props) {
   else{
     console.log("in else")
       elem = (
-        <SettingMessage chat={chat}/>
+        <SettingMessage chat={chat} user={userId}/>
       )
   }
   
@@ -229,17 +221,17 @@ export default function ChatPage(props) {
         <h3 className="text-center">Chats</h3>
         <Grid container>
          
-        <Grid item xs={7} md={3} style={{borderRight:"lightgray 2px solid",height:"100vh"}} >
+        <Grid item xs={7} md={3} style={{borderRight:"lightgray 2px solid",height:"auto"}} >
             <Chats   recipients = {rec.recipients} setActiveChat={activeChatHandler}/> 
             </Grid> 
             <Grid item xs={5}  md={9} > 
             {
               activeChat.messages != undefined ?
-                    <div>
-                    <SingleChat activeChat={activeChat} userId = {userId} />
-                    </div>
-                    :
-                    console.log("nope")
+                <div>
+                <SingleChat activeChat={activeChat} userId = {userId} rec={rec.recipients.length} />
+                </div>
+              :
+                console.log("nope")
             }
              
             {elem}

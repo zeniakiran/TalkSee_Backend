@@ -1,13 +1,22 @@
+require('dotenv').config();
 var express = require('express');
 var router = express.Router();
 //const validateProducts = require("../../Middlewares/validation");
 var { Messages } = require("../../models/MessageModel");
 //const auth = require("../../Middlewares/auth");
 //const admin = require("../../Middlewares/admin");
+let Pusher = require('pusher');
 var cors = require("cors")
 const corsOptions = {
     origin: 'https://localhost:4000',
   }
+
+  let pusher = new Pusher({
+    appId: process.env.PUSHER_APP_ID,
+    key: process.env.PUSHER_APP_KEY,
+    secret: process.env.PUSHER_APP_SECRET,
+    cluster: process.env.PUSHER_APP_CLUSTER
+});
 router.get("/", async (req, res) => {
     try {
         let chatFromDb = await Messages.find();
@@ -60,18 +69,38 @@ router.get("/msgbyuserid/:email",async (req, res) => {
 }); 
 
 router.post("/",async (req,res)=>{
-    let message= new Messages();
+    try{
+        let message= new Messages();
     message.from= req.body.from;
     message.to= req.body.to;
     message.roomId= req.body.roomId;
     message.messageBody = req.body.messageBody;
+    message.messageVideo = req.body.messageVideo;
     message.time = req.body.time ;
     message.type = req.body.type;
     await message.save();
-    return res.send("Message has been added to database successfully!");
+    /* pusher.trigger('private-my-channel', 'my-event', {
+        data: req.body.messageBody,
+      }//, {socket_id: req.headers['x-socket-id']}
+      ); */
+      //console.log("pusher",req.headers['x-socket-id'])
+    return res.status(200).send('response from chatapi');
+    }
+    catch(err){
+        console.log(err)
+    }
+    
 
 });
-
+router.post("/pusher/auth", function(req, res) {
+    const socketId = req.body.socket_id;
+    const channel = req.body.channel_name;
+    console.log(socketId)
+    console.log(channel)
+    const auth = pusher.authenticate(socketId, channel);
+    res.send(auth);
+  });
+  
 
 
 module.exports =  router;

@@ -54,8 +54,8 @@ const SignUp = () => {
       history.push("/dashboard");
   }, [history]);
   const [values, setValues] = useState({
-    firstname: "",
-    lastname:"",
+    firstName: "",
+    lastName:"",
     email: "",
     gender:"",
     password: "",
@@ -67,8 +67,8 @@ const SignUp = () => {
     loading: false,
   });
   const {
-    firstname,
-    lastname,
+    firstName,
+    lastName,
     email,
     gender,
     password,
@@ -107,8 +107,8 @@ const SignUp = () => {
   const Register = (event) => {
     event.preventDefault();
     if (
-      isEmpty(firstname) ||
-      isEmpty(lastname) ||
+      isEmpty(firstName) ||
+      isEmpty(lastName) ||
       isEmpty(email) ||
       isEmpty(password) ||
       isEmpty(confirmPassword)||isEmpty(gender)) 
@@ -119,15 +119,15 @@ const SignUp = () => {
       } else if (!equals(password, confirmPassword)) {
       setValues({ ...values, errorMessage: "Password do not matched" });
       } else {
-      const { firstname,lastname, email, password ,gender} = values;
-     const data = { firstname,lastname,  email, password ,gender};
+      const { firstName,lastName, email, password ,gender} = values;
+     const data = { email,firstName,lastName, password ,gender};
       setValues({ ...values, loading: true });
       signup(data)
         .then((response) => {
           setValues({
             ...values,
-            firstname: "",
-            lastname:"",
+            firstName: "",
+            lastName:"",
             email: "",
             password: "",
             confirmPassword: "",
@@ -167,14 +167,14 @@ const SignUp = () => {
             className={classes.textfield}
             id="filled-start-adornment"
              
-            value={values.firstname}
+            value={values.firstName}
             label= {
               <div> 
-             <Typography variant="headline" style={{fontWeight:"bold",fontStyle:"italic"  }}> Firstname </Typography>
+             <Typography variant="headline" style={{fontWeight:"bold",fontStyle:"italic"  }}> FirstName </Typography>
              <Typography variant="headline" style={{color:"red"}}>*</Typography>
                   </div>
             }
-            name="firstname"
+            name="firstName"
             
             fullWidth
             onChange={handleTextChange}
@@ -189,14 +189,14 @@ const SignUp = () => {
            <TextField
             className={classes.textfield}
             id="filled-start-adornment1"
-            value={values.lastname}
+            value={values.lastName}
             label= {
               <div> 
-             <Typography variant="headline" style={{fontWeight:"bold",fontStyle:"italic"  }}> Lastname </Typography>
+             <Typography variant="headline" style={{fontWeight:"bold",fontStyle:"italic"  }}> LastName </Typography>
              <Typography variant="headline" style={{color:"red"}}>*</Typography>
                   </div>
             }
-            name="lastname"
+            name="lastName"
             
             fullWidth
             onChange={handleTextChange}

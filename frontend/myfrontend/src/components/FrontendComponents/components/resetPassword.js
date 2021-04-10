@@ -1,139 +1,243 @@
-import React,{useState} from "react";
-import axios from 'axios';
-import {Grid,Button, Typography, InputAdornment,TextField} from "@material-ui/core";
-import { grey, cyan, brown} from '@material-ui/core/colors';
-import isEmail from "validator/lib/isEmail";
+import React, { useState, useEffect } from "react";
+import clsx from 'clsx';
+import accountService from "../../../services/accountService";
+import {
+  Grid,
+  Button,
+  InputAdornment,
+  InputLabel,
+  FormControl,
+  Input,
+  Paper,
+  IconButton,
+  Typography,
+} from "@material-ui/core";
+import LockIcon from '@material-ui/icons/Lock';
+import VpnKeyIcon from '@material-ui/icons/VpnKey';
+ import { grey, cyan,indigo} from '@material-ui/core/colors';
 import isEmpty from "validator/lib/isEmpty";
+import equals from "validator/lib/equals";
 import LinearBuffer from "../Alerts/ProgressBar";
 import AlertBar from "../Alerts/AlertBar";
-import EmailIcon from '@material-ui/icons/Email';
- 
+import { Visibility, VisibilityOff } from "@material-ui/icons";
+import PageTitle from "./pageTitle";
+import { makeStyles } from "@material-ui/core/styles";
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
- 
-const ResetPassword = () => {
-      
- const [values, setValues] = useState({
-    email: "",
+ const useStyles = makeStyles((theme) => ({
+  textfield: {
+     margin: theme.spacing(1),
+  },
+   margin:{
+     marginTop: "1.2rem"
+   } 
+}));
+
+const ResetPassword = ({ match }) => {
+  const classes = useStyles();
+  const [values, setValues] = useState({
+    token: "",
+    password: "",
+    confirmPassword: "",
     errorMessage: "",
-    successMsg:"",
+    successMsg: "",
+    showPassword: false,
+    showPassword1: false,
     loading: false,
   });
-  const { email, successMsg, errorMessage, loading } = values;
+  
+   const {
+    token,
+    password,
+    confirmPassword,
+    errorMessage,
+    successMsg,
+    loading,
+  } = values;
 
- const handleTextChange = (evt) => {
+    useEffect(() => {
+        let token = match.params.token
+        if(token) {
+            setValues({...values, token})
+        }
+    }, [])
+    const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+   const handleChange = (prop) => (event) => {
     setValues({
       ...values,
-      [evt.target.name]: evt.target.value,
+      [prop]: event.target.value,
       errorMessage: "",
       successMsg: "",
     });
   };
-  const VerifyEmail = (event) => {
+ const handleClickShowPassword = () => {
+    setValues({ ...values, showPassword: !values.showPassword });
+  };
+  const handleClickShowConfirmPassword = () => {
+    setValues({ ...values, showPassword1: !values.showPassword1 });
+  };
+   const ResetPasswordBtn = (event) => {
     event.preventDefault();
-    if (isEmpty(email)   ) {
-      setValues({ ...values, errorMessage: "Field is required" });
-    } else if (!isEmail(email)) {
-      setValues({ ...values, errorMessage: "Invalid Email  syntax" });
+    if (
+      isEmpty(password) ||
+      isEmpty(confirmPassword)
+    ) {
+      setValues({ ...values, errorMessage: "All fields are required" });
+    } else if (!equals(password, confirmPassword)) {
+      setValues({ ...values, errorMessage: "Passwords do not match" });
     } else {
-      const { email} = values;
-      const data = {  email};
+  
+     
       setValues({ ...values, loading: true });
-        axios.post("http://localhost:5000/resetPassword",data)
+     accountService.resetPassword( { newPassword: password, resetPasswordLink: token})
         .then((response) => {
           setValues({
             ...values,
-            email: "",
+            password: "",
+            confirmPassword: "",
             errorMessage: false,
-            successMsg: response.data.successMessage,
+            successMsg: response.successMessage,
             loading: false,
           });
         })
         .catch((err) => {
           setValues({
             ...values,
+             password: "",
+            confirmPassword: "",
             loading: false,
             errorMessage: err.response.data.errorMessage,
           });
         });
     }
   };
-const Header = () => (
-    <Grid container >
-      <Grid item xs={1} sm={2} xm={5} md={4}></Grid>
-      <Grid item xs={10} sm={8} xm={2} md={4}>
-         <Typography variant="headline" style={{marginBottom:"2rem", 
-         marginTop:"3rem",
-         textAlign:"center",
-         fontSize:"5rem",
-         color:brown[300],
-         fontFamily:"Brush Script MT, Brush Script Std, cursive"}}
-          component="h1">TalkSee</Typography>
-        <hr/>  
-      </Grid>
+     
+  const ResetPasswordForm=()=>(
       
-    <Grid item  xs={1} sm={2} xm={5} md={4}></Grid>
- 
-    </Grid>
-  );
-const ResetPageForm = () =>(
-<div>
-    <Grid container>
-          <Grid item xs={1} sm={3} md={4}></Grid>
-          <Grid item xs={10} sm ={6} md={4}>
-              <TextField
-            style={{marginTop:"2rem"}}
-            label= {
-              <div> 
-             <Typography variant="headline" style={{fontWeight:"bold",fontStyle:"italic" }}> Email Address </Typography>
-             <Typography variant="headline" style={{color:"red"  }}>*</Typography>
-                  </div>
-            }
-            id="filled-start-adornment1"
-            
-            name="email"
-            value={values.email}
-            fullWidth
-            onChange={handleTextChange}
-             InputProps={{
-          startAdornment: (
+    <Grid container >
+      <Grid item xs={1} sm={3} md={4}></Grid>
+        <Grid item xs={10} sm ={6} md={4}>
+          <Paper style={{padding: '30px 50px'}} >
+          <Button  
+            className= "loginbtn"
+            href="https://mail.google.com/mail/u/0/#inbox"
+            color="primary"
+           style={{marginBottom:"2rem" ,paddingLeft:"0rem",color:indigo[800]  }}
+          >
+           <ArrowBackIcon style={{fontWeight:"bold",marginRight:"0.3rem"}}/> Go Back
+          </Button>
+             <FormControl className={clsx( classes.textField)} fullWidth>
+         <InputLabel htmlFor="standard-adornment-password"> 
+             <Typography variant="headline" style={{fontWeight:"bold",fontStyle:"italic"  }}> New Password</Typography>
+             <Typography variant="headline" style={{color:"red",marginLeft:"0.4rem" }}>*</Typography>
+         </InputLabel>
+                    <Input
+            id="standard-adornment-password"
+            type={values.showPassword ? 'text' : 'password'}
+            name="password"
+            value={values.password}
+            onChange={handleChange('password')}
+              
+          startAdornment= {
             <InputAdornment position="start">
-             <EmailIcon style={{ color: grey[600] }}/>
+             <LockIcon style={{ color: grey[600] }}/>
             </InputAdornment>
-          ),
-        }}
+          }
+        
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                >
+                  {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            }
           />
-          <Button
+        </FormControl>
+         
+          <FormControl className={clsx(classes.margin, classes.textField)} fullWidth>
+                 <InputLabel htmlFor="standard-adornment-password"> 
+             <Typography variant="headline" style={{fontWeight:"bold",fontStyle:"italic"  }}> Confirm Password</Typography>
+             <Typography variant="headline" style={{color:"red",marginLeft:"0.4rem" }}>*</Typography>
+         </InputLabel>
+           <Input
+            id="standard-adornment-confirmPassword"
+            type={values.showPassword1 ? 'text' : 'password'}
+            name="confirmPassword"
+            value={values.confirmPassword}
+            onChange={handleChange('confirmPassword')}
+             startAdornment= {
+            <InputAdornment position="start">
+             <VpnKeyIcon style={{ color: grey[600] }}/>
+            </InputAdornment>
+          }
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowConfirmPassword}
+                  onMouseDown={handleMouseDownPassword}
+                >
+                  {values.showPassword1 ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+    
+         <Button
              style={{ color: grey[50],
               backgroundColor:cyan[600],
               fontWeight:"bold", 
               borderRadius:"1rem" , 
-              marginTop: "1.5rem",
+              marginTop: "0.8rem",
               padding: "0.5rem",
-               }}
+              }}
             className= "loginbtn"
             variant="contained"
             fullWidth
-            onClick={VerifyEmail}
+            onClick={ResetPasswordBtn}
           >
-            Verify Email Address
+            Reset Password 
           </Button>
-          </Grid>
-          <Grid item xs={1} sm={3} md={4}></Grid>
+          {successMsg &&  <Button
+                     style={{  
+                     backgroundColor:grey[500],
+              fontWeight:"bold", 
+              borderRadius:"1rem" , 
+              marginTop: "0.8rem",
+              padding: "0.5rem",
+               }}
+            className= "loginbtn"
+            variant="outline"
+            fullWidth
+            onClick={event =>  window.location.href='/login'}
+                  >
+                      Login
+                  </Button>}
+           </Paper>
+        </Grid>
+     <Grid item xs={1} sm={3} md={4}></Grid>
     </Grid>
-</div>
-)
-return (<div>
-    {Header()}
-    {loading && <LinearBuffer />}
+       
+  );   
+  return (
+  <div>
+        {loading && <LinearBuffer />}
       {errorMessage && (
-        <AlertBar type="error" message={errorMessage} autoClose={5000} />
+        <AlertBar type="error" message={errorMessage} autoClose={4000} />
       )}
       {successMsg && (
-        <AlertBar type="success" message={successMsg} autoClose={5000} />
+        <AlertBar type="success" message={successMsg} autoClose={4000} />
       )}
-      {ResetPageForm()}
-    </div>
-    )
-};
-
+       <PageTitle name= {"Reset Password"}/>
+      {ResetPasswordForm()}
+      
+  </div>)
+      }
 export default ResetPassword;

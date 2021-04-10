@@ -76,6 +76,7 @@ const LogIn = () => {
   };
   const Register = (event) => {
     event.preventDefault();
+    localStorage.setItem("userId",email)
     if (isEmpty(email) || isEmpty(password)) {
       setValues({ ...values, errorMessage: "Both fields are required" });
     } else if (!isEmail(email)) {
@@ -87,12 +88,13 @@ const LogIn = () => {
 
       login(data)
         .then((response) => {
-          authentication(response.data.token, response.data.user);
-
-          if (isAuthenticated() && isAuthenticated().role === 1)
-            history.push("/dashboard");
-          else history.push("/dashboard");
-          setValues({ ...values, loading: false });
+          //authentication(response.data.token, response.data.user);
+          //localStorage.setItem("Token",response.data.token)
+          //if (isAuthenticated() && isAuthenticated().role === 1)
+          console.log(response)
+            history.push("/users");
+          //else history.push("/users");
+            //setValues({ ...values, loading: false });
         })
         .catch((err) => {
           setValues({
@@ -100,7 +102,7 @@ const LogIn = () => {
             email:"",
             password:"",
             loading: false,
-            errorMessage: err.response.data.errorMessage,
+            errorMessage: err,
           });
         });
     }

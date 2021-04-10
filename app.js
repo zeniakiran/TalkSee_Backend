@@ -7,7 +7,7 @@ var logger = require('morgan');
 var mongoose = require("mongoose");
 var config = require("./config/dev");
 var cors = require("cors")
-var usersRouter = require('./routes/UsersApi');
+var usersRouter = require('./routes/ApiRoutes/UsersApi');
 var ChatApiRouter = require('./routes/ApiRoutes/ChatApi');
 var GroupApiRouter = require('./routes/ApiRoutes/GroupApi');
 //var UserInfoApiRouter = require('./routes/ApiRoutes/UserInfoApi')
@@ -80,10 +80,19 @@ mongoose.connect(config.mongoURI,
 .catch((err)=>{console.log(err + "Error in App")})
 
 socketListener.on("connection", (clientSocket) => {
+  var users=[]
+  var obj={}
   console.log("a socket connected with id:", clientSocket.id);
+ // console.log("sockets",socketListener.username)
+ socketListener.setMaxListeners(5)
+  
   socketHandler(clientSocket, socketListener);
-  clientSocket.send("hello")
+  //clientSocket.send("hello")
+  //console.log("Users",users)
 });
+/* socketListener.on('disconnect', () => {
+  socketListener.removeAllListeners();
+}); */
 
 server.listen(port, () =>
   console.log(`Server up and running on port ${port} !`)

@@ -1,71 +1,57 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import accountService from "../../../services/accountService";
 import jwt from 'jsonwebtoken';
-import { grey,green, cyan,red, brown} from '@material-ui/core/colors';
-import {Button, Grid, Typography} from "@material-ui/core";
+import { grey,green, cyan,red} from '@material-ui/core/colors';
+import {Button, Grid} from "@material-ui/core";
 import CheckCircleRoundedIcon from '@material-ui/icons/CheckCircleRounded';
 import CancelRoundedIcon from '@material-ui/icons/CancelRounded';
+import PageTitle from "./pageTitle";
 const Activate = ({ match }) => {
+ let token1 = match.params.token;
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     token: '',
     errorMessage: "",
     successMsg: "",
   });
+   const { firstName,lastName, token, errorMessage, successMsg} = formData;
    
-  const { username, token, errorMessage, successMsg} = formData;
   useEffect(() => {
     let token = match.params.token;
-    let { username } = jwt.decode(token);
+    let { firstName } = jwt.decode(token);
+    let { lastName } = jwt.decode(token);
     if (token) {
-      setFormData({ ...formData, username,  token });
-    }
-    axios
-      .post("http://localhost:5000/api/users/activation", {token})
+      setFormData({ ...formData, firstName,lastName,  token });  
+      accountService.accountActivation({token})
       .then(response => {
         setFormData({
           ...formData,
           errorMessage: false,
-          successMsg: response.data.successMessage,
+          successMsg: response.successMessage,
+          firstName: response.firstName,
+          lastName: response.lastName,
         });
-       
       })
       .catch(err => {
-        
       setFormData({
           ...formData,
+          successMsg: false,
          errorMessage: err.response.data.errorMessage,
+          firstName: err.response.data.firstName,
+          lastName: err.response.data.lastName,
         });
       });
-  }, [match.params]);
- 
-   
+    }}, [match.params]);
+     
   
-  const Header = () => (
-    <Grid container >
-      <Grid item xs={1} sm={2} xm={5} md={4}></Grid>
-      <Grid item xs={10} sm={8} xm={2} md={4}>
-         <Typography variant="headline" style={{marginBottom:"2rem", 
-         marginTop:"3rem",
-         textAlign:"center",
-         fontSize:"5rem",
-         color:brown[300],
-         fontFamily:"Brush Script MT, Brush Script Std, cursive"}}
-          component="h1">TalkSee</Typography>
-        <hr/>  
-      </Grid>
-      
-    <Grid item  xs={1} sm={2} xm={5} md={4}></Grid>
- 
-    </Grid>
-  );
   const ActivationSuccess=()=>(
 <div> 
   <Grid container > 
  <Grid item xs={1} sm={3} md={4}></Grid>
   <Grid item xs={1} sm={3} md={4}> 
   
-      <p><strong>Hi {username}</strong></p>
+      <p><strong>Hi {firstName +" "+lastName}</strong></p>
         <div>  <CheckCircleRoundedIcon 
               style = {{ color: green[600],paddingTop:"0.3rem" }}/>  
            <span style ={{fontSize:"1.3rem"}} > Your account has been successfully verified. Click below to create your profile</span></div>
@@ -79,7 +65,7 @@ const Activate = ({ match }) => {
               padding: "0.5rem" }}
               variant="contained"
               className= "loginbtn"
-              onClick={event =>  window.location.href='/login'}
+              onClick={event =>  window.location.href='/profile-setup/'+token1}
              
           >
             Create Profile
@@ -97,7 +83,7 @@ const Activate = ({ match }) => {
  <Grid item xs={1} sm={3} md={4}></Grid>
   <Grid item xs={1} sm={3} md={4}> 
   
-      <p><i>Hi {username}</i></p>
+      <p><strong>Hi {firstName+" "+lastName}</strong></p>
         <div>  <CancelRoundedIcon 
               style = {{ color: red[600]  }}/>  
            <span style ={{fontSize:"1.3rem"}} > <strong>{errorMessage}</strong> </span></div>
@@ -111,8 +97,7 @@ const Activate = ({ match }) => {
               padding: "0.5rem" }}
             variant="contained"
              className= "loginbtn"
-            onClick={event =>  window.location.href='/signup'}
-            
+            onClick={event =>  window.location.href='/signup/'+token1}
              
           >
                Try  Again   
@@ -126,7 +111,7 @@ const Activate = ({ match }) => {
   );
   return (
   <div>
-       {Header()}
+        <PageTitle name= {"Activation"}/>
        {errorMessage && ( ActivationFailure())}
        {successMsg && (ActivationSuccess())}
   </div>)

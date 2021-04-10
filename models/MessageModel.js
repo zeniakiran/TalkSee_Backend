@@ -10,7 +10,8 @@ var messagesSchema = mongoose.Schema({
         type : String,
         default : new Date().toLocaleString()
     },
-    type: String
+    type: String,
+    messageVideo: String
 });
 
 var Messages = mongoose.model("Messages", messagesSchema);

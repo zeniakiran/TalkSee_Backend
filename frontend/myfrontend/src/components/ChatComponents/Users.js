@@ -16,6 +16,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from 'react-router-dom';
 import userservice from "../../services/UserService";
 import groupservice from "../../services/GroupService";
+import { isAuthenticated, logout } from "../FrontendComponents/clientStorages/auth";
 import { v4 as uuidv4 } from 'uuid';
 import "./users.css"
 //import commonUtilites from "../Utilities/common";
@@ -82,16 +83,22 @@ const Users = (props) => {
   })
    .catch((err) => console.log("This is err"+ err));
 }
-  useEffect(getData , []);
+  useEffect(()=>{
+    getData()
+    console.log(props)
+    props.clientSocket.current.emit("adduser",{id:props.clientSocket.current.id, name: userId.current})
+  },[]);
 
     const userClickHandler = (u) =>{
         let email = u.email
         let fname= u.firstName
         let lname = u.lastName
         let lang = u.langPreference
+        let profileUrl = u.profileImg
         let x = fname+' '+lname
         localStorage.setItem("recName",x)
         localStorage.setItem("recLang",lang)
+        localStorage.setItem("profileUrl",profileUrl)
         history.push('/chat/'+email); 
         
   }
@@ -133,6 +140,11 @@ const Users = (props) => {
       name.current = e.target.value
       console.log(name.current)
     }
+    const handleLogOut = (evt) => {
+      logout(() => {
+        history.push("/login");
+      });
+    };
 
   /* useEffect(() => {
     getUsers().then((res) => setUsers(res));
@@ -150,6 +162,13 @@ const Users = (props) => {
      {/*<Button onClick={showButtons} variant="contained" color="primary">
         Create Group
       </Button>*/}
+      <button
+        className="btn text-decoration-none btn-link   pl-0"
+        style={{textDecoration:"none"}}
+        onClick={handleLogOut}
+      >
+        <i className="fa fa-sign-out" aria-hidden="true"></i> Logout
+      </button>
       <h3 className=" text-center">Contacts</h3>
       <List className={classes.list}>
       {users && (

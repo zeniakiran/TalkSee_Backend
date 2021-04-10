@@ -8,7 +8,7 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 sgMail.setApiKey("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")
 exports.signupVerificationController = async (req, res) => {
-  const { email,firstName, lastName, langPreference, password,gender } = req.body;
+  const { email,firstName, lastName, password,gender } = req.body;
   try {
     const emailAlready = await UserModel.findOne({ email });
     if (emailAlready) {
@@ -18,11 +18,13 @@ exports.signupVerificationController = async (req, res) => {
     }
      const token = jwt.sign(
       {
+        email,
         firstName,
         lastName,
-        email,
-        //langPreference,
+        /* langPreference,
+        profileImg, */
         password,
+        gender
       },
       config.jwtPrivateKey,
       {
@@ -40,7 +42,7 @@ exports.signupVerificationController = async (req, res) => {
      }
    })
     const emailData = {
-      from: "fa17-bcs-015@cuilahore.edu.pk",
+      from: process.env.EMAIL,
       to: email,
       subject: 'Account activation link',
       html: ` <head>
@@ -118,14 +120,14 @@ exports.signupVerificationController = async (req, res) => {
           errorMessage: 'Link expired, Signup again'
         });
       }});
-      const { firstname,lastname, email, password,gender } = jwt.decode(token);
+      const { email,firstName,lastName, password,gender } = jwt.decode(token);
   try{
     const emailAlready = await UserModel.findOne({ email });
     if (emailAlready) {
       return res.status(400).json({
         errorMessage: "Email Already taken",
-        firstname:firstname,
-        lastname:lastname
+        firstname:firstName,
+        lastname:lastName
       });
     }
      const newUser = new UserModel();
@@ -133,37 +135,38 @@ exports.signupVerificationController = async (req, res) => {
     newUser.lastName = lastName;
     newUser.email = email;
     newUser.gender =gender;
-    //newUser.langPreference = langPreference;
+    /* newUser.langPreference = langPreference;
+    newUser.profileImg = profileImg; */
     const salt = await bcrypt.genSalt(10);
     newUser.password = await bcrypt.hash(password, salt);
       
     await newUser.save();
      res.status(200).json({
       successMessage: "Successfully Registered",
-      firstname:firstname,
-      lastname:lastname
+      firstName:firstName,
+      lastName:lastName
     });
   }catch (err) {
     res.status(400).json({
       errorMessage: "Failed to register your account",
-      firstname:firstname,
-      lastname:lastname
+      firstName:firstName,
+      lastName:lastName
     });
   }
    
      } else {
    return  res.status(400).json({
               errorMessage: 'Signup failed because no token identify',
-              firstname:firstname,
-              lastname:lastname
+              firstName:firstName,
+              lastName:lastName
             });
   }
 
 }
-/*exports.loginController = async (req, res) => {
+exports.loginController = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await Signup.findOne({ email });
+    const user = await UserModel.findOne({ email });
     if (!user) {
       return res.status(400).json({
         errorMessage: "User not registered",
@@ -180,7 +183,7 @@ exports.signupVerificationController = async (req, res) => {
         _id: user._id,
       },
     };
-    jwt.sign(payload, config.get("jwtPrivateKey"), (err, token) => {
+    jwt.sign(payload, config.jwtPrivateKey, (err, token) => {
       if (err) console.log("JWT error");
       const { _id, username, email, role } = user;
       res.json({
@@ -195,11 +198,10 @@ exports.signupVerificationController = async (req, res) => {
   }
 
 };
- */
 exports.forgotPasswordController = async (req, res) => {
   const { email } = req.body;
    try{
-      const user = await Signup.findOne({ email });
+      const user = await UserModel.findOne({ email });
      if (!user) {
        return res.status(400).json({
          errorMessage: "User not found. Please Signup",
@@ -212,7 +214,7 @@ exports.forgotPasswordController = async (req, res) => {
        },
      };
      const token = jwt.sign(
-       payload,config.get("jwtResetKey"),{expiresIn: '10m'}
+       payload,config.jwtResetKey,{expiresIn: '10m'}
      );
       let transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -252,7 +254,7 @@ exports.forgotPasswordController = async (req, res) => {
                      <div class="card">
                      <h1>TalkSee</h1>
                      <h2>Click below link to reset your password</h2> 
-                     <p>http://localhost:3000/reset-password/${token}</p>
+                     <p>http://localhost:4000/reset-password/${token}</p>
                      <hr />
                      </div>
                 </body>
@@ -292,3 +294,67 @@ exports.forgotPasswordController = async (req, res) => {
      });
    }
  };
+
+ exports.resetPasswordController = async (req, res) => {
+  const { resetPasswordLink, newPassword } = req.body;
+
+try {
+    if (resetPasswordLink) {
+      jwt.verify(resetPasswordLink, config.jwtResetKey, (err) => {
+      if (err) {
+        return res.status(401).json({
+          errorMessage: 'Reset Password Link expired, Try again',
+        });
+      } });
+    
+          let user = await UserModel.findOne({resetPasswordLink});
+           if(user){
+              const salt = await bcrypt.genSalt(10);
+              user.password = await bcrypt.hash(newPassword, salt);
+              user.resetPasswordLink='';
+              await user.save();
+               return res.status(200).json({
+            successMessage: "Password successfully updated",
+    });
+           }
+           else{
+                return  res.status(500).json({
+                errorMessage: "Your password is already updated.Please login",
+           });
+           }
+      
+    }
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({
+      errorMessage: "Link is not recognized",
+    });
+  }
+};
+exports.profileSetupController = async (req, res) => {
+  const {profileImg, langPreference, token}= req.body;
+  try{
+   const{email} = jwt.decode(token);
+   console.log(langPreference);
+    let user = await UserModel.findOne({email});
+    if(user){
+    user.profileImg=profileImg;
+    user.langPreference=langPreference;
+     await user.save();
+               return res.status(200).json({
+            successMessage: "Profile has been created",
+    });
+  }
+  else{
+                return  res.status(500).json({
+                errorMessage: "profile not set",
+           });
+           }
+  }
+  catch (err) {
+    console.log(err)
+    res.status(500).json({
+      errorMessage: "Error in Profile Controller",
+    });
+  }
+}

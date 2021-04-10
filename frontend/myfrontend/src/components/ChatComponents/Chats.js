@@ -5,14 +5,8 @@ import chatservice from "../../services/ChatService";
 export default function Chats(props) {
   let contacts = ["Fariha"]
   /* console.log("Chats,",props.lastmsgs)*/
-  console.log("Rec,",props.recipients) 
+  //console.log("Rec,",props.recipients) 
   let recipients = props.recipients
-  let userId = localStorage.getItem("userId")
-  let dummy3=[]
-  const [lastmsgs, setMsg] = useState([])
-  //let lastmsgs = useRef([])
-  const [show,setShow]=useState(false)
-  let elem;
   const onClickHandler =(e)=>{
     props.setActiveChat(e);
   }
