@@ -68,18 +68,16 @@ router.get("/msgbyuserid/:email",async (req, res) => {
 }); 
 
 router.post("/",async (req,res)=>{
-<<<<<<< HEAD
     try{
         let message= new Messages();
-=======
-    let pusher = new Pusher({
+
+   /*  let pusher = new Pusher({
         appId: process.env.PUSHER_APP_ID,
         key: process.env.PUSHER_APP_KEY,
         secret: process.env.PUSHER_APP_SECRET,
         cluster: process.env.PUSHER_APP_CLUSTER
-    });
+    }); */
     let message= new Messages();
->>>>>>> 9e8680160ff6dc78612bcaa6305088b19d898d6f
     message.from= req.body.from;
     message.to= req.body.to;
     message.roomId= req.body.roomId;
@@ -88,22 +86,19 @@ router.post("/",async (req,res)=>{
     message.time = req.body.time ;
     message.type = req.body.type;
     await message.save();
-<<<<<<< HEAD
     /* pusher.trigger('private-my-channel', 'my-event', {
         data: req.body.messageBody,
       }//, {socket_id: req.headers['x-socket-id']}
       ); */
       //console.log("pusher",req.headers['x-socket-id'])
-    return res.status(200).send('response from chatapi');
+    return res.status(200).send("Message has been added to database successfully!");
     }
     catch(err){
         console.log(err)
     }
-    
-=======
-    pusher.trigger('notifications', 'post_updated', post, req.headers['x-socket-id']);
-    return res.send("Message has been added to database successfully!");
->>>>>>> 9e8680160ff6dc78612bcaa6305088b19d898d6f
+
+    //pusher.trigger('notifications', 'post_updated', post, req.headers['x-socket-id']);
+    //sreturn res.send("Message has been added to database successfully!");
 
 });
 router.post("/pusher/auth", function(req, res) {
