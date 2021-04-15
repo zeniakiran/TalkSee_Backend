@@ -97,7 +97,7 @@ const Activate = ({ match }) => {
               padding: "0.5rem" }}
             variant="contained"
              className= "loginbtn"
-            onClick={event =>  window.location.href='/signup/'+token1}
+            onClick={event =>  window.location.href='/signup'}
              
           >
                Try  Again   

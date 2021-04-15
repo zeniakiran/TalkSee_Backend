@@ -169,9 +169,10 @@ exports.loginController = async (req, res) => {
     const user = await UserModel.findOne({ email });
     if (!user) {
       return res.status(400).json({
-        errorMessage: "User not registered",
+        errorMessage: "Account not registered",
       });
     }
+    //console.log(user)
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) {
       return res.status(400).json({
@@ -179,22 +180,23 @@ exports.loginController = async (req, res) => {
       });
     }
     const payload = {
-      user: {
-        _id: user._id,
-      },
-    };
+      user: { _id: user._id, },
+     };
     jwt.sign(payload, config.jwtPrivateKey, (err, token) => {
-      if (err) console.log("JWT error");
-      const { _id, username, email, role } = user;
-      res.json({
+      if (err) console.log("JWT sign error in Login");
+      const { _id, firstName,lastName, email, role,gender, profileImg,langPreference, friends, sentRequests,friendRequests } = user;
+      console.log(firstName)
+      return  res.json({
         token,
-        user: { _id, username, email, role },
+        user: { _id, firstName,lastName, email, role ,gender, profileImg,langPreference, friends, sentRequests,friendRequests,  },
       });
     });
    } catch (err) {
-    res.status(500).json({
-      errorMessage: "Server Error in Controller",
+     return res.status(500).json({
+      errorMessage: "Server Error in Login Controller"
+      
     });
+    
   }
 
 };

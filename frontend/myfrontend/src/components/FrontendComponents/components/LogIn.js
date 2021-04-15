@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,useContext} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from 'clsx';
 import {
@@ -13,7 +13,7 @@ import {
   IconButton,
   InputLabel
 } from "@material-ui/core";
-import { grey, cyan, brown} from '@material-ui/core/colors';
+import { grey, cyan} from '@material-ui/core/colors';
 import EmailIcon from '@material-ui/icons/Email';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import { Visibility, VisibilityOff } from "@material-ui/icons";
@@ -25,7 +25,7 @@ import LinearBuffer from "../Alerts/ProgressBar";
 import { login } from "../api/auth";
 import PageTitle from "./pageTitle";
 import { authentication, isAuthenticated } from "../clientStorages/auth";
-
+ 
 const useStyles = makeStyles((theme) => ({
    textField: {
     marginTop: theme.spacing(2),
@@ -35,15 +35,16 @@ const useStyles = makeStyles((theme) => ({
     
   }
 }));
-const LogIn = () => {
+const LogIn = (props) => {
   const classes = useStyles();
   let history = useHistory();
-
   useEffect(() => {
     if (isAuthenticated() && isAuthenticated().role === 1)
       history.push("/admin/dashboard");
     else if (isAuthenticated() && isAuthenticated().role === 0)
       history.push("/user/dashboard");
+     
+      
   }, [history]);
   const [values, setValues] = useState({
     email: "",
@@ -76,7 +77,6 @@ const LogIn = () => {
   };
   const Register = (event) => {
     event.preventDefault();
-    localStorage.setItem("userId",email)
     if (isEmpty(email) || isEmpty(password)) {
       setValues({ ...values, errorMessage: "Both fields are required" });
     } else if (!isEmail(email)) {
@@ -88,21 +88,20 @@ const LogIn = () => {
 
       login(data)
         .then((response) => {
-          //authentication(response.data.token, response.data.user);
-          //localStorage.setItem("Token",response.data.token)
-          //if (isAuthenticated() && isAuthenticated().role === 1)
+          authentication(response.data.token, response.data.user);
           console.log(response)
-            history.push("/users");
-          //else history.push("/users");
-            //setValues({ ...values, loading: false });
+          if (isAuthenticated() && isAuthenticated().role === 1)
+            history.push("/dashboard");
+          else {
+        history.push("/dashboard");};
+          setValues({ ...values, loading: false });
         })
         .catch((err) => {
           setValues({
             ...values,
-            email:"",
             password:"",
             loading: false,
-            errorMessage: err,
+            errorMessage: err.response.data.errorMessage,
           });
         });
     }
@@ -190,7 +189,7 @@ const LogIn = () => {
             fullWidth
             onClick={Register}
           >
-            LOGIN
+            Sign in
           </Button>
            <Link to="/forgot-password" style={{textDecoration:"none",marginLeft:"1rem auto"}}  >Forgot Password?</Link>
    </Paper>

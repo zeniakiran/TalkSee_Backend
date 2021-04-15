@@ -21,7 +21,7 @@ import LockIcon from '@material-ui/icons/Lock';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import { Link, useHistory } from "react-router-dom";
-import { grey, cyan, brown} from '@material-ui/core/colors';
+import { grey, cyan} from '@material-ui/core/colors';
 import isEmail from "validator/lib/isEmail";
 import isEmpty from "validator/lib/isEmpty";
 import equals from "validator/lib/equals";
@@ -32,7 +32,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { signup } from "../api/auth";
 import PageTitle from "./pageTitle";
 import { isAuthenticated } from "../clientStorages/auth";
-
+ 
 
 const useStyles = makeStyles((theme) => ({
    
@@ -120,7 +120,7 @@ const SignUp = () => {
       setValues({ ...values, errorMessage: "Password do not matched" });
       } else {
       const { firstName,lastName, email, password ,gender} = values;
-     const data = { email,firstName,lastName, password ,gender};
+      const data = { firstName,lastName,  email, password ,gender};
       setValues({ ...values, loading: true });
       signup(data)
         .then((response) => {
@@ -170,7 +170,7 @@ const SignUp = () => {
             value={values.firstName}
             label= {
               <div> 
-             <Typography variant="headline" style={{fontWeight:"bold",fontStyle:"italic"  }}> FirstName </Typography>
+             <Typography variant="headline" style={{fontWeight:"bold",fontStyle:"italic"  }}> firstName </Typography>
              <Typography variant="headline" style={{color:"red"}}>*</Typography>
                   </div>
             }
@@ -192,7 +192,7 @@ const SignUp = () => {
             value={values.lastName}
             label= {
               <div> 
-             <Typography variant="headline" style={{fontWeight:"bold",fontStyle:"italic"  }}> LastName </Typography>
+             <Typography variant="headline" style={{fontWeight:"bold",fontStyle:"italic"  }}> lastName </Typography>
              <Typography variant="headline" style={{color:"red"}}>*</Typography>
                   </div>
             }

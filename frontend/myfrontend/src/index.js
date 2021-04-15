@@ -5,11 +5,11 @@ import axios from "axios";
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import Pusher from 'pusher-js';
+//import Pusher from 'pusher-js';
 //import Reducer from './Redux/reducers/chat_reducers';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
-Pusher.logToConsole = true;
+//Pusher.logToConsole = true;
 
 //useEffect (()=>{
   /* const pusher = new Pusher('18cb37e3146179a6a80e', {

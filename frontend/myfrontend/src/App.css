@@ -1,54 +1,101 @@
 * {
-    padding: 0px;
-    margin: 0px;
-    box-sizing: border-box;
-  }
-  
-  /**Header Component*/
-  .navbar {
-    background: #8dadaf;
-    z-index: 1;
-    text-transform: capitalize;
-  }
-  .navbar .nav-link {
-    color: rgb(231, 226, 221) !important;
-    font-size: 18px;
-    font-weight: bold;
-    text-transform: capitalize;
-  }
-  .btn-link {
-    color: rgb(231, 226, 221) !important;
-    text-transform: capitalize;
-    font-size: 18px;
-    font-weight: bold;
-  }
-  
-  /*Login+Signup Component*/
-  .header {
-    color: #8dadaf;
-    font-size: 1.5rem;
-    font-weight: bold;
-    font-family: Helvetica, sans-serif;
-  }
-  .active-header {
-    color: rgb(0, 172, 193);
-    font-weight: bold;
-    text-decoration: none;
-    border-bottom: 5px dotted #a1b1b3;
-    font-size: 1.5rem;
-    font-weight: bold;
-    font-family: Helvetica, sans-serif;
-  }
-  .header:hover {
-    text-decoration: none;
-    color: #8dadaf;
-  }
-  .active-header:hover {
-    text-decoration: none;
-    color: rgb(0, 172, 193);
-  }
-  
-  .loginbtn:focus {
-    outline: none !important;
-  }
-  
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+
+/**Header Component*/
+.navbar {
+  background: #8dadaf;
+  z-index: 1;
+  text-transform: capitalize;
+}
+.navbar .nav-link {
+  color: rgb(231, 226, 221) !important;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+.btn-link {
+  color: rgb(231, 226, 221) !important;
+  text-transform: capitalize;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/*Login+Signup Component*/
+.header {
+  color: #8dadaf;
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-family: Helvetica, sans-serif;
+}
+.active-header {
+  color: rgb(0, 172, 193);
+  font-weight: bold;
+  text-decoration: none;
+  border-bottom: 5px dotted #a1b1b3;
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-family: Helvetica, sans-serif;
+}
+.header:hover {
+  text-decoration: none;
+  color: #8dadaf;
+}
+.active-header:hover {
+  text-decoration: none;
+  color: rgb(0, 172, 193);
+}
+
+.loginbtn:focus {
+  outline: none !important;
+}
+
+/**ProfileSetup*/
+.profile-page {
+  height: 40vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.profile-container {
+  height: 270px;
+  width: 300px;
+  border-radius: 10px;
+  background-color: #5a9ba034;
+}
+
+.img-holder {
+  margin: auto;
+  width: 175px;
+  height: 175px;
+  border: 3px black solid;
+  border-radius: 5px;
+  margin-top: 1rem;
+}
+.profile-img {
+  width: 175px;
+  height: 175px;
+  object-fit: cover;
+}
+#input[type="file"] {
+  display: none;
+}
+.label {
+  width: 100%;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+.image-upload {
+  margin: auto;
+  width: 225px;
+  height: 50px;
+  color: white;
+  border-radius: 30px;
+  padding: 1px;
+  background-color: rgb(0, 172, 193);
+  text-align: center;
+  cursor: pointer;
+}

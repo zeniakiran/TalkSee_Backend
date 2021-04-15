@@ -9,64 +9,54 @@ import notFound from "./components/FrontendComponents/components/notFound";
 import ForgotPassword from "./components/FrontendComponents/components/forgotPassword";
 import ResetPassword from "./components/FrontendComponents/components/resetPassword";
 import ProfileSetup from "./components/FrontendComponents/components/profileSetup";
+import AllContact from "./components/FrontendComponents/components/AllContacts";
+import AllFriendRequest from "./components/FrontendComponents/components/AllFriendRequest";
+import AllFriends from "./components/FrontendComponents/components/AllFriends";
 import Chat from "./components/ChatComponents/Chat";
-import ChatPage from "./components/ChatComponents/ChatPage";
+import MyChats from "./components/ChatComponents/MyChats";
 import Users from "./components/ChatComponents/Users";
-import GroupChat from "./components/ChatComponents/GroupChat";
+//import GroupChat from "./components/ChatComponents/GroupChat";
 import io from "socket.io-client";
+import {SocketProvider} from './context/SocketContext';
+import {MyChatsProvider} from './context/MyChatsContext';
 import { useEffect,useRef,useState } from 'react';
+import useLocalStorage from './hooks/useLocalStorage';
 const App =() =>{
-  let clientSocket = useRef(null);
-  /* let childComp ="none"
-  const childCompHandler = (child) =>{
-      childComp=child
-      console.log("child",child)
-  } */
-  useEffect(()=>{
-    clientSocket.current = io("http://127.0.0.1:5000");
-    clientSocket.current.on('connect' , () => {
-      console.log(clientSocket.current.id);
-    });
-    //console.log("fghbnj",clientSocket.current.id)
-    /* clientSocket.current.on("newMessage", (payload) => {
-      alert(payload.notification)
-      console.log("Message:",payload)
-    }) */
-    //clientSocket.current.emit("adduser",)
-    //return () => clientSocket.close()
-    //console.log("id:",localStorage.getItem("userId"))
   
-  },[])
-  const myFunc = (data) =>{
-    alert("New Message: ",data)
-  }
+  const [userId,setId] = useState()
   return (
     <div className="App">
+    <MyChatsProvider userId={userId}>
+    <SocketProvider >
     <Router>
       <Switch>
-            <Route path="/" exact><LogIn/></Route>
+            <Route path="/" exact><LogIn onIdSubmit={setId} /></Route>
             <Route exact path="/signup" component={SignUp} />
-            <Route exact path="/login" component={LogIn} />
+            <Route exact path="/login"><LogIn onIdSubmit={setId} /></Route>
             <Route exact path="/user/activate/:token" component={Activate} />
             <Route exact path="/dashboard" component={UserDashboard} />
             <Route exact path="/reset-password/:token" component={ResetPassword} />
             <Route exact path="/forgot-password" component={ForgotPassword} />
             <Route exact path="/profile-setup/:token" component={ProfileSetup}/>
             <Route exact path="/notfound" component={notFound} />
-            
+            <Route exact path ="/all-contacts" component= {AllContact}/>
+            <Route exact path = "/all-friend-requests" component ={AllFriendRequest}/>
+            <Route exact path ="/all-my-friends" component= {AllFriends}/>
             <Route path="/chat/:id" render={(props) => (
-              <Chat {...props} key={props.location.key} clientSocket={clientSocket} appFunc={myFunc}/>
+              <Chat {...props} key={props.location.key} clientSocket={SocketProvider.clientSocket} />
             )} exact>
             </Route>
-            <Route path="/groupchat/:id" render={(props) => (
+            {/* <Route path="/groupchat/:id" render={(props) => (
               <GroupChat {...props} key={props.location.key} />
             )} exact>
-            </Route> 
-            <Route path="/users" exact ><Users clientSocket={clientSocket}/></Route>
-            <Route path="/mychats" exact ><ChatPage /></Route>
+            </Route>  */}
+            <Route path="/users" exact ><Users clientSocket={SocketProvider.clientSocket}/></Route>
+            <Route path="/mychats" exact ><MyChats /></Route>
             {<Redirect to="/notfound" /> }     
       </Switch>
       </Router>
+    </SocketProvider>
+    </MyChatsProvider>
     </div>
   );
 }

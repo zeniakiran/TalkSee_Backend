@@ -1,5 +1,5 @@
 import axios from "axios";
-
+axios.defaults.headers.common["x-auth-token"] =localStorage.getItem("token");
 export const signup = async (data) => {
   const config = {
     headers: {

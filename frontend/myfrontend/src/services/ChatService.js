@@ -13,7 +13,12 @@ class ChatService extends GenericService{
     getMessagesbyUserId = (userId) =>{
         return this.get("chatapi/msgbyuserid/"+userId)
     }
-    
+    getChatRecipients = (userId) =>{
+        return this.get("chatapi/chatrecipients/"+userId)
+    }
+    getLastMsg = (from,to) =>{
+        return this.get("chatapi/lastmsg/"+from+" "+to)
+    }
 }
 
 let chatservice = new ChatService();

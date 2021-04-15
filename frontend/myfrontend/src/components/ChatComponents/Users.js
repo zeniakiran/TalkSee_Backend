@@ -1,4 +1,4 @@
-import React, { useState, useEffect ,useRef} from "react";
+import React, { useState, useEffect ,useRef,useContext} from "react";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -17,6 +17,7 @@ import { useHistory } from 'react-router-dom';
 import userservice from "../../services/UserService";
 import groupservice from "../../services/GroupService";
 import { isAuthenticated, logout } from "../FrontendComponents/clientStorages/auth";
+import {SocketContext} from '../../context/SocketContext';
 import { v4 as uuidv4 } from 'uuid';
 import "./users.css"
 //import commonUtilites from "../Utilities/common";
@@ -68,6 +69,7 @@ const Users = (props) => {
   let userslist = useRef([])
   let history = useHistory();
   let recipients = []
+  const clientSocket = useContext(SocketContext);
   //const getUsers = useGetUsers();
   const getData = () => {
     userId.current= localStorage.getItem("userId")
@@ -85,8 +87,9 @@ const Users = (props) => {
 }
   useEffect(()=>{
     getData()
-    console.log(props)
-    props.clientSocket.current.emit("adduser",{id:props.clientSocket.current.id, name: userId.current})
+    console.log(clientSocket)
+    if(clientSocket!==undefined)
+      clientSocket.emit("adduser",{id:clientSocket.id, name: userId.current})
   },[]);
 
     const userClickHandler = (u) =>{

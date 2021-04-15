@@ -10,7 +10,7 @@ export default function TypeMessage(props) {
         //console.log("msg",message)
         //console.log("user",props.user)
       if (message.to === props.user) {
-        console.log("Type received")
+        //console.log("Type received")
         return (
           <div className ='msgdiv'>
           <div className="incoming_msg_img">

@@ -5,7 +5,7 @@ var router = express.Router();
 var { Messages } = require("../../models/MessageModel");
 //const auth = require("../../Middlewares/auth");
 //const admin = require("../../Middlewares/admin");
-let Pusher = require('pusher');
+//let Pusher = require('pusher');
 var cors = require("cors")
 let Pusher = require('pusher');
 
@@ -67,9 +67,63 @@ router.get("/msgbyuserid/:email",async (req, res) => {
      } 
 }); 
 
+router.get("/chatrecipients/:email",async (req, res) => {
+    try {
+        let emailAdd = req.params.email;
+        let chatsFromDb = await Messages.find({
+             $or: [ { from: emailAdd},
+                    {to : emailAdd} ] 
+            /* from : email[0],
+            to : email[1] */
+            //from : emailAdd
+        });
+        let dummy=[]
+        let chatRecipients=[]
+        if(!chatsFromDb) 
+            return res.send("No messages from current email");
+        else{
+            chatsFromDb.map((chat)=>{
+                dummy.push(chat.to)
+                dummy.push(chat.from)
+            })
+            const array = Array.from(new Set(dummy));
+            array.map((r)=>{
+                if(r !== emailAdd)
+                    chatRecipients.push(r)
+            })
+            
+            return res.send(chatRecipients); 
+        } 
+        
+    }
+    catch(err){
+        res.status(400).send(err);
+     } 
+}); 
+
+router.get("/lastmsg/:email",async (req, res) => {
+    try {
+        let emailAdd = req.params.email;
+        let email = emailAdd.split(" ")
+        let messageFromDb = await Messages.find({
+            $or: [ { from: email[0],
+                to : email[1]  }, { from: email[1],
+                    to : email[0]  } ]
+            /* from : email[0],
+            to : email[1] */
+        });
+
+        if(!messageFromDb) 
+            return res.status(400).send("No messages from current email"); 
+        return res.status(200).send(messageFromDb[(messageFromDb.length)-1].messageBody); 
+    }
+    catch(err){
+        res.status(400).send(err);
+     } 
+}); 
+
 router.post("/",async (req,res)=>{
     try{
-        let message= new Messages();
 
    /*  let pusher = new Pusher({
         appId: process.env.PUSHER_APP_ID,
@@ -110,6 +164,8 @@ router.post("/pusher/auth", function(req, res) {
     res.send(auth);
   });
   
-
+  function sizeObj(obj) {
+    return Object.keys(obj).length;
+  }
 
 module.exports =  router;

@@ -1,20 +1,21 @@
 import TypeMessage from "./TypeMessage";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef,useContext } from "react";
 import axios from "axios";
 import io from "socket.io-client";
 import chatservice from "../../services/ChatService";
 import userservice from "../../services/UserService";
 import "./chat.css"
 import "./logout.css"
-import Pusher from 'pusher-js';
+//import Pusher from 'pusher-js';
 import SettingMessage from "./SettingMessage"
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { isAuthenticated, logout } from "../FrontendComponents/clientStorages/auth";
 import { useHistory } from 'react-router-dom';
 import { PromiseProvider } from "mongoose";
+import {SocketContext} from '../../context/SocketContext';
 export default function SingleChat(props) {
   
-  console.log("Pr",props)
+ // console.log("Pr",props)
   const [chat, setChat] = useState([{ from: "", to: "", messages: [] }]);
   const [loading,setLoading] = useState(false)
   let chats = useRef([])
@@ -25,7 +26,9 @@ export default function SingleChat(props) {
   let recipient = useRef("");
   let recipientInfo = useRef({name:"",lang:"",url:""})
   let roomId = useRef("");
-  let clientSocket = useRef(null);
+  //let clientSocket = useRef(null);
+  //clientSocket = props.clientSocket
+  const clientSocket = useContext(SocketContext);
   let data;
   let returndata;
   let history = useHistory();
@@ -54,7 +57,8 @@ useEffect(() => {
  const getData = () => { 
   recipient.current = props.match.params.id
   //setUser((u)=>{u.uId=localStorage.getItem("userId")}); 
-  user.current.uId = localStorage.getItem("userId")
+  var us = JSON.parse(localStorage.getItem("user"))
+  user.current.uId = us.email
   userservice.getUserByEmail(user.current.uId).
     then((data) =>{
         /* setUser((u) => {
@@ -78,13 +82,13 @@ useEffect(() => {
               else{
                 console.log("No chats or some error")
               }
-              console.log("dummy",dummy)
+              //console.log("dummy",dummy)
               setChat({messages:dummy})
-              console.log("chat again",chat)
+              //console.log("chat again",chat)
               //props.clientSocket.current = io("http://127.0.0.1:5000");
-              console.log("ghj",props.clientSocket.current.id)
+              //console.log("ghj",props.clientSocket.current.id)
               /* props.clientSocket.current.emit("adduser",{id:props.clientSocket.current.id, name: user.current.uId}) */
-              props.clientSocket.current.emit(
+              /* props.clientSocket.current.emit(
                 "roomJoin",
                 { from: user.current.uId, to: recipient.current },
                 ({ error, room }) => {
@@ -96,40 +100,58 @@ useEffect(() => {
                   }
                 }
               );
-
-              props.clientSocket.current.on("messageReceived", (payload) => {
-                console.log("in receive")
-                /* chatservice.createMessage(payload)
-                .then((response)=>console.log(response))
-                .catch((err)=>console.log(err)) */
-                setChat((chatState) => {
-                  if(chatState.messages){
-                    let newMessages = [...chatState.messages];
-                  newMessages = [...newMessages, payload];
-                  return { ...chatState, messages: newMessages };
-                  }
-                  else{
-                    return {messages: [payload] };  
-                  }
-                  
-                });     
-                console.log("Received chat",chat)
-
-                //props.child()
-                
-              });
-              props.clientSocket.current.on("newMessage", (payload) => {
-                console.log("IN NEW MSG")
-                props.appFunc(payload.notification)
-              })
+ */
+              
+              
 
               
     })
    .catch((err) => console.log("This is err"+ err));
 }
 getData();
-    
+
 }, []);
+
+useEffect (()=>{
+  clientSocket.emit(
+    "roomJoin",
+    { from: user.current.uId, to: recipient.current },
+    ({ error, room }) => {
+      if (!error) {
+        roomId.current = room;
+        console.log("joined room with id", room);
+      } else {
+        console.log("error joining room", error);
+      }
+    }
+  );
+  clientSocket.on("messageReceived", (payload) => {
+    console.log("in receive payload",payload)
+    /* chatservice.createMessage(payload)
+    .then((response)=>console.log(response))
+    .catch((err)=>console.log(err)) */
+    setChat((chatState) => {
+      if(chatState.messages){
+        let newMessages = [...chatState.messages];
+      newMessages = [...newMessages, payload];
+      return { ...chatState, messages: newMessages };
+      }
+      else{
+        return {messages: [payload] };  
+      }
+      
+    });     
+    //console.log("Received chat",chat)
+
+    //props.child()
+    
+  });
+  clientSocket.on("newMessage", (payload) => {
+    console.log("IN NEW MSG")
+    //props.appFunc(payload.notification)
+  
+  })
+},[])
 
 const handleLogOut = (evt) => {
   logout(() => {
@@ -143,7 +165,7 @@ const handleLogOut = (evt) => {
                     'lang': recipientInfo.current.lang,
                     'userImgUrl': user.current.uImg
                     };
-            console.log(data)
+            //console.log(data)
             //axios.post('http://127.0.0.1:80/',data) // flask ka post method call kre ga
             //.then(response => {
             /* pusher.subscribe('my-channel')
@@ -163,9 +185,9 @@ const handleLogOut = (evt) => {
             time: new Date().toLocaleString(),
             type: "sent"
           };
-          props.clientSocket.current.emit("messageSend", messageS, (err) => {
+          clientSocket.emit("messageSend", messageS, (err) => {
               if (!err) {
-                      console.log("message sent successfully",props.clientSocket.current.id);
+                      console.log("message sent successfully");
                       /* chatservice.createMessage(messageS)
                       .then((response)=>console.log(response))
                       .catch((err)=>console.log(err)) */
