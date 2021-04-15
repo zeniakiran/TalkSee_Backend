@@ -10,6 +10,7 @@ export function SocketProvider({id,children}) {
   }); */
   //const clientSocket = useRef(null);
   const [clientSocket, setSocket] = useState()
+  //let clientSocket = useRef(null);
   useEffect(() => {
     const socket = io(
       'http://localhost:5000',
@@ -17,6 +18,10 @@ export function SocketProvider({id,children}) {
     )
     setSocket(socket)
     return () => socket.close()
+    /* clientSocket.current = io("http://127.0.0.1:5000");
+    clientSocket.current.on('connect' , () => {
+      console.log(clientSocket.current.id);
+    }); */
   }, [])
   return (
     <SocketContext.Provider value={clientSocket}>

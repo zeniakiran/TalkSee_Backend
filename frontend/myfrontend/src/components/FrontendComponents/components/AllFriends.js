@@ -1,12 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useRef,useContext } from "react";
 import SingleFriend from "./SingleFriend";
 import friendService from "../../../services/friendService";
 import { Button, Grid } from "@material-ui/core";
 import PageTitle from "./pageTitle";
 import { isAuthenticated } from "../clientStorages/auth";
-const AllFriends = () => {
+import { useHistory } from 'react-router-dom';
+import {SocketContext} from '../../../context/SocketContext';
+
+const AllFriends = (props) => {
      const myId=isAuthenticated()._id;
      const [friends, setFriends] =React.useState([]);
+     let history = useHistory()
+     const clientSocket = useContext(SocketContext);
+     let userEmail = useRef()
+     userEmail.current = JSON.parse(localStorage.getItem("user")).email
      const getAllMyFriends = () => 
      {
        friendService.getAllFriends(myId)
@@ -15,7 +22,19 @@ const AllFriends = () => {
       .catch((err=>{console.log(err)}))
    
      }
-    useEffect(getAllMyFriends , []);
+    useEffect(()=>{
+
+      getAllMyFriends()
+    }, []);
+    useEffect(()=>{
+      /* if(clientSocket!==null){
+        console.log(props.clientSocket)
+        clientSocket.emit("adduser",{id:props.clientSocket.id, name: userEmail.current})
+      }
+      else{
+        console.log("no socket")
+      }  */
+    },[])
 
      return ( 
     <div>
@@ -23,7 +42,7 @@ const AllFriends = () => {
        <Button className= "loginbtn"
              style={{marginLeft:"20rem"}}
             variant="contained" 
-            onClick={event =>  window.location.href='/dashboard'}>Back</Button>
+            onClick={event =>  history.push('/dashboard')}>Back</Button>
      {
       friends.length === 0 ? 
         ( <div style= {{textAlign: "center",

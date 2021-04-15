@@ -6,10 +6,16 @@ import { Button, Grid } from "@material-ui/core";
 import friendService from "../../../services/friendService";
 import PageTitle from "./pageTitle";
 import { isAuthenticated } from "../clientStorages/auth";
+import { useHistory } from 'react-router-dom';
+
+
 const AllContact = () => {
+
   const myId=isAuthenticated()._id;
   const [contacts, setContacts] = React.useState([]);
   const [friends, setFriends] = React.useState([]);
+  let history = useHistory()
+
   const getFriendRequest = () => {
  friendService.getSentFriendRequest(myId)
  .then((data)=>{
@@ -30,9 +36,13 @@ const AllContact = () => {
   .catch((err) => {console.log(err);});
 };
  useEffect(()=> {
+  
    getAllMyFriends();
    getFriendRequest();
-   getAllContacts()}, []);
+   getAllContacts()
+   
+
+  }, []);
   
  
   return ( 
@@ -41,7 +51,7 @@ const AllContact = () => {
      <Button className= "loginbtn"
            style={{marginLeft:"20rem"}}
           variant="contained" 
-          onClick={event =>  window.location.href='/dashboard'}>Back</Button>
+          onClick={event =>  history.push('/dashboard')}>Back</Button>
    {
     contacts.length === 0 ? 
       ( <div style= {{textAlign: "center",

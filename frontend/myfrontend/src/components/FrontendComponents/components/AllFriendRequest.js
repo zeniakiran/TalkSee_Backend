@@ -4,9 +4,11 @@ import friendService from "../../../services/friendService";
 import { Button, Grid } from "@material-ui/core";
 import PageTitle from "./pageTitle";
 import { isAuthenticated } from "../clientStorages/auth";
+import { useHistory } from 'react-router-dom';
 const AllFriendRequest = () => {
      const myId=isAuthenticated()._id;
      const [friendreqs, setFrndRequest] =React.useState([]);
+     let history = useHistory()
      const getFriendRequest = () => 
      {
       friendService.getFriendRequest(myId).then((data)=>{
@@ -21,7 +23,7 @@ const AllFriendRequest = () => {
        <Button className= "loginbtn"
              style={{marginLeft:"20rem"}}
             variant="contained" 
-            onClick={event =>  window.location.href='/all-contacts'}>Back</Button>
+            onClick={event =>  history.push('/all-contacts')}>Back</Button>
      {
       friendreqs.length === 0 ? 
         ( <div style= {{textAlign: "center",

@@ -4,7 +4,7 @@ const socketHandler = (clientSocket, serverSocket,id) => {
   //clientSocket.join(id)
   //let obj={username:"",id:""}
   //console.log("users:",users)
-    clientSocket.on("roomJoin", (payload, acknowledgeCb) => {
+    /* clientSocket.on("roomJoin", (payload, acknowledgeCb) => {
       console.log("got a room join from client with data", payload,acknowledgeCb);
       let roomList = sortList([payload.from, payload.to]);
       console.log("list",roomList)
@@ -16,12 +16,15 @@ const socketHandler = (clientSocket, serverSocket,id) => {
         }
         acknowledgeCb({ error: undefined, room: roomName });
       });
-    });
+    }); */
   
     clientSocket.on("messageSend", (payload,cb) => {
       console.log("this is payload 1:",payload);
       console.log("send 2")
+      console.log(users)
       users.map((u)=>{
+        //console.log("Payload to",payload.to)
+       // console.log("username",u.username)
           if(payload.to === u.username){
               console.log("matched user 3",u.id,payload.to)
               clientSocket.to(u.id).emit("messageReceived", {
@@ -42,7 +45,7 @@ const socketHandler = (clientSocket, serverSocket,id) => {
           }
           else{
             console.log("no matched user 3")
-            clientSocket.to(payload.room).emit("messageReceived", {
+            /* clientSocket.to(payload.room).emit("messageReceived", {
               from: payload.from,
               to: payload.to,
               room: payload.room,
@@ -52,7 +55,7 @@ const socketHandler = (clientSocket, serverSocket,id) => {
               time: payload.time,
               type: "received",
             }
-            ); 
+            );  */
           }
       })
       /* clientSocket.to(payload.room).emit("messageReceived", {
@@ -90,6 +93,7 @@ const socketHandler = (clientSocket, serverSocket,id) => {
     });
 
     clientSocket.on('adduser', (payload)=> {
+      console.log("in add user")
       let flag=0
       if(users.length>1){
         console.log("Length > 1")

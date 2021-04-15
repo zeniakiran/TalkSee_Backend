@@ -52,7 +52,7 @@ socketListener.on("connection", (clientSocket) => {
   //const id = clientSocket.handshake.query.id
   console.log("a socket connected with id:", clientSocket.id, i);
  // console.log("sockets",socketListener.username)
- //socketListener.setMaxListeners(5)
+ socketListener.setMaxListeners(5)
   
   socketHandler(clientSocket, socketListener);
 });

@@ -22,6 +22,13 @@ import {MyChatsProvider} from './context/MyChatsContext';
 import { useEffect,useRef,useState } from 'react';
 import useLocalStorage from './hooks/useLocalStorage';
 const App =() =>{
+  /* let clientSocket = useRef(null);
+  useEffect(() => {
+    clientSocket.current = io("http://127.0.0.1:5000");
+    clientSocket.current.on('connect' , () => {
+      console.log(clientSocket.current.id);
+    });
+  }, []) */
   
   const [userId,setId] = useState()
   return (
@@ -41,16 +48,16 @@ const App =() =>{
             <Route exact path="/notfound" component={notFound} />
             <Route exact path ="/all-contacts" component= {AllContact}/>
             <Route exact path = "/all-friend-requests" component ={AllFriendRequest}/>
-            <Route exact path ="/all-my-friends" component= {AllFriends}/>
+            <Route exact path ="/all-my-friends"><AllFriends /></Route>
             <Route path="/chat/:id" render={(props) => (
-              <Chat {...props} key={props.location.key} clientSocket={SocketProvider.clientSocket} />
+              <Chat {...props} key={props.location.key} />
             )} exact>
             </Route>
             {/* <Route path="/groupchat/:id" render={(props) => (
               <GroupChat {...props} key={props.location.key} />
             )} exact>
             </Route>  */}
-            <Route path="/users" exact ><Users clientSocket={SocketProvider.clientSocket}/></Route>
+            <Route path="/users" exact ><Users/></Route>
             <Route path="/mychats" exact ><MyChats /></Route>
             {<Redirect to="/notfound" /> }     
       </Switch>

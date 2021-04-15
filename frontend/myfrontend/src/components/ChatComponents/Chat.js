@@ -113,7 +113,7 @@ getData();
 }, []);
 
 useEffect (()=>{
-  clientSocket.emit(
+  /* clientSocket.emit(
     "roomJoin",
     { from: user.current.uId, to: recipient.current },
     ({ error, room }) => {
@@ -124,7 +124,7 @@ useEffect (()=>{
         console.log("error joining room", error);
       }
     }
-  );
+  ); */
   clientSocket.on("messageReceived", (payload) => {
     console.log("in receive payload",payload)
     /* chatservice.createMessage(payload)
