@@ -166,21 +166,21 @@ const handleLogOut = (evt) => {
                     'userImgUrl': user.current.uImg
                     };
             //console.log(data)
-            //axios.post('http://127.0.0.1:80/',data) // flask ka post method call kre ga
-            //.then(response => {
+            axios.post('http://127.0.0.1:80/',data) // flask ka post method call kre ga
+            .then((response )=> {
             /* pusher.subscribe('my-channel')
             .bind('my-event', data => {
               alert("new message!",data)
             }); */
             setLoading(false)
            // console.log(" Response" ,response.data);
-            //returndata = response.data
+            returndata = response.data
             let messageS = {
             from: user.current.uId,
             to: recipient.current,
             room: roomId.current,
             messageBody: message,
-            //messageVideo: returndata,
+            messageVideo: returndata,
             //translated: returndata,
             time: new Date().toLocaleString(),
             type: "sent"
@@ -207,7 +207,7 @@ const handleLogOut = (evt) => {
               }
             })
          
-         //})
+         }).catch((err)=>console.log(err))
       
     
   };

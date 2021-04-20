@@ -13,6 +13,7 @@ const SingleFriend = (props) => {
      const RemoveFriend =()=>{
          friendService.deleteFriend({friendId: friend.id, myId}) 
           .then((data) => {
+            console.log(data)
            onRemove()
              localStorage.setItem("user",JSON.stringify(data));
              })
