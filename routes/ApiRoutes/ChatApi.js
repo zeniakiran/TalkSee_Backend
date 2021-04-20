@@ -70,6 +70,7 @@ router.get("/msgbyuserid/:email",async (req, res) => {
 router.get("/chatrecipients/:email",async (req, res) => {
     try {
         let emailAdd = req.params.email;
+        console.log("add",emailAdd)
         let chatsFromDb = await Messages.find({
              $or: [ { from: emailAdd},
                     {to : emailAdd} ] 
@@ -79,7 +80,7 @@ router.get("/chatrecipients/:email",async (req, res) => {
         });
         let dummy=[]
         let chatRecipients=[]
-        if(!chatsFromDb) 
+        if(!chatsFromDb || chatsFromDb.length===0) 
             return res.send("No messages from current email");
         else{
             chatsFromDb.map((chat)=>{

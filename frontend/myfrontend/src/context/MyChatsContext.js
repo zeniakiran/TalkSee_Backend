@@ -20,7 +20,7 @@ export function MyChatsProvider({userId,children}) {
          recMsgs = []
         console.log("in getdata")
         chatservice.getChatRecipients(uId).then((data)=>{    
-            if(data){
+            if(data.length>0){
                 console.log("data getchat",data)
                 data.map((rec) =>{
                     return recData.push(rec)
@@ -31,6 +31,7 @@ export function MyChatsProvider({userId,children}) {
                     return r
                 })
                 chatRecipients.Rname.map((r)=>{
+                    console.log(r)
                     chatservice.getLastMsg(uId, r)
                     .then((data)=>{
                         console.log("data",data)
@@ -58,7 +59,8 @@ export function MyChatsProvider({userId,children}) {
     //getRecData()
   const value = {
       chatRecipients : chatRecipients,
-      getRecData : getRecData
+      getRecData : getRecData,
+      setRecipients : setChatRecipients
   }
   return (
     <MyChatsContext.Provider value={value}>

@@ -29,6 +29,10 @@ const AllContact = () => {
   setFriends(data);})
  .catch((err=>{console.log(err)}))
  }
+
+ window.onbeforeunload = function(){
+    alert("warning")
+ }
   
   const getAllContacts = () => {
   contactService.getAllContact()
@@ -96,7 +100,7 @@ const AllContact = () => {
            style={{marginLeft:"20rem",textTransform:"capitalize"}}
           variant="contained" 
           color="Primary"
-          onClick={event =>  window.location.href='/all-friend-requests'}> All Friend requests</Button>
+          onClick={event =>  history.push('/all-friend-requests')}> All Friend requests</Button>
   </div> );
 }
 

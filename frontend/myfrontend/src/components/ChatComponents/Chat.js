@@ -11,13 +11,14 @@ import SettingMessage from "./SettingMessage"
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { isAuthenticated, logout } from "../FrontendComponents/clientStorages/auth";
 import { useHistory } from 'react-router-dom';
-import { PromiseProvider } from "mongoose";
+import {MyChatsContext} from '../../context/MyChatsContext';
 import {SocketContext} from '../../context/SocketContext';
 export default function SingleChat(props) {
   
  // console.log("Pr",props)
   const [chat, setChat] = useState([{ from: "", to: "", messages: [] }]);
   const [loading,setLoading] = useState(false)
+  const [isRecipient,setIsRec] = useState(0)
   let chats = useRef([])
   let x = [];
   let dummy = [];
@@ -29,6 +30,7 @@ export default function SingleChat(props) {
   //let clientSocket = useRef(null);
   //clientSocket = props.clientSocket
   const clientSocket = useContext(SocketContext);
+  const {chatRecipients,setRecipients,getRecData} = useContext(MyChatsContext);
   let data;
   let returndata;
   let history = useHistory();
@@ -112,6 +114,11 @@ getData();
 
 }, []);
 
+useEffect(()=>{
+  getRecData(user.current.uId)
+  console.log(chatRecipients)
+},[chatRecipients])
+
 useEffect (()=>{
   /* clientSocket.emit(
     "roomJoin",
@@ -125,7 +132,7 @@ useEffect (()=>{
       }
     }
   ); */
-  clientSocket.on("messageReceived", (payload) => {
+   clientSocket.on("messageReceived", (payload) => {
     console.log("in receive payload",payload)
     /* chatservice.createMessage(payload)
     .then((response)=>console.log(response))
@@ -145,19 +152,36 @@ useEffect (()=>{
 
     //props.child()
     
+    
   });
-  clientSocket.on("newMessage", (payload) => {
+  /*clientSocket.on("newMessage", (payload) => {
     console.log("IN NEW MSG")
     //props.appFunc(payload.notification)
   
-  })
-},[])
+  }) */
+  
+  
+
+},[clientSocket,chatRecipients])
 
 const handleLogOut = (evt) => {
   logout(() => {
     history.push("/login");
   });
 };
+
+const setRecArray = (index,msg)=>{
+  let items = [...chatRecipients.lastMsg];
+    // 2. Make a shallow copy of the item you want to mutate
+    let item = {...items[index]};
+    // 3. Replace the property you're intested in
+    item.lastMsg = msg;
+    // 4. Put it back into our array. N.B. we *are* mutating the array here, but that's why we made a copy first
+    items[index] = item;
+    // 5. Set the state to our new copy
+    setRecipients({items});
+
+}
 
   const sendMessage = (message) => {
             setLoading(true)

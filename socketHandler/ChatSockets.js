@@ -40,22 +40,14 @@ const socketHandler = (clientSocket, serverSocket,id) => {
               //console.log("this is payload:",payload);
               cb(undefined);
               serverSocket.to(u.id).emit("newMessage",{
-                notification: "You have a new message!"
+                notification: payload
+              });
+              serverSocket.to(u.id).emit("newRecipient",{
+                payload
               });
           }
           else{
             console.log("no matched user 3")
-            /* clientSocket.to(payload.room).emit("messageReceived", {
-              from: payload.from,
-              to: payload.to,
-              room: payload.room,
-              messageBody: payload.messageBody,
-              //messageVideo: payload.messageVideo,
-              translated: payload.translated,
-              time: payload.time,
-              type: "received",
-            }
-            );  */
           }
       })
       /* clientSocket.to(payload.room).emit("messageReceived", {
@@ -115,7 +107,7 @@ const socketHandler = (clientSocket, serverSocket,id) => {
             users.push(obj);
             console.log("in user",users)
         }
-        else{
+        else if(flag>0){
           console.log("in user else",users)
         }
       }

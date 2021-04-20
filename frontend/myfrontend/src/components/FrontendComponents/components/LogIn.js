@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     
   }
 }));
-const LogIn = (props) => {
+const LogIn = ({onIdSubmit}) => {
   const classes = useStyles();
   let history = useHistory();
   useEffect(() => {
@@ -104,6 +104,9 @@ const LogIn = (props) => {
             errorMessage: err.response.data.errorMessage,
           });
         });
+        //var id 
+        onIdSubmit(email)
+        console.log(email)
     }
   };
   
