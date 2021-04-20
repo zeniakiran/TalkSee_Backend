@@ -1,9 +1,9 @@
 const { UserModel } = require("../models/UserModel");
 exports.sendFriendRequestController = async (req, res) => {
-    const{friendId, myId,myName, myProfileImg ,myEmail} =req.body
+    const{friendId, myId,myName, myProfileImg ,myEmail,myGender,myLangPreference} =req.body
     UserModel.findByIdAndUpdate
     (  friendId,{
-        $push: {friendRequests: { name: myName, id: myId , email:myEmail, profileImg:myProfileImg}}
+        $push: {friendRequests: { name: myName, id: myId , email:myEmail, profileImg:myProfileImg,langPreference:myLangPreference,gender:myGender}}
     },{
         new:true, useFindAndModify: false
     },(err,result)=>{
@@ -46,7 +46,7 @@ exports.cancelFriendRequestController = async (req, res) => {
     })
 }
 exports.acceptFriendRequestController = async (req, res) => {
-    const{friendId,friendName,friendProfileImg, friendEmail,chatId,myId,myName,myProfileImg,myEmail} =req.body
+    const{friendId,friendName,friendProfileImg, friendEmail,chatId,myId,myName,myProfileImg,myEmail,myGender,myLangPreference} =req.body
       UserModel.findByIdAndUpdate(friendId ,
                 { $pull: { sentRequests:   myId  }},
                 {new:true, useFindAndModify: false
@@ -67,6 +67,8 @@ exports.acceptFriendRequestController = async (req, res) => {
                             id: myId,
                             profileImg: myProfileImg,
                             email:myEmail,
+                            gender:myGender,
+                            langPreference:myLangPreference,
                             chatId: chatId
                         }}}
             ,{ new:true, useFindAndModify: false},(err,result)=>{
@@ -80,6 +82,8 @@ exports.acceptFriendRequestController = async (req, res) => {
                             id: friendId,
                             profileImg: friendProfileImg,
                             email:friendEmail,
+                            gender:myGender,
+                            langPreference:myLangPreference,
                             chatId: chatId
                         }
                     }

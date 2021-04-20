@@ -12,7 +12,7 @@ const SingleContact = (props) => {
   
     //const [showAddBtn, setAddBtn]=useState(state?!state.sentRequests.includes(contact._id):true);
     const myId=isAuthenticated()._id;
-    const myName =isAuthenticated().firstname + " " +isAuthenticated().lastname;
+    const myName =isAuthenticated().firstName + " " +isAuthenticated().lastName;
     const myProfileImg =isAuthenticated().profileImg;
     const myEmail =isAuthenticated().email;
     const myGender =isAuthenticated().gender;
@@ -45,7 +45,7 @@ const SingleContact = (props) => {
        <Paper style={{padding: '10px 24px'}} >
               <img src={contact.profileImg}  className="img-fluid rounded-circle p-2"
           style={{ width: "4.9em" ,display:"inline" }} alt="img"/>
-              <h4   style={{display:"inline"  }}>{contact.firstname + " "+ contact.lastname}</h4>
+              <h4   style={{display:"inline"  }}>{contact.firstName + " "+ contact.lastName}</h4>
         {showAddBtn ?  
          <Button className= "loginbtn"
              style={{display:"inline-block"  ,position:"relative",float:"right",marginTop:"1rem", backgroundColor:lightBlue[600],color:"white"}}

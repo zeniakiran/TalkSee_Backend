@@ -19,9 +19,9 @@ export default function TypeMessage(props) {
             <div className="received_msg">
               <div className="received_withd_msg">
                 <div> 
-                {/* <Player >
+                <Player >
                   <source src={message.messageVideo} />
-              </Player> */}
+              </Player>
                 </div>
               
                 <p>{message.messageBody}</p>
@@ -35,9 +35,9 @@ export default function TypeMessage(props) {
         return (
           <div class="outgoing_msg">
             <div class="sent_msg">
-            {/* <Player>
+            {<Player>
                   <source src={message.messageVideo} />
-              </Player> */}
+              </Player>}
               <p>{message.messageBody}</p>
               <span class="time_date"> {message.time}</span>
             </div>

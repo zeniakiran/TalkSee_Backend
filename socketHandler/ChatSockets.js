@@ -32,7 +32,7 @@ const socketHandler = (clientSocket, serverSocket,id) => {
                 to: payload.to,
                 //room: payload.room,
                 messageBody: payload.messageBody,
-                //messageVideo: payload.messageVideo,
+                messageVideo: payload.messageVideo,
                 translated: payload.translated,
                 time: payload.time,
                 type: "received",
