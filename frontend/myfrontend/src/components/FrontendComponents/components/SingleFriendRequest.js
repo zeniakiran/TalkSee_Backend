@@ -39,7 +39,7 @@ const SingleFriendRequest = (props) => {
 
   return (
       <div>
-   <Paper style={{padding: '15px 24px'}} >
+   <Paper style={{padding: '10px 20px', marginBottom:"2rem"}}  >
           <img src={friendreq.profileImg}  className="img-fluid rounded-circle p-2"
       style={{ width: "4.9em" ,display:"inline" }} alt="img"/>
        <h4   style={{display:"inline" }}>{friendreq.name}</h4>
@@ -60,7 +60,6 @@ const SingleFriendRequest = (props) => {
       </div>
       
        </Paper>
-        <hr/>
  </div>
   )
 }

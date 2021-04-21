@@ -11,6 +11,7 @@ const UserDashboard = ( ) => {
   const [isRecipient,setIsRec] = useState(0)
   const [Fname, setFname] = useState("");
   const [Lname, setLname] = useState("");
+  const myId= isAuthenticated()._id;
   let userEmail = useRef()
   let history = useHistory()
   userEmail.current = JSON.parse(localStorage.getItem("user")).email
@@ -21,18 +22,21 @@ const UserDashboard = ( ) => {
     setLname(isAuthenticated().lastName);
    },[])
    window.onload = () => {
-    alert('page is fully loaded');
+    //alert('page is fully loaded');
+    if(clientSocket!==undefined){
+      console.log("ok")
+      clientSocket.emit("adduser",{id:clientSocket.id, name: userEmail.current})
+    }
+    else{
+      console.log("ghy")
+    }
   };
   
    useEffect(()=>{
     if(clientSocket!==undefined){
         console.log(clientSocket)
         clientSocket.emit("adduser",{id:clientSocket.id, name: userEmail.current})
-        clientSocket.on("newMessage", (payload) => {
-            console.log("IN NEW MSG",payload.notification)
-          //props.appFunc(payload.notification)
-          
-        })
+        
         /* clientSocket.on("newRecipient", (payload) => {
           console.log("IN NEW REc",payload)
           let index;
@@ -70,6 +74,17 @@ const UserDashboard = ( ) => {
         console.log("no socket")
       }
    },[],[clientSocket])
+
+   useEffect (()=>{
+    if(clientSocket!==undefined){
+    clientSocket.on("newMessage", (payload) => {
+      console.log("IN NEW MSG")
+      alert("new message!")
+    //props.appFunc(payload.notification)
+    
+  })
+}
+   },[])
    const setRecArray = (index,msg)=>{
     let items = [...chatRecipients.lastMsg];
       // 2. Make a shallow copy of the item you want to mutate
@@ -105,6 +120,11 @@ const UserDashboard = ( ) => {
             variant="outlined" 
             color="Primary"
             onClick={event =>  history.push('/mychats')}> My Chats</Button>
+    <Button className= "loginbtn"
+             style={{marginLeft:"20rem",marginTop:"2rem",display:"block"}}
+            variant="outlined" 
+            color="Primary"
+            onClick={event =>  history.push('/update-my-profile-setup/'+myId)}>Update Profile</Button>
       
     </div>
 };

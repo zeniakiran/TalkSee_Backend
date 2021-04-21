@@ -42,7 +42,7 @@ const SingleContact = (props) => {
     }
     return (
         <div>
-       <Paper style={{padding: '10px 24px'}} >
+       <Paper style={{padding: '10px 20px', marginBottom:"2rem"}}  >
               <img src={contact.profileImg}  className="img-fluid rounded-circle p-2"
           style={{ width: "4.9em" ,display:"inline" }} alt="img"/>
               <h4   style={{display:"inline"  }}>{contact.firstName + " "+ contact.lastName}</h4>
@@ -58,9 +58,7 @@ const SingleContact = (props) => {
             onClick={cancelFriendRequest}>Requested</Button> 
              }
         <Typography style={{color:"gray",marginLeft:"5rem" ,  fontStyle: "italic" , fontSize:"0.9rem" }}>{contact.email}</Typography>
-     </Paper> 
-    <hr/>
-          
+     </Paper>       
    
     </div>);
 }

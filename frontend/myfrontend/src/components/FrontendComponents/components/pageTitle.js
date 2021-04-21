@@ -8,13 +8,13 @@ const PageTitle = ({name}) => {
       <Grid item xs={10} sm={8} xm={2} md={4}>
          <Typography variant="headline" 
          style={{ 
-         marginTop:"2rem",
+          marginTop:"0.5rem",
          textAlign:"center",
          fontSize:"5rem",
          color:brown[300],
          fontFamily:"Brush Script MT, Brush Script Std, cursive"}}
           component="h1">{name}</Typography>
-        <hr/>  
+        <hr style ={{marginBottom:"1rem"}}/>  
       </Grid>
       
     <Grid item  xs={1} sm={2} xm={5} md={4}></Grid>

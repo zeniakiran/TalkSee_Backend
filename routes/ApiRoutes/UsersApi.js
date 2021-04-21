@@ -9,11 +9,13 @@ const {
   signupValidation,
   loginValidation,
   resetPasswordValidation,
-  profileSetupValidation
+  profileSetupValidation,
+  
 
-} = require("../../middlewares/validateUser");
+} = require("../../middlewares/validateUser")
 const { signupVerificationController,activationController,resetPasswordController, 
-        forgotPasswordController , profileSetupController, loginController } = 
+        forgotPasswordController , profileSetupController, loginController,
+        updateProfileSetupController,getMyAccountController } = 
         require("../../controller/authUser");
 
 router.get('/', async (req, res, next) => {
@@ -100,5 +102,7 @@ router.post("/login",loginController /* async (req, res) => {
 router.put("/forgot-password",forgotPasswordController);
 router.put("/reset-password",resetPasswordValidation,resetPasswordController);
 router.post("/profile-setup" ,profileSetupValidation,profileSetupController)
+router.get("/my-account/:id"  ,getMyAccountController);
+router.put("/update-profile-setup/:id",updateProfileSetupController)
 module.exports = router;
 //router.put("/forgot-password",forgotPasswordController);

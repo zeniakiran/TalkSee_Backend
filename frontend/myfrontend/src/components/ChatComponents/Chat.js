@@ -118,6 +118,7 @@ useEffect(()=>{
   getRecData(user.current.uId)
   console.log(chatRecipients)
 },[chatRecipients])
+let count=0;
 
 useEffect (()=>{
   /* clientSocket.emit(
@@ -132,28 +133,35 @@ useEffect (()=>{
       }
     }
   ); */
-   clientSocket.on("messageReceived", (payload) => {
-    console.log("in receive payload",payload)
-    /* chatservice.createMessage(payload)
-    .then((response)=>console.log(response))
-    .catch((err)=>console.log(err)) */
-    setChat((chatState) => {
-      if(chatState.messages){
-        let newMessages = [...chatState.messages];
-      newMessages = [...newMessages, payload];
-      return { ...chatState, messages: newMessages };
-      }
-      else{
-        return {messages: [payload] };  
-      }
-      
-    });     
-    //console.log("Received chat",chat)
-
-    //props.child()
-    
-    
-  });
+   
+  if(count>=1){
+    console.log("stop")
+  }
+  else{
+    clientSocket.on("messageReceived", (payload) => {
+      console.log("in receive payload",payload)
+      /* chatservice.createMessage(payload)
+      .then((response)=>console.log(response))
+      .catch((err)=>console.log(err)) */
+      setChat((chatState) => {
+        if(chatState.messages){
+          let newMessages = [...chatState.messages];
+        newMessages = [...newMessages, payload];
+        return { ...chatState, messages: newMessages };
+        }
+        else{
+          return {messages: [payload] };  
+        }
+        
+      });     
+      //console.log("Received chat",chat)
+  
+      //props.child()
+      count = count + 1
+      console.log("count",count)
+    });
+  }
+  
   /*clientSocket.on("newMessage", (payload) => {
     console.log("IN NEW MSG")
     //props.appFunc(payload.notification)
@@ -162,7 +170,7 @@ useEffect (()=>{
   
   
 
-},[clientSocket,chatRecipients])
+},[])
 
 const handleLogOut = (evt) => {
   logout(() => {
@@ -190,15 +198,15 @@ const setRecArray = (index,msg)=>{
                     'userImgUrl': user.current.uImg
                     };
             //console.log(data)
-            axios.post('http://127.0.0.1:80/',data) // flask ka post method call kre ga
-            .then((response )=> {
+            //axios.post('http://127.0.0.1:80/',data) // flask ka post method call kre ga
+            //.then((response )=> {
             /* pusher.subscribe('my-channel')
             .bind('my-event', data => {
               alert("new message!",data)
             }); */
             setLoading(false)
            // console.log(" Response" ,response.data);
-            returndata = response.data
+            //returndata = response.data
             let messageS = {
             from: user.current.uId,
             to: recipient.current,
@@ -231,7 +239,7 @@ const setRecArray = (index,msg)=>{
               }
             })
          
-         }).catch((err)=>console.log(err))
+         //}).catch((err)=>console.log(err))
       
     
   };

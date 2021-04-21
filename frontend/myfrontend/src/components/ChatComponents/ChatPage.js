@@ -105,7 +105,7 @@ export default function ChatPage(props) {
       }
     );
 
-    clientSocket.current.on("messageReceived", (payload) => {
+    /* clientSocket.current.on("messageReceived", (payload) => {
       console.log("Payload",payload)
       chatservice.createMessage(payload)
       .then((response)=>console.log(response))
@@ -125,7 +125,7 @@ export default function ChatPage(props) {
       
     });
 
-  };
+  }; */
  
   useEffect(() => {
           

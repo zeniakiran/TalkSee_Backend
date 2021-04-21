@@ -1,107 +1,74 @@
 import React, { useEffect } from "react";
 import SingleContact from "./SingleContact";
-import SingleFriend from "./SingleFriend";
 import contactService from "../../../services/contactService";
 import { Button, Grid } from "@material-ui/core";
 import friendService from "../../../services/friendService";
 import PageTitle from "./pageTitle";
 import { isAuthenticated } from "../clientStorages/auth";
-import { useHistory } from 'react-router-dom';
-
-
+import { Link, useHistory } from 'react-router-dom';
+import Header from "./Header";
 const AllContact = () => {
+    const myId=isAuthenticated()._id;
+    let history = useHistory()
+    const [contacts, setContacts] = React.useState([]);
 
-  const myId=isAuthenticated()._id;
-  const [contacts, setContacts] = React.useState([]);
-  const [friends, setFriends] = React.useState([]);
-  let history = useHistory()
+    const getData = () => {
+   friendService.getSentFriendRequest(myId)
+   .then((data)=>{
+      localStorage.setItem("user",JSON.stringify(data));})
+   .catch((err=>{console.log(err)}))
+   }
+     
+  const getSingleContact = () => {
+    contactService.getSingleContact(myId)
+    .then((data) => { setContacts(data);})
+    .catch((err) => {console.log(err);});
+  };
 
-  const getFriendRequest = () => {
- friendService.getSentFriendRequest(myId)
- .then((data)=>{
-    localStorage.setItem("user",JSON.stringify(data));})
- .catch((err=>{console.log(err)}))
- }
-  const getAllMyFriends = () => {
- friendService.getAllFriends(myId)
- .then((data)=>{
-   console.log(data)
-  setFriends(data);})
- .catch((err=>{console.log(err)}))
- }
-
- window.onbeforeunload = function(){
-    alert("warning")
- }
-  
-  const getAllContacts = () => {
-  contactService.getAllContact()
-  .then((data) => { setContacts(data);})
-  .catch((err) => {console.log(err);});
-};
- useEffect(()=> {
-  
-   getAllMyFriends();
-   getFriendRequest();
-   getAllContacts()
-   
-
-  }, []);
-  
- 
-  return ( 
-  <div>
-    <PageTitle name= {"TalkSee User"}/>
-     <Button className= "loginbtn"
-           style={{marginLeft:"20rem"}}
-          variant="contained" 
-          onClick={event =>  history.push('/dashboard')}>Back</Button>
-   {
-    contacts.length === 0 ? 
-      ( <div style= {{textAlign: "center",
-  padding: "6rem", fontWeight:"bold"}}>No one using TalkSee</div>) 
-      :(
-          <Grid container  style={{marginTop:"3rem"}}>
-        <Grid item xs ={1} md={3}> </Grid>
-        <Grid item xs ={10} md={6}>
-   
-        { contacts.map((contact, index) => {
-            return contact._id === myId ? (
-            <div  >    </div>)
-          :( 
-          <div>
-            {friends.length === 0 ?  <SingleContact key={index} contact={contact}    />
-            :(<div>
-             {friends.map((friend,index)=>{
-              return friend.id === contact._id?(
-                  <SingleFriend key={index} friend={friend}  onRemove={getAllMyFriends}   />
-                ):
-                <SingleContact key={index} contact={contact}    />
-              
-          }) }   
-      </div>)
-          }</div>)
-           
-          } )
-        }
-        </Grid>
-        <Grid item xs={1}   md={3}></Grid>
-      </Grid>
-       
-       
-      )
-        }
-      
-      
-    )
-       
+   useEffect(()=> {
+     getData();
+     getSingleContact();
+ }, []);
     
-    <Button className= "loginbtn"
-           style={{marginLeft:"20rem",textTransform:"capitalize"}}
-          variant="contained" 
-          color="Primary"
-          onClick={event =>  history.push('/all-friend-requests')}> All Friend requests</Button>
-  </div> );
+   
+    return ( 
+    <div>
+      <Header/>
+      <PageTitle name= {"Add Friend"}/>
+     
+     {
+      contacts.length === 0 ? 
+        ( <div style= {{textAlign: "center",
+    padding: "6rem", fontWeight:"bold"}}>All are your Friends <Link  to="/all-my-friends" >Click here</Link></div>) 
+        :(
+            <Grid container  style={{marginTop:"3rem", display:"flex"}}>
+          <Grid item xs ={1} md={3}> </Grid>
+          <Grid item xs ={10} md={6}>
+     
+           { contacts.map((contact, index) => {
+              return contact._id === myId ? <div></div>
+            : <SingleContact key={index} contact={contact}/>
+            } )
+          }
+          <Button className= "loginbtn"
+            style={{textTransform:"capitalize",float:"right"}}
+            variant="outlined" 
+            color="Primary"
+            onClick={event =>  history.push('/all-friend-requests')}> My Friend Requests</Button>
+          </Grid>
+          <Grid item xs={1}   md={3}></Grid>
+        </Grid>
+         
+         
+        )
+          }
+        
+        
+      )
+         
+      
+      
+    </div> );
 }
-
+ 
 export default AllContact;

@@ -12,6 +12,7 @@ import ProfileSetup from "./components/FrontendComponents/components/profileSetu
 import AllContact from "./components/FrontendComponents/components/AllContacts";
 import AllFriendRequest from "./components/FrontendComponents/components/AllFriendRequest";
 import AllFriends from "./components/FrontendComponents/components/AllFriends";
+import UpdateProfileSetup from "./components/FrontendComponents/components/updateProfileSetup";
 import Chat from "./components/ChatComponents/Chat";
 import MyChats from "./components/ChatComponents/MyChats";
 import Users from "./components/ChatComponents/Users";
@@ -45,6 +46,7 @@ const App =() =>{
             <Route exact path="/reset-password/:token" component={ResetPassword} />
             <Route exact path="/forgot-password" component={ForgotPassword} />
             <Route exact path="/profile-setup/:token" component={ProfileSetup}/>
+            <Route exact path="/update-my-profile-setup/:id" component={UpdateProfileSetup}/>
             <Route exact path="/notfound" component={notFound} />
             <Route exact path ="/all-contacts" component= {AllContact}/>
             <Route exact path = "/all-friend-requests" component ={AllFriendRequest}/>

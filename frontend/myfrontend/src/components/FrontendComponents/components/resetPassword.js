@@ -23,6 +23,7 @@ import { Visibility, VisibilityOff } from "@material-ui/icons";
 import PageTitle from "./pageTitle";
 import { makeStyles } from "@material-ui/core/styles";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { useHistory } from 'react-router-dom';
 
  const useStyles = makeStyles((theme) => ({
   textfield: {
@@ -35,6 +36,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const ResetPassword = ({ match }) => {
   const classes = useStyles();
+  let history = useHistory();
   const [values, setValues] = useState({
     token: "",
     password: "",
@@ -216,7 +218,7 @@ const ResetPassword = ({ match }) => {
             className= "loginbtn"
             variant="outline"
             fullWidth
-            onClick={event =>  window.location.href='/login'}
+            onClick={event =>  history.push('/login')}
                   >
                       Login
                   </Button>}
