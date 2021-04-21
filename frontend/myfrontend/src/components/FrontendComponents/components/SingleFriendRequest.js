@@ -5,7 +5,7 @@ import { lightBlue,grey} from '@material-ui/core/colors';
 const SingleFriendRequest = (props) => {
   const { friendreq ,onAcceptReject} = props;
   const myId=isAuthenticated()._id;
-  const myName =isAuthenticated().firstname + " " +isAuthenticated().lastname;
+  const myName =isAuthenticated().firstName + " " +isAuthenticated().lastName;
   const myProfileImg =isAuthenticated().profileImg;
   const myEmail = isAuthenticated().email;
   const myGender =isAuthenticated().gender;

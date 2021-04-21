@@ -4,6 +4,7 @@ import { isAuthenticated } from "../clientStorages/auth";
 import { Button } from "@material-ui/core";
 import {SocketContext} from '../../../context/SocketContext';
 import {MyChatsContext} from '../../../context/MyChatsContext';
+import io from "socket.io-client";
 import { useHistory } from 'react-router-dom';
 
 const UserDashboard = ( ) => {
@@ -16,20 +17,31 @@ const UserDashboard = ( ) => {
   let history = useHistory()
   userEmail.current = JSON.parse(localStorage.getItem("user")).email
   console.log(userEmail)
-  const clientSocket = useContext(SocketContext);
+  const {clientSocket,setSocket} = useContext(SocketContext);
    useEffect (()=>{
     setFname(isAuthenticated().firstName);
     setLname(isAuthenticated().lastName);
+    console.log(history)
    },[])
    window.onload = () => {
-    //alert('page is fully loaded');
-    if(clientSocket!==undefined){
-      console.log("ok")
-      clientSocket.emit("adduser",{id:clientSocket.id, name: userEmail.current})
+    alert('page is fully loaded');
+    const clientSocket1 = io("http://127.0.0.1:5000")
+    setSocket((s)=>{
+      s.clientSocket = clientSocket1
+      s.clientSocket.on('connect' , () => {
+        console.log("connected",s.clientSocket.id);
+        s.clientSocket.emit("adduser",{id:s.clientSocket.id, name: userEmail.current})
+      });
+      return s.clientSocket
+    })
+    
+    /* if(clientSocket1!==undefined){
+      console.log("ok",clientSocket1.id)
+      clientSocket1.emit("adduser",{id:clientSocket1.id, name: userEmail.current})
     }
     else{
       console.log("ghy")
-    }
+    } */
   };
   
    useEffect(()=>{
@@ -77,12 +89,18 @@ const UserDashboard = ( ) => {
 
    useEffect (()=>{
     if(clientSocket!==undefined){
+    
     clientSocket.on("newMessage", (payload) => {
-      console.log("IN NEW MSG")
-      alert("new message!")
+      if(history.location.pathname.includes("/chat"))
+        console.log("contains")
+      else{
+        console.log("IN NEW MSG")
+        alert("new message!")
+      }
     //props.appFunc(payload.notification)
     
   })
+  //clientSocket.off('newMessage')
 }
    },[])
    const setRecArray = (index,msg)=>{

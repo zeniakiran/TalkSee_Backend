@@ -23,8 +23,12 @@ export function SocketProvider({id,children}) {
       console.log(clientSocket.current.id);
     }); */
   }, [])
+  let value={
+    clientSocket : clientSocket,
+    setSocket : setSocket
+  }
   return (
-    <SocketContext.Provider value={clientSocket}>
+    <SocketContext.Provider value={value}>
       {children}
     </SocketContext.Provider>
   )

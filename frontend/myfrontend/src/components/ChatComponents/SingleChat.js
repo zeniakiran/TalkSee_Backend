@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from "react";
+/* import React, { useEffect, useState,useRef } from "react";
 import TypeMessage from "./TypeMessage"
 //import "./chat.css";
 import Typography from '@material-ui/core/Typography';
@@ -48,3 +48,4 @@ export default function SingleChat(props) {
     </React.Fragment>
   );
 }
+ */
