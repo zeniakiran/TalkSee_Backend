@@ -24,6 +24,11 @@ import AlertBar from "../Alerts/AlertBar";
 import LinearBuffer from "../Alerts/ProgressBar";
 import { login } from "../api/auth";
 import PageTitle from "./pageTitle";
+//import { toast } from "react-toastify";
+
+import {SocketContext} from '../../../context/SocketContext';
+//import { v4 as uuidv4 } from 'uuid';
+
 import { authentication, isAuthenticated } from "../clientStorages/auth";
  
 const useStyles = makeStyles((theme) => ({
@@ -35,9 +40,10 @@ const useStyles = makeStyles((theme) => ({
     
   }
 }));
-const LogIn = ({onIdSubmit}) => {
+const LogIn = ({onIdSubmit,setId}) => {
   const classes = useStyles();
   let history = useHistory();
+  const {messageEvent} = useContext(SocketContext);
   useEffect(() => {
     if (isAuthenticated() && isAuthenticated().role === 1)
       history.push("/admin/dashboard");
@@ -46,6 +52,14 @@ const LogIn = ({onIdSubmit}) => {
      
       
   }, [history]);
+  window.onload= ()=>{
+    //messageEvent()
+    console.log("in load")
+  }
+
+  useEffect(()=>{
+    //messageEvent()
+  },[])
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -91,10 +105,12 @@ const LogIn = ({onIdSubmit}) => {
           authentication(response.data.token, response.data.user);
           console.log(response)
           if (isAuthenticated() && isAuthenticated().role === 1)
-            history.push("/dashboard");
+            history.push("/dashboard/"+isAuthenticated()._id);
           else {
-        history.push("/dashboard");};
+        history.push("/dashboard/"+isAuthenticated()._id);};
           setValues({ ...values, loading: false });
+          console.log(isAuthenticated()._id)
+          setId(isAuthenticated()._id)
         })
         .catch((err) => {
           setValues({
@@ -106,7 +122,9 @@ const LogIn = ({onIdSubmit}) => {
         });
         //var id 
         onIdSubmit(email)
-        console.log(email)
+        
+        console.log("email",email)
+        //generateUU(uuidv4())
     }
   };
   

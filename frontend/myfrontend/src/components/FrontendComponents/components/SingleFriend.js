@@ -5,10 +5,10 @@ import { useHistory } from 'react-router-dom';
 import React from "react";
 import {   red  ,lightGreen} from '@material-ui/core/colors';
 const SingleFriend = (props) => {
-    const { friend ,onRemove} = props;
-    //console.log(friend)
+    const { friend ,onRemove, chatRec} = props;
+    console.log(chatRec)
     const myId=isAuthenticated()._id;
-    const myEmail= isAuthenticated().email;
+    //const myEmail= isAuthenticated().email;
     const friendEmail =  friend.email;
      const RemoveFriend =()=>{
          friendService.deleteFriend({friendId: friend.id, myId}) 
@@ -20,11 +20,13 @@ const SingleFriend = (props) => {
          .catch((err) => {console.log(err);});
       }
     const chatButtonHandler = (fr)=>{
-      //console.log("Fr",fr)
+      console.log("Fr",fr)
+      console.log("pth","/chat/"+friendEmail+'/ '+fr.id)
+      localStorage.setItem("friendId",fr.id)
       localStorage.setItem("recName",fr.name)
       localStorage.setItem("recLang",fr.langPreference)
       localStorage.setItem("profileUrl",fr.profileImg)
-      history.push("/chat/"+friendEmail)
+      history.push("/chat/"+friendEmail+' '+fr.id)
     } 
     let history = useHistory()
     return (

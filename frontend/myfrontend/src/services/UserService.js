@@ -4,8 +4,8 @@ class UserService extends GenericService{
     getUsers = () => {
         return this.get("users");
     }
-    getUserByEmail = (id) =>{
-        return this.get("users/userbyemail/"+id);
+    getUserByEmail = (data) =>{
+        return this.post("users/userbyemail",data);
     }
     getUserNameByEmail = (id) =>{
         return this.get("users/usernamebyemail/"+id);

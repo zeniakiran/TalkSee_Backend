@@ -116,7 +116,8 @@ router.get("/lastmsg/:email",async (req, res) => {
 
         if(!messageFromDb) 
             return res.status(400).send("No messages from current email"); 
-        return res.status(200).send(messageFromDb[(messageFromDb.length)-1].messageBody); 
+        let obj ={lastMsg: messageFromDb[(messageFromDb.length)-1].messageBody, type: messageFromDb[(messageFromDb.length)-1].type }
+        return res.status(200).send(obj); 
     }
     catch(err){
         res.status(400).send(err);

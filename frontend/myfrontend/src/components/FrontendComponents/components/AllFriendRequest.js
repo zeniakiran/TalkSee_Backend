@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext, useRef } from "react";
 import SingleFriendRequest from "./SingleFriendRequest";
 import friendService from "../../../services/friendService";
 import { Button, Grid } from "@material-ui/core";
@@ -7,10 +7,35 @@ import { isAuthenticated } from "../clientStorages/auth";
 import { useHistory } from 'react-router-dom';
 import Header from "./Header";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-const AllFriendRequest = () => {
+import {SocketContext} from '../../../context/SocketContext';
+import io from "socket.io-client";
+
+const AllFriendRequest = ({match}) => {
      const myId=isAuthenticated()._id;
      const [friendreqs, setFrndRequest] =React.useState([]);
+     let clientSocket1 = useRef()
+     let userEmail = isAuthenticated().email
+     const {setSocket,roomJoin,messageEvent} = useContext(SocketContext);
+     let roomId = useRef()
+     roomId.current = '/'+match.params.id
      let history = useHistory()
+
+     window.onload = () => {
+       messageEvent()
+      let did = JSON.parse(localStorage.getItem('user'))._id
+      roomJoin(did)
+      clientSocket1 = io("http://127.0.0.1:5000")
+      setSocket((s)=>{
+        s = clientSocket1
+        s.on('connect' , () => {
+          console.log("connected",s.id);
+          s.emit("adduser",{id:s.id, name: userEmail.current})
+          
+        });
+        return s;
+      })
+    };
+
      const getFriendRequest = () => 
      {
       friendService.getFriendRequest(myId).then((data)=>{
@@ -18,6 +43,27 @@ const AllFriendRequest = () => {
             .catch((err=>{console.log(err)}))
      }
     useEffect(getFriendRequest , []);
+
+    useEffect(()=>{
+      //roomJoin(myId)
+      
+     },[])
+
+   /*  useEffect(()=>{
+      if(clientSocket){
+        clientSocket.emit(
+          "myChatsRoom",
+          { myChatsRoom : roomId.current},
+          ({error,room}) => {
+            if (!error) {
+              console.log("joined room with id", room);
+            } else {
+              console.log("error joining room", error);
+            }
+          }
+        );
+      }
+     },[]) */
 
      return ( 
     <div>

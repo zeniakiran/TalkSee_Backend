@@ -8,14 +8,35 @@ import { useHistory } from 'react-router-dom';
 import Header from "./Header";
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import {SocketContext} from '../../../context/SocketContext';
+import {MyChatsContext} from '../../../context/MyChatsContext';
+import io from "socket.io-client";
 
 const AllFriends = (props) => {
      const myId=isAuthenticated()._id;
      const [friends, setFriends] =React.useState([]);
      let history = useHistory()
-     const clientSocket = useContext(SocketContext);
+     let clientSocket1 = useRef()
+     const {clientSocket, setSocket,roomJoin, messageEvent} =  useContext(SocketContext);
+     const {chatRecipients} = useContext(MyChatsContext);
      let userEmail = useRef()
      userEmail.current = JSON.parse(localStorage.getItem("user")).email
+
+     window.onload = () => {
+       messageEvent()
+      let did = JSON.parse(localStorage.getItem('user'))._id
+      roomJoin(did)
+      clientSocket1 = io("http://127.0.0.1:5000")
+      setSocket((s)=>{
+        s = clientSocket1
+        s.on('connect' , () => {
+          console.log("connected",s.id);
+          s.emit("adduser",{id:s.id, name: userEmail.current})
+          
+        });
+        return s;
+      })
+    };
+
      const getAllMyFriends = () => 
      {
        friendService.getAllFriends(myId)
@@ -27,7 +48,18 @@ const AllFriends = (props) => {
     useEffect(()=>{
 
       getAllMyFriends()
+      
     }, []);
+    useEffect(()=>{
+      //roomJoin(myId)
+      
+     },[])
+
+     useEffect(()=>{
+      //messageEvent()
+      
+     },[])
+
     useEffect(()=>{
       /* if(clientSocket!==null){
         console.log(props.clientSocket)
@@ -53,7 +85,7 @@ const AllFriends = (props) => {
           <Grid item xs ={10} md={6}>
           {
           friends.map((friend, index) => (
-               <SingleFriend key={index} friend={friend} onRemove={getAllMyFriends} /> )
+               <SingleFriend key={index} friend={friend} onRemove={getAllMyFriends} chatRec={chatRecipients.recId}/> )
           )}
           <Button
               color="primary"

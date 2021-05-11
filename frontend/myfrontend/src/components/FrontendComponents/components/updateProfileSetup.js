@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext, useRef } from "react";
 import AlertBar from "../Alerts/AlertBar";
 import LinearBuffer from "../Alerts/ProgressBar";
 import PageTitle from "./pageTitle";
@@ -10,6 +10,8 @@ import {Button} from "@material-ui/core";
 import Header from "./Header";
 import accountService from "../../../services/accountService";
 import { isAuthenticated } from "../clientStorages/auth";
+import {SocketContext} from '../../../context/SocketContext';
+import io from "socket.io-client";
 const useStyles = makeStyles({
   
   textfield: {
@@ -23,8 +25,12 @@ const useStyles = makeStyles({
 
 
 const UpdateProfileSetup = ( {match}) => {
+  console.log(match)
     const classes = useStyles();
      const myId=isAuthenticated()._id;
+     let clientSocket1 = useRef()
+     let userEmail = isAuthenticated().email
+     const {messageEvent,setSocket,roomJoin} =  useContext(SocketContext);
 const options = [
   { label: 'Afrikaans',value:'af' },
   { label: 'Albanian',value:'sq'},
@@ -143,6 +149,27 @@ const options = [
     loading: false,
   });
   const { img,language, successMsg, errorMessage,infoMessage, loading } = values;
+
+  window.onload = () => {
+    messageEvent()
+    let did = JSON.parse(localStorage.getItem('user'))._id
+    roomJoin(did)
+    clientSocket1 = io("http://127.0.0.1:5000")
+    setSocket((s)=>{
+      s = clientSocket1
+      s.on('connect' , () => {
+        console.log("connected",s.id);
+        s.emit("adduser",{id:s.id, name: userEmail.current})
+        
+      });
+      return s;
+    })
+  };
+
+useEffect(()=>{
+  //roomJoin(myId)
+  
+  },[])
  useEffect(() => {
      accountService.getMyAccount(myId).then((data) => {
      setValues({ ...values , img: data.profileImg, language:data.langPreference});

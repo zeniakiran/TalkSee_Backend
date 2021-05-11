@@ -57,7 +57,7 @@ const myProfileImg =isAuthenticated().profileImg;
                   </Link>
                 </li>
                  <li className="nav-item" style ={{marginRight:"1rem"}}>
-                  <Link to="/dashboard" className="nav-link">
+                  <Link to={{pathname: '/dashboard/'+myId}} className="nav-link">
                      <i className="fa fa-home" aria-hidden="true"></i>  Dashboard
                   </Link>
                 </li>

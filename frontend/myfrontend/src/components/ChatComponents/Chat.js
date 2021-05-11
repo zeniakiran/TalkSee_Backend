@@ -1,188 +1,190 @@
-import TypeMessage from "./TypeMessage";
-import React, { useEffect, useState, useRef,useContext } from "react";
-import axios from "axios";
-import io from "socket.io-client";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import chatservice from "../../services/ChatService";
 import userservice from "../../services/UserService";
-import "./chat.css"
-import SettingMessage from "./SettingMessage"
-import CircularProgress from '@material-ui/core/CircularProgress'
-import { isAuthenticated, logout } from "../FrontendComponents/clientStorages/auth";
-import { useHistory } from 'react-router-dom';
-import {MyChatsContext} from '../../context/MyChatsContext';
-import {SocketContext} from '../../context/SocketContext';
-import Header from "../FrontendComponents/components/Header";
+import "./chat.css";
+import SettingMessage from "./SettingMessage";
+import { SocketContext } from "../../context/SocketContext";
+import RenderChat from './RenderChat'
 
 export default function SingleChat(props) {
- 
   const [chat, setChat] = useState([{ from: "", to: "", messages: [] }]);
-  const [loading,setLoading] = useState(false)
-  let chats = useRef([])
+  const [loading, setLoading] = useState(false);
+  let chats = useRef([]);
   let dummy = [];
-  let user = useRef({uId:"",uImg:""})
+  let user = useRef({ uId: "", uImg: "", uName: "" });
   let recipient = useRef("");
-  let recipientInfo = useRef({name:"",lang:"",url:""})
+  let recipientInfo = useRef({ name: "", lang: "", url: "" });
   let roomId = useRef("");
-  //let clientSocket = useRef(null);
-  //clientSocket = props.clientSocket
-  const {clientSocket} = useContext(SocketContext);
-  console.log("my socket",clientSocket)
-  //const {chatRecipients,setRecipients,getRecData} = useContext(MyChatsContext);
+  let myChatsRoom = useRef();
+  let notificationRoom = useRef();
   let returndata;
-  
-  useEffect (()=>{
-  recipientInfo.current.name= localStorage.getItem("recName")
-  recipientInfo.current.lang = localStorage.getItem("recLang")
-  recipientInfo.current.url = localStorage.getItem("profileUrl")
-  //console.log("vghbjn in Chat",props.child)
-  },[])
+  let id = props.match.params.id.split(" ");
+  const { clientSocket } = useContext(SocketContext);
+  const [isDel , setDel] = useState(false)
+  var us = JSON.parse(localStorage.getItem("user"));
+  console.log("my socket", clientSocket);
 
-  /* useEffect (()=>{
-      pusher = new Pusher('f99dc5faffa906c52c32', {
-      secret: 'b525f9548e7daffdcb76',
-      cluster: 'ap2',
-      encrypted: true
-    });
-    pusher.connection.bind('connected', function () {
-      // attach the socket ID to all outgoing Axios requests
-      axios.defaults.headers.common['X-Socket-Id'] = pusher.connection.socket_id;
-  });
-  },[]) */
-useEffect(() => {
+  useEffect(() => {
+    recipientInfo.current.name = localStorage.getItem("recName");
+    recipientInfo.current.lang = localStorage.getItem("recLang");
+    recipientInfo.current.url = localStorage.getItem("profileUrl");
+    myChatsRoom.current = "mychats/" + localStorage.getItem("friendId");
+    notificationRoom.current = "/" + id[1];
+  }, []);
 
-const getData = () => { 
-recipient.current = props.match.params.id
-var us = JSON.parse(localStorage.getItem("user"))
-user.current.uId = us.email
-userservice.getUserByEmail(user.current.uId).
-then((data) =>{
-    user.current.uImg= data[0].profileImg
-}).catch((err)=>console.log("Err in UserService",err))
+  const getData = () => {
+    recipient.current = id[0];
+    user.current.uId = us.email;
+    user.current.uName = us.firstName + " " + us.lastName;
+    userservice
+      .getUserByEmail(user.current.uId)
+      .then((data) => {
+        user.current.uImg = data[0].profileImg;
+      })
+      .catch((err) => console.log("Err in UserService", err));
 
-  chatservice.getMessagesbyEmail(user.current.uId,recipient.current)
-  .then((data) => { 
-    chats.current = data;
-    console.log("Data",chats.current)
-    if (chats) {
-      chats.current.map((chat, index) => {
-          dummy.push(chat)
-      });
-    }
-    else{
-      console.log("No chats or some error")
-    }
-    setChat({messages:dummy})   
-    })
-  .catch((err) => console.log("This is err"+ err));
-}
-getData();
+    chatservice
+      .getMessagesbyEmail(user.current.uId, recipient.current)
+      .then((data) => {
+        chats.current = data;
+        console.log("Data", chats.current);
+        if (chats) {
+          chats.current.map((chat, index) => {
+            dummy.push(chat);
+          });
+        } else {
+          console.log("No chats or some error");
+        }
+        setChat({ messages: dummy });
+      })
+      .catch((err) => console.log("This is err" + err));
+  };
 
-}, []);
+  useEffect(() => {
+    getData();
+  }, []);
 
-let count=0;
+  let count = 0;
+  useEffect(() => {
+    if (clientSocket !== undefined) {
+      clientSocket.emit(
+        "roomJoin",
+        { from: user.current.uId, to: recipient.current },
+        ({ error, room }) => {
+          if (!error) {
+            roomId.current = room;
+            console.log("joined room with id", room);
+          } else {
+            console.log("error joining room", error);
+          }
+        }
+      );
 
-useEffect (()=>{
-  count = count+1;
-    console.log("useEffect called",count)
-    clientSocket.on("messageReceived", (payload) => {
-      //console.log("in receive payload",payload)
-      /* chatservice.createMessage(payload)
-      .then((response)=>console.log(response))
-      .catch((err)=>console.log(err)) */
-          setChat((chatState) => {
-            if(chatState.messages){
-              let newMessages = [...chatState.messages];
+      clientSocket.on("messageReceived", (payload) => {
+        console.log("Payload", payload.messageBody + " count: " + count);
+        setChat((chatState) => {
+          if (chatState.messages) {
+            let newMessages = [...chatState.messages];
             newMessages = [...newMessages, payload];
             return { ...chatState, messages: newMessages };
-            }
-            else{
-              return {messages: [payload] };  
-            }
-            
-          });   
-    });
-},[])
+          } else {
+            return { messages: [payload] };
+          }
+        });
+      });
 
+      return function cleanup() {
+        clientSocket.off("messageReceived");
+        console.log("in cleanup");
+      };
+    }
+  }, []);
 
   const sendMessage = (message) => {
-      setLoading(true)
-      let data = { 'msg' : message, 
-              'lang': recipientInfo.current.lang,
-              'userImgUrl': user.current.uImg
-              };
-      //console.log(data)
-      axios.post('http://127.0.0.1:80/',data) // flask ka post method call kre ga
-      .then((response )=> {
-      setLoading(false)
-      // console.log(" Response" ,response.data);
-      returndata = response.data
-      let messageS = {
+    setLoading(true);
+    let data = {
+      msg: message,
+      lang: recipientInfo.current.lang,
+      userImgUrl: user.current.uImg,
+    };
+    //console.log(data)
+    //axios.post('http://127.0.0.1:80/',data) // flask ka post method call kre ga
+    //.then((response )=> {
+    setLoading(false);
+    // console.log(" Response" ,response.data);
+    //returndata = response.data
+    console.log("room", roomId.current);
+    let messageS = {
       from: user.current.uId,
       to: recipient.current,
+      userName: user.current.uName,
       room: roomId.current,
       messageBody: message,
       messageVideo: returndata,
-      //translated: returndata,
       time: new Date().toLocaleString(),
-      type: "sent"
+      type: "sent",
     };
-      clientSocket.emit("messageSend", messageS, (err) => {
-          if (!err) {
-            console.log("message sent successfully");
-            /* chatservice.createMessage(messageS)
+    clientSocket.emit("messageSend", messageS, (err) => {
+      console.log("in send");
+      if (!err) {
+        console.log("message sent successfully");
+        /* chatservice.createMessage(messageS)
             .then((response)=>console.log(response))
             .catch((err)=>console.log(err)) */
-            //console.log("MsgS",messageS)
-          if(chat.messages){
-            setChat({messages : [...chat.messages,messageS]});
-            console.log("sent chat",chat)
-          }
-          else{
-            setChat({messages : [messageS]})
-            console.log("first message "+ chat)
-          }
-          } 
-          else {
-            console.log("error sending message:", err);
-          }
-        })
-        clientSocket.emit("messageSend1", messageS,(err)=>{
-          if(!err)
-            console.log("testing")
-          else
-            console.log(err)
-        })
-        clientSocket.off('messageSend1')
-      })
+        //console.log("MsgS",messageS)
+        if (chat.messages) {
+          setChat({ messages: [...chat.messages, messageS] });
+          console.log("sent chat", chat);
+        } else {
+          setChat({ messages: [messageS] });
+          console.log("first message " + chat);
+        }
+      } else {
+        console.log("error sending message:", err);
+      }
+    });
+    clientSocket.emit(
+      "messageSend1",
+      {
+        message: messageS,
+        roomId: notificationRoom.current,
+        name: user.current.uName,
+      },
+      (err) => {
+        if (!err) console.log("testing");
+        else console.log(err);
+      }
+    );
+
+    clientSocket.emit(
+      "myChats",
+      { roomId: myChatsRoom.current, message: messageS, userImg: us.profileImg },
+      (err) => {
+        if (!err) console.log("testing");
+        else console.log(err);
+      }
+    );
   };
 
   let elem = null;
-  if(!chat.messages){
-      console.log("in if part")
-    elem = <h5 style = {{textAlign:"center"}}>There are currently no Messages</h5>
+  if (!chat.messages) {
+    console.log("in if part");
+    elem = (
+      <h5 style={{ textAlign: "center" }}>There are currently no Messages</h5>
+    );
+  } else {
+    console.log("in else");
+    elem = <SettingMessage chat={chat} user={user.current.uId} isDel={isDel}/>;
   }
-  else{
-    console.log("in else")
-      elem = (
-        <SettingMessage chat={chat} user={user.current.uId}/>
-      )
-  }
-  return (
-    <React.Fragment>
-      <Header/>
-      <div className="singleChatContainer">
-        <div className="mesgs">
-          <div className="msg_history">
-            <div className="profilediv">
-              <img className="profile" src= {recipientInfo.current.url} alt="dp"/>
-              <span className="recName">{recipientInfo.current.name}</span>
-            </div>
-            {elem}
-            {loading ? <div className = "load"><CircularProgress color="secondary" /></div>:null}
-          </div>
-          <TypeMessage sendMessage={sendMessage} />
-        </div>
-      </div>
-    </React.Fragment>
+
+
+  return (    
+    <RenderChat recipientInfo={recipientInfo.current} 
+     element={elem}
+     loading = {loading}
+     sendMessage = {sendMessage}
+     isDel ={isDel}
+     setDel = {setDel}
+    />
   );
 }

@@ -1,18 +1,21 @@
 import React, { useEffect, useRef,useContext,useState } from "react";
-import io from "socket.io-client";
 import {MyChatsContext} from '../../context/MyChatsContext';
 import {SocketContext} from '../../context/SocketContext';
 import {Grid} from "@material-ui/core";
-import List from "@material-ui/core/List";
 import { makeStyles } from "@material-ui/core/styles";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Avatar from "@material-ui/core/Avatar";
-import FaceIcon from '@material-ui/icons/Face';
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import Paper from '@material-ui/core/Paper';
+import PageTitle from "../FrontendComponents/components/pageTitle";
+import Header from "../FrontendComponents/components/Header";
+import { useHistory } from 'react-router-dom';
+import chatservice from "../../services/ChatService"
+import userservice from "../../services/UserService"
 import Button from '@material-ui/core/Button';
+
 import "./chat.css"
 
 const useStyles = makeStyles((theme) => ({
@@ -33,16 +36,18 @@ const useStyles = makeStyles((theme) => ({
     
   },
   avatar: {
-    margin: theme.spacing(0, 3, 0, 1),
+    margin: theme.spacing(0, 3, 0, 1)
   },
   listText:{
-    fontSize : '1.3rem',
-    fontFamily : 'Roboto'
+    fontSize : '1.5rem',
+    fontFamily : 'Roboto',
+    marginLeft:"40px"
   }
   ,listText1:{
-    fontSize : '1rem',
+    fontSize : '1.2rem',
     fontFamily : 'Roboto',
-    color : 'gray'
+    color : 'gray',
+    marginLeft:"40px"
   }
   , listBtn:{
     backgroundColor: 'rgb(0, 172, 193)',
@@ -50,21 +55,100 @@ const useStyles = makeStyles((theme) => ({
     fontSize : '1rem'
   },
   mygrid:{
-    marginTop:'100px'
+    marginTop:'50px',
+    marginLeft: '350px',
+    width:'650px'
+  },
+  mygrid1 :{
+    padding:"20px"
+  },
+  img:{
+    width:"4rem",
+    height:"4rem",
+    borderRadius:"60px"
   }
 }));
-const MyChats = ()=> {
+const MyChats = (props)=> {
   const classes = useStyles();
+  let history = useHistory()
   const {chatRecipients,getRecData,setRecipients} = useContext(MyChatsContext);
-  const clientSocket = useContext(SocketContext);
-  const [newMsg,setNewMsg]=useState(false)
-  let uId = JSON.parse(localStorage.getItem("user"))
-  let recName = []
-  let recMsg = []
-  let dummy = []
-  //const [recArray,setRecArray] = useState([])
 
-  const setRecArray = (index,msg)=>{
+  const [loaded,isLoaded]= useState("hi")
+  const {clientSocket} = useContext(SocketContext);
+  let uId = JSON.parse(localStorage.getItem("user"))
+  let roomId = useRef()
+  let count = useRef(0)
+  roomId.current = 'mychats/'+props.match.params.id
+  let recData = []
+  let recMsgs = []
+  let msgType = []
+  let recName = []
+  let recId=[]
+  let imgUrl =[]
+
+  window.onload = () => {
+    console.log(uId.email)
+    /* getRecData(uId.email)
+    if(chatRecipients.Rname !== undefined)
+        setMyChats()
+    else
+        console.log("no array") 
+        getRecData(uId.email,setMyChats)  */ 
+        /* recData = []; recName =[]; recMsgs = []; msgType = []; imgUrl=[]; recId=[]
+        //console.log("in getdata")
+        chatservice.getChatRecipients(uId.email).then((data)=>{    
+            if(data.length>0){
+                console.log("data getchat",data)
+                data.map((rec) =>{
+                    //console.log('single rec',rec)
+                    return recData.push(rec)
+                })
+                console.log("rec data",recData)
+                recData = Array.from(new Set(recData));
+                console.log("rec data updated",recData)
+                setRecipients((r)=>{
+                    r.Rname=recData
+                    //console.log(chatRecipients)
+                    return r
+                })
+                chatRecipients.Rname.map((r)=>{
+                    //console.log("r",r)
+                    chatservice.getLastMsg(uId.email, r)
+                    .then((data1)=>{
+                        //console.log("data",data1.type)
+                        recMsgs.push(data1.lastMsg)
+                        msgType.push(data1.type)
+                        //return {recMsgs,msgType}
+                    })
+                    .catch((err)=>console.log(err))
+
+                    userservice.getUserByEmail(r).then((data2)=>{
+                        //console.log("data 2",data2)
+                        recId.push(data2[0]._id)
+                        imgUrl.push(data2[0].profileImg)
+                        recName.push(data2[0].firstName+' '+data2[0].lastName)
+                        setRecipients((r)=>{
+                            r.lastMsg = recMsgs
+                            r.msgType = msgType
+                            r.recId = recId
+                            r.imgUrl= imgUrl
+                            r.name = recName
+                            //console.log(chatRecipients)
+                            return r
+                        })
+                        setMyChats()
+                    }).catch((err)=>console.log(err))
+                })
+                
+            }
+            else
+                console.log("no data")
+            
+            })
+            .catch((err)=>console.log(err)) */
+  };
+
+  const setRecArray = (index,msg,type)=>{
     let items = [...chatRecipients.lastMsg];
     items[index] = msg;
     console.log("items",items)
@@ -77,7 +161,7 @@ const MyChats = ()=> {
      
   }
 
-  const setNewRecipient = (rec,msg)=>{
+  const setNewRecipient = (rec,msg,type)=> {
     setRecipients((r)=>{
       let newR = [...r.Rname]
       newR = [...newR,rec]
@@ -88,69 +172,129 @@ const MyChats = ()=> {
     });
 
   }
+
+  
   useEffect(()=>{
+    console.log("component mounted")
     getRecData(uId.email)
-    console.log("id user",uId.email)
-    console.log("chat",chatRecipients.Rname)
+    //console.log("id user",uId.email)
+    console.log("chat frm Mychats",chatRecipients)
     
-  },[chatRecipients])
+  },[chatRecipients] )
 
   useEffect(()=>{
-    clientSocket.on("newRecipient", (payload) => {
-      console.log("IN NEW REc",payload)
-      let index;
-      let count=0;
+    if(clientSocket){
+      clientSocket.emit(
+        "myChatsRoom",
+        { myChatsRoom : roomId.current},
+        ({error,room}) => {
+          if (!error) {
+            console.log("joined room with id", room);
+          } else {
+            console.log("error joining room", error);
+          }
+        }
+      );
+
+      clientSocket.on("newRecipient", (payload) => {
+        console.log("new rec",payload.message)
+        let index;
+      
       if(chatRecipients.Rname && chatRecipients.lastMsg){
         console.log(chatRecipients)
+        count.current=0
+        chatRecipients.Rname = Array.from(new Set(chatRecipients.Rname));
         chatRecipients.Rname.map((r,indx)=>{
-        console.log(payload.payload.from)
-        if(payload.payload.from ===r){
+        console.log(payload.message.from)
+        if(payload.message.from ===r){
+          
           index = indx
-          count = count+1
-          //setIsRec(count)
+          console.log("index: ",index)
+          count.current = count.current+1
+         
         }
         else{
-          console.log("false",payload.payload.from,r)
+          console.log("false",payload.message.from,r)
         }
         })
-        if(count >=1)
-            setRecArray(index,payload.payload.messageBody)
-        else if(count === 0)
-            setNewRecipient(payload.payload.from,payload.payload.messageBody)
-        console.log("After state",chatRecipients)
+        if(count.current >=1){
+            setRecArray(index,payload.message.messageBody,payload.message.type)
+            console.log("After state",chatRecipients)
+        }
+        else if(count.current === 0){
+            setNewRecipient(payload.message.from,payload.message.messageBody)
+            console.log("After new state",chatRecipients)
+        }
       }
       else{
         console.log("no chat")
       }
+        })
+    }
 
-  })
   },[])
-  return (
-    <div>
-          {chatRecipients.Rname !== undefined ? 
-            chatRecipients.Rname.map((r,index)=>{
-            return (<Grid className={classes.mygrid} xs={12}>
+ 
+ const setMyChats = ()=>(
+   //console.log("in function",chatRecipients.Rname)
+  //if(chatRecipients.Rname !== undefined){
+      <div>
+        {
+          chatRecipients.Rname.map((r,index)=>{
+              console.log("in setChatss",chatRecipients)
+              console.log("r: ",r+" index:",index)
+              console.log("chats url:",chatRecipients.imgUrl[index],index)
+              console.log("chats msg:",chatRecipients.lastMsg[index],index)
+              console.log("chats name:",chatRecipients.name[index], index)
+            return (<Grid xs={6}>
             <ListItem
               button
+              onClick={(()=> history.push('/chat/'+r))}
+              
             >
             <ListItemAvatar>
-             <Avatar className={classes.globe}>
-                <FaceIcon/>
-             </Avatar>
+                <img src={chatRecipients.imgUrl[index]} alt="img"  className={classes.img}/>
             </ListItemAvatar> 
               <ListItemText>
-                <Typography>{r}</Typography>
-                <Typography>{chatRecipients.lastMsg[index]}</Typography>
+                 {/*  {setText(r,chatRecipients.lastMsg[index],chatRecipients.msgType[index])}
+                  {elem} */}
+                  <Typography className={classes.listText}>{r}</Typography>
+                  <Typography className={classes.listText1}>{chatRecipients.lastMsg[index]}</Typography>
               </ListItemText>
             <Divider/> 
            </ListItem>
+           <Divider/>
             </Grid>
             )
             })
+          
+        }
+      </div>
+      
+  /* }
+  else{
+    console.log("no final array")
+  }
+    */
+ )
+  
+  return (
+    <div>
+    <Header/>
+    <PageTitle name= {"My Chats"}/>
+      <Paper md={8} xs ={4} className={classes.mygrid}>
+      
+      {console.log("in return",loaded)}
+          {chatRecipients.Rname !== undefined? 
+          <div>
+            {setMyChats()}
+            
+            </div>
           :
           console.log("no final array")
-          }
-      </div>
+          } 
+          
+      </Paper>
+    </div>
   )
 }
 export default MyChats;

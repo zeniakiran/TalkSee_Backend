@@ -31,10 +31,31 @@ catch(err){
  } 
 });
 
-router.get('/userbyemail/:email', async (req, res, next) => {
+router.post('/userbyemail', async (req, res, next) => {
   try {
+    const  users  = req.body;
+    console.log(users)
+    const emails= []
+     //users.forEach(function (item) {
+         // emails.push(item.email);
+        //});
+   const usersArr = await UserModel.find({ email: { $in: users} });
+   let user = []
+   usersArr.map((u)=>{
+      user.push({email : u.email, name : u.firstName +" "+
+      u.lastName, id : u._id, img:u.profileImg})
+      
+   })
+   console.log(user);
+    return res.status(200).send(user);
+  }
+    catch (err) 
+          {console.error(err.message);}
+          
+  /* try {
     let emailAdd = req.params.email;
-    let userFromDb = await UserModel.find({
+    console.log("email",emailAdd)
+    let  userFromDb = await UserModel.find({
       email : emailAdd
     });
     if(!userFromDb) 
@@ -44,7 +65,7 @@ router.get('/userbyemail/:email', async (req, res, next) => {
 }
 catch(err){
     res.status(400).send(err);
- } 
+ }  */
 });
 
 router.post("/signup",signupVerificationController

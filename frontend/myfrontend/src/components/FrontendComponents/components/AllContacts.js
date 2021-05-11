@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext, useRef } from "react";
 import SingleContact from "./SingleContact";
 import contactService from "../../../services/contactService";
 import { Button, Grid } from "@material-ui/core";
@@ -7,11 +7,35 @@ import PageTitle from "./pageTitle";
 import { isAuthenticated } from "../clientStorages/auth";
 import { Link, useHistory } from 'react-router-dom';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import {SocketContext} from '../../../context/SocketContext';
+import io from "socket.io-client";
 import Header from "./Header";
-const AllContact = () => {
+
+const AllContact = ({match}) => {
     const myId=isAuthenticated()._id;
+    let userEmail = isAuthenticated().email;
     let history = useHistory()
     const [contacts, setContacts] = React.useState([]);
+    let roomId = useRef()
+    let clientSocket1 = useRef()
+    roomId.current = '/'+match.params.id
+    const {setSocket,roomJoin,messageEvent} = useContext(SocketContext);
+
+    window.onload = () => {
+      messageEvent()
+      let did = JSON.parse(localStorage.getItem('user'))._id
+      roomJoin(did)
+      clientSocket1 = io("http://127.0.0.1:5000")
+      setSocket((s)=>{
+        s = clientSocket1
+        s.on('connect' , () => {
+          console.log("connected",s.id);
+          s.emit("adduser",{id:s.id, name: userEmail})
+          
+        });
+        return s;
+      })
+    };
 
     const getData = () => {
    friendService.getSentFriendRequest(myId)
@@ -30,6 +54,11 @@ const AllContact = () => {
      getData();
      getSingleContact();
  }, []);
+
+   useEffect(()=>{
+    //roomJoin(myId)
+    //messageEvent()
+   },[])
     
    
     return ( 
