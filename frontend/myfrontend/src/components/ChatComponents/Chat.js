@@ -34,6 +34,7 @@ export default function SingleChat(props) {
   }, []);
 
   const getData = () => {
+    console.log("in get Data")
     recipient.current = id[0];
     user.current.uId = us.email;
     user.current.uName = us.firstName + " " + us.lastName;
