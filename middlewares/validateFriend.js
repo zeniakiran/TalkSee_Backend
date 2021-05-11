@@ -1,4 +1,3 @@
-//abcd
 const {validateSendFriendRequest,
     validateCRFriendRequest,
     validateDeleteFriend,
