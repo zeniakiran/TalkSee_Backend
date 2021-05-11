@@ -192,6 +192,7 @@ export default function SingleChat(props) {
      isDel ={isDel}
      setDel = {setDel}
      msgsToDel ={messagesToDel}
+     getData ={getData}
     />
   );
 }

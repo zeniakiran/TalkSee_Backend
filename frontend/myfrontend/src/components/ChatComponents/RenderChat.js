@@ -21,7 +21,14 @@ export default function RenderChat(props) {
   
   //console.log("props",props.msgsToDel)
   const deleteChat = ()=>{
-    console.log("props",props.msgsToDel)
+    //console.log("props",props.msgsToDel.msgs)
+    props.msgsToDel.msgs.map((msg) => {
+      console.log(msg._id)
+      chatservice.deleteMessage(msg._id).then((res)=>console.log("response: ",res))
+      .catch((err)=>console.log(err))
+    })
+    props.getData()
+
   }
   
   const handleClick = (event) => {
@@ -83,7 +90,7 @@ export default function RenderChat(props) {
                 </Menu>
                   </div>
                   :
-                  <Button onClick={handleClick}>
+                  <Button onClick={deleteChat}>
                   Delete
                   </Button>
               }

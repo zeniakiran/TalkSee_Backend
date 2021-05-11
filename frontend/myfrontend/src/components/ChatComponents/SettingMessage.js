@@ -14,7 +14,7 @@ export default function SettingMessage(props) {
       if(m !== undefined){
         let msgs = [...m.msgs]
         msgs = [...msgs  ,message]
-        console.log("mmmmm",m)
+        //console.log("mmmmm",m)
         return {...m, msgs}
         
       }
