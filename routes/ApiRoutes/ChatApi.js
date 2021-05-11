@@ -42,6 +42,7 @@ router.get("/", async (req, res) => {
         });
         if(!messageFromDb) 
             return res.send("No messages from current email"); 
+        console.log(messageFromDb)
         return res.send(messageFromDb); 
     }
     catch(err){
@@ -157,17 +158,20 @@ router.post("/",async (req,res)=>{
     //sreturn res.send("Message has been added to database successfully!");
 
 });
-router.post("/pusher/auth", function(req, res) {
-    const socketId = req.body.socket_id;
-    const channel = req.body.channel_name;
-    console.log(socketId)
-    console.log(channel)
-    const auth = pusher.authenticate(socketId, channel);
-    res.send(auth);
-  });
-  
-  function sizeObj(obj) {
-    return Object.keys(obj).length;
-  }
+
+  router.delete("/:id", async (req,res)=>{
+    try{
+        let msgId = await Messages.findByIdAndDelete(req.params.id);
+        if(!msgId) 
+            return res.send("Message does not exist");
+
+        return res.send("The message has been deleted successfully!");
+    }
+    catch(err){
+        res.status(400).send("Invalid Id");
+    }
+
+});
+
 
 module.exports =  router;

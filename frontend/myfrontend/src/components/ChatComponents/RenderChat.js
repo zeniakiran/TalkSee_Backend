@@ -8,6 +8,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import Header from "../FrontendComponents/components/Header";
 import Button from '@material-ui/core/Button';
+import chatservice from "../../services/ChatService";
 
 export default function RenderChat(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -17,6 +18,12 @@ export default function RenderChat(props) {
     'Delete'
   ];
 
+  
+  //console.log("props",props.msgsToDel)
+  const deleteChat = ()=>{
+    console.log("props",props.msgsToDel)
+  }
+  
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -76,7 +83,9 @@ export default function RenderChat(props) {
                 </Menu>
                   </div>
                   :
-                  <Button>Delete</Button>
+                  <Button onClick={handleClick}>
+                  Delete
+                  </Button>
               }
             </div>
             {props.element}

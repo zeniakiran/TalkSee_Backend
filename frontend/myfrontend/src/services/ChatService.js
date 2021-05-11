@@ -19,6 +19,9 @@ class ChatService extends GenericService{
     getLastMsg = (from,to) =>{
         return this.get("chatapi/lastmsg/"+from+" "+to)
     }
+    deleteMessage = (id) =>{
+        return this.delete("chatapi/"+ id)
+    }
 }
 
 let chatservice = new ChatService();

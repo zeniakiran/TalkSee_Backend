@@ -22,6 +22,7 @@ export default function SingleChat(props) {
   const { clientSocket } = useContext(SocketContext);
   const [isDel , setDel] = useState(false)
   var us = JSON.parse(localStorage.getItem("user"));
+  const [messagesToDel, setMsgs] = useState([])
   console.log("my socket", clientSocket);
 
   useEffect(() => {
@@ -165,6 +166,11 @@ export default function SingleChat(props) {
       }
     );
   };
+  
+  const chatDeleteHandler = (message)=>{
+    console.log(message)
+    setMsgs(message)
+}
 
   let elem = null;
   if (!chat.messages) {
@@ -174,10 +180,10 @@ export default function SingleChat(props) {
     );
   } else {
     console.log("in else");
-    elem = <SettingMessage chat={chat} user={user.current.uId} isDel={isDel}/>;
+    elem = <SettingMessage chat={chat} user={user.current.uId} isDel={isDel} delHandler = {chatDeleteHandler}/>;
   }
 
-
+  
   return (    
     <RenderChat recipientInfo={recipientInfo.current} 
      element={elem}
@@ -185,6 +191,7 @@ export default function SingleChat(props) {
      sendMessage = {sendMessage}
      isDel ={isDel}
      setDel = {setDel}
+     msgsToDel ={messagesToDel}
     />
   );
 }
