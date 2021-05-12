@@ -1,7 +1,7 @@
-import React, { useEffect,useRef,useContext } from "react";
+import React, { useEffect,useRef,useContext,useState } from "react";
 import SingleFriend from "./SingleFriend";
 import friendService from "../../../services/friendService";
-import { Button, Grid } from "@material-ui/core";
+import { Button, Grid,InputAdornment, TextField  } from "@material-ui/core";
 import PageTitle from "./pageTitle";
 import { isAuthenticated } from "../clientStorages/auth";
 import { useHistory } from 'react-router-dom';
@@ -9,12 +9,18 @@ import Header from "./Header";
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import {SocketContext} from '../../../context/SocketContext';
 import {MyChatsContext} from '../../../context/MyChatsContext';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { grey } from '@material-ui/core/colors';
 import io from "socket.io-client";
+import SearchIcon from '@material-ui/icons/Search';
 
 const AllFriends = (props) => {
      const myId=isAuthenticated()._id;
      const [friends, setFriends] =React.useState([]);
      let history = useHistory()
+      const [searchTerm, setSearchTerm] = useState("");
+    const onChangeSearch = (event) => 
+        setSearchTerm(event.currentTarget.value)
      let clientSocket1 = useRef()
      const {clientSocket, setSocket,roomJoin, messageEvent} =  useContext(SocketContext);
      const {chatRecipients} = useContext(MyChatsContext);
@@ -74,34 +80,65 @@ const AllFriends = (props) => {
     <div>
       <Header/>
       <PageTitle name= {"My Friends"}/>
+       <Grid container   style={{display:"flex" ,marginTop:"1.8rem",justifyContent:"center"}}>
+          <Grid item xs ={1} md={5}> </Grid>
+          <Grid item xs ={10} md={4}  >
+            <TextField
+                value={searchTerm}
+                onChange={onChangeSearch}
+                placeholder="Search By Name..."
+                variant="outlined"
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="end">
+             <SearchIcon style={{ color: grey[600] ,marginRight:"0.4rem",float:"right"}}/>
+            </InputAdornment>
+          ),
+         }}
+            />
+            </Grid>
+              <Grid item xs ={1} md={4}> </Grid>
+            </Grid>
+          
+   
      {
       friends.length === 0 ? 
         ( <div style= {{textAlign: "center",
     padding: "6rem", fontWeight:"bold"}}>No Friend Found</div>) 
         :
         (
-        <Grid container   style={{marginTop:"3rem",display :"flex"}}>
+        <Grid container   style={{marginTop:"3rem", display :"flex"}}>
           <Grid item xs ={1} md={3}> </Grid>
           <Grid item xs ={10} md={6}>
           {
-          friends.map((friend, index) => (
-               <SingleFriend key={index} friend={friend} onRemove={getAllMyFriends} chatRec={chatRecipients.recId}/> )
+          friends.filter((friend)=>{
+             if(searchTerm == "") return friend
+             else if (friend.name.toLowerCase().startsWith(searchTerm.toLowerCase()))
+                return friend
+           }).map((friend, index) => (
+               <SingleFriend key={index} friend={friend} onRemove={getAllMyFriends} /> )
           )}
-          <Button
-              color="primary"
-              aria-label="add"
-              variant="outlined"
-              style={{textTransform:"capitalize",float:"right"}}
-              onClick={event => history.push('/all-contacts')}
-            >
-          <PersonAddIcon style={{marginRight:"0.2rem",fontSize:"1.6rem"}} />Add New Friend
-          </Button>
+            
           </Grid>
           <Grid item xs={1}   md={3}></Grid>
         </Grid>
          )
          
       }
+       <Grid container   style={{display:"flex" ,marginBottom:"2rem"}}>
+          <Grid item xs ={1} md={3}> </Grid>
+          <Grid item xs ={10} md={6}>
+      
+ <Button className= "loginbtn"
+            style={{textTransform:"capitalize",float:"left"}}
+            variant="outlined" 
+            color="Primary"
+            onClick={event =>  history.push('/dashboard/'+myId)}><ArrowBackIcon/> Back
+            </Button>
+         </Grid>
+       <Grid item xs ={1} md={3}> </Grid>
+       </Grid>
+  
       
  
     </div> );

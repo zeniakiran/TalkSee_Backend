@@ -41,15 +41,15 @@ const App =() =>{
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/login"><LogIn onIdSubmit={setId}  setId={setDid}/></Route>
             <Route exact path="/user/activate/:token" component={Activate} />
-            <Route exact path="/dashboard/:id" ><UserDashboard/></Route>
+            <Route exact path="/dashboard/:id"  component ={UserDashboard} />
             <Route exact path="/reset-password/:token" component={ResetPassword} />
             <Route exact path="/forgot-password" component={ForgotPassword} />
             <Route exact path="/profile-setup/:token" component={ProfileSetup}/>
             <Route exact path="/update-my-profile-setup/:id" component={UpdateProfileSetup}/>
-            <Route exact path="/notfound" component={notFound} />
             <Route exact path ="/all-contacts/:id" component= {AllContact}/>
             <Route exact path = "/all-friend-requests/:id" component ={AllFriendRequest}/>
-            <Route exact path ="/all-my-friends/:id"><AllFriends /></Route>
+            <Route exact path ="/all-my-friends/:id" component ={AllFriends} />
+            <Route exact path="/notfound" component={notFound} />
 
             <Route path="/chat/:id" render={(props) => (
               <Chat {...props} key={props.location.key} />

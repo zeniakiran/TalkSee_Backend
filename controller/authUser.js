@@ -2,11 +2,9 @@ const { UserModel } = require("../models/UserModel");
 const bcrypt = require("bcryptjs");
 const _ = require("lodash");
 const jwt = require("jsonwebtoken");
-const sgMail = require('@sendgrid/mail');
-const config = require("../config/keys");
+ const config = require("../config/keys");
 const nodemailer = require('nodemailer');
 require('dotenv').config();
-sgMail.setApiKey("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")
 exports.signupVerificationController = async (req, res) => {
   const { email,firstName, lastName, password,gender } = req.body;
   try {
@@ -21,8 +19,6 @@ exports.signupVerificationController = async (req, res) => {
         email,
         firstName,
         lastName,
-        /* langPreference,
-        profileImg, */
         password,
         gender
       },
@@ -135,8 +131,6 @@ exports.signupVerificationController = async (req, res) => {
     newUser.lastName = lastName;
     newUser.email = email;
     newUser.gender =gender;
-    /* newUser.langPreference = langPreference;
-    newUser.profileImg = profileImg; */
     const salt = await bcrypt.genSalt(10);
     newUser.password = await bcrypt.hash(password, salt);
       
@@ -172,7 +166,6 @@ exports.loginController = async (req, res) => {
         errorMessage: "Account not registered",
       });
     }
-    //console.log(user)
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) {
       return res.status(400).json({
