@@ -66,7 +66,7 @@ const UserDashboard = ({uuId}) => {
   return <div>
     <Header/>
    {/* <ToastContainer/> */}
-    <h1> Hi, {Fname + " " + Lname}</h1>
+     
      <Button className= "loginbtn"
              style={{marginLeft:"20rem" ,display:"block"}}
             variant="outlined" 
@@ -76,7 +76,7 @@ const UserDashboard = ({uuId}) => {
              style={{marginLeft:"20rem",marginTop:"2rem"}}
             variant="outlined" 
             color="Primary"
-            onClick={event =>  history.push('/all-my-friends/'+myId)}> My friend Lists</Button>
+            onClick={event =>  history.push('/all-my-friends/'+myId)}> My Friends</Button>
     <Button className= "loginbtn"
              style={{marginLeft:"20rem",marginTop:"2rem",display:"block"}}
             variant="outlined" 

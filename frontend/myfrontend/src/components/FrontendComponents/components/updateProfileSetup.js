@@ -8,10 +8,12 @@ import Resizer from 'react-image-file-resizer';
 import { grey, cyan} from '@material-ui/core/colors';
 import {Button} from "@material-ui/core";
 import Header from "./Header";
+import axios from 'axios';
 import accountService from "../../../services/accountService";
 import { isAuthenticated } from "../clientStorages/auth";
-import {SocketContext} from '../../../context/SocketContext';
-import io from "socket.io-client";
+//import {SocketContext} from '../../../context/SocketContext';
+//import io from "socket.io-client";
+import Webcam from "react-webcam";
 const useStyles = makeStyles({
   
   textfield: {
@@ -24,13 +26,11 @@ const useStyles = makeStyles({
 
 
 
-const UpdateProfileSetup = ( {match}) => {
-  console.log(match)
+const UpdateProfileSetup = ( ) => {
     const classes = useStyles();
      const myId=isAuthenticated()._id;
-     let clientSocket1 = useRef()
-     let userEmail = isAuthenticated().email
-     const {messageEvent,setSocket,roomJoin} =  useContext(SocketContext);
+      const webcamRef = React.useRef(null);
+     const [capturedPic, setCapturedPic]=React.useState(false);
 const options = [
   { label: 'Afrikaans',value:'af' },
   { label: 'Albanian',value:'sq'},
@@ -140,6 +140,7 @@ const options = [
   {label:'Zulu',value: "zu"},
   
 ];
+ 
     const [values, setValues] = useState({
     img: "",
     language:"",
@@ -149,31 +150,10 @@ const options = [
     loading: false,
   });
   const { img,language, successMsg, errorMessage,infoMessage, loading } = values;
-
-  window.onload = () => {
-    messageEvent()
-    let did = JSON.parse(localStorage.getItem('user'))._id
-    roomJoin(did)
-    clientSocket1 = io("http://127.0.0.1:5000")
-    setSocket((s)=>{
-      s = clientSocket1
-      s.on('connect' , () => {
-        console.log("connected",s.id);
-        s.emit("adduser",{id:s.id, name: userEmail.current})
-        
-      });
-      return s;
-    })
-  };
-
-useEffect(()=>{
-  //roomJoin(myId)
-  
-  },[])
  useEffect(() => {
      accountService.getMyAccount(myId).then((data) => {
      setValues({ ...values , img: data.profileImg, language:data.langPreference});
-    }).catch((err) => {
+    }) .catch((err) => {
            setValues({ ...values , errorMessage:err.response.data.errorMessage}); 
         });
   }, []);
@@ -182,14 +162,42 @@ const resizeFile = (file) => new Promise(resolve => {
     Resizer.imageFileResizer(file, 300, 300, 'JPEG', 100, 0,
     uri => {resolve(uri);},'base64' );
 });
+const capture =  React.useCallback(() => {
+   try{
+      const imageSrc = webcamRef.current.getScreenshot();
+       setValues({...values, infoMessage: "Picture Captured"}); 
+       setCapturedPic(true);
+       const data = new FormData();
+       data.append("file", imageSrc);
+     //  axios.post("http://127.0.0.1:5000/webcam-face-detection",data)
+       //  .then(async (response) => {
+         // setValues({ ...values , errorMessage :"", successMsg:response.data.successMessage})
+           setValues({...values, infoMessage: "Loading.... "});
+           data.append("file", imageSrc);
+           data.append("upload_preset", "TalkSee");
+          fetch("https://api.cloudinary.com/v1_1/fariha31/image/upload",
+              { method: "PUT",
+                body: data,
+             } ).then(response => response.json())
+      .then(data =>   setValues({ ...values , img: data.url}))
+     /* .catch(err => console.error('Error:', err));;   
+           }
+        )*/
+         }
+ catch(err)
+     {setValues({...values, errorMessage: "error in uploading photo"}); }
+    
+    },
+    [webcamRef]
+  );
  const uploadImage = async (e) => {
   try {
            const imageFile = e.target.files[0];
            const data = new FormData();
            data.append("file", imageFile);
-           //axios.post("http://127.0.0.1:5000/",data)
-        // .then(async (response) => {
-           setValues({ ...values , errorMessage :"", successMsg:"response.data.successMessage"})
+         //  axios.post("http://127.0.0.1:5000/",data)
+       //then(async (response) => {
+         //  setValues({ ...values , errorMessage :"", successMsg:response.data.successMessage})
             const compressedImage = await resizeFile(imageFile);
            setValues({...values, infoMessage: "Loading...."});
            data.append("file", compressedImage);
@@ -200,11 +208,11 @@ const resizeFile = (file) => new Promise(resolve => {
              } );   
            const file =  await res.json();
            setValues({ ...values , img: file.secure_url});
-       // })
-        /* .catch((err) => {
-            setValues({ ...values , errorMessage:err.response.data.errorMessage});  */
-        //});
-    }
+      /*  })
+        .catch((err) => {
+            setValues({ ...values , errorMessage:err.response.data.errorMessage}); 
+        });*/
+      }
  catch(err)
      {setValues({...values, errorMessage: "error in uploading photo"}); }
 }
@@ -227,18 +235,23 @@ const updateProfile =()=>{
  
   const ProfilePage = () =>( 
   <div className="profile-page">
+    
       <div className="profile-container">
           <div className="img-holder">
-             <img src={img} className="profile-img" alt="img"/>
+             <img src={img} className="profile-img"/>
               </div>
              <input type="file" accept="image/*" name="image-upload" id="input" onChange={uploadImage}  />
              <div className="label">
-                   <label className="image-upload" htmlFor="input">
+            <label className="image-upload" htmlFor="input">
 						<i className="material-icons">add_photo_alternate</i>
 						Choose Profile Photo
 					</label>
-                 </div>
-                  
+                 </div> 
+             <div className="label">   
+             <button className="take-photo loginbtn"  data-toggle="modal" data-target="#exampleModalCenter" onClick={()=>setCapturedPic(false)}>
+               <i className="material-icons" style ={{marginRight:"0.2rem"}}>photo_camera</i>
+               Take Photo</button> 
+              </div>
               <Select
                     style={{ width: 210, padding: "0.4rem" }}
                     placeholder="Select Language ---"
@@ -270,15 +283,48 @@ const updateProfile =()=>{
           >
             Update Profile
           </Button>
-          
-      </div>             
+                   
+      </div> 
+                
+  
+<div className="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div className="modal-dialog modal-dialog-centered" role="document">
+    <div className="modal-content">
+      <div className="modal-header">
+        <h3 className="modal-title" id="exampleModalLongTitle">Take Photo</h3>
+        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div className="modal-body">
+        <div  className="webcam-container">
+         <Webcam  
+        audio={false}
+        height= {200}
+       width ={460}
+        ref={webcamRef}
+        screenshotFormat="image/jpeg" />
+        </div>
+      </div>
+       
+        {capturedPic ? (<div className="modal-footer"> 
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div> ):
+        (<div className="modal-footer"> 
+        <button  className="take-photo loginbtn" onClick ={capture}>
+          <i className="material-icons" style ={{marginRight:"0.2rem"}}>
+            photo_camera</i>Capture photo</button> </div>)
+        }
+    </div>
+  </div>
+</div>             
   </div>
 )
 return (<div>
     
     {loading && <LinearBuffer />}
     <Header/>
-     <PageTitle name= {"Update Profile"}/>
+     <PageTitle name= {"Update Profile "}/>
       {errorMessage && (
         <AlertBar type="error" message={errorMessage} autoClose={3000} />
       )}
