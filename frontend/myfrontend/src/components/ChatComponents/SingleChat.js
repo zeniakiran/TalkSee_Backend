@@ -69,18 +69,30 @@ const SingleChat = (props) => {
   console.log("props",props.recipients)
   console.log("props",props.lastMsg)
   let elem = null;
+  let elem1=null
+
+  const recipientClickHandler = (fr,type,id) =>{
+    if(type === 'unread'){
+      chatservice.changeMessageType({type : 'read'},id)
+      .then((res)=>console.log(res))
+      .catch((err)=>console.log(err))
+    }
+    console.log("fr",fr)
+    localStorage.setItem("friendId",fr.id)
+    localStorage.setItem("recName",fr.name)
+    localStorage.setItem("recLang",fr.lang)
+    localStorage.setItem("profileUrl",fr.img)
+    history.push("/chat/"+fr.email+' '+fr.id)
+    
+  }
   
   return (
     <div>
       {props.recipients.map((r, index) => {
-        //console.log("r: ", r + " index:", index);
-        //console.log("chats url:", r.profileImg, index);
-        //console.log("chats msg:", usersData.current.lastMsg[index], index);
-        //console.log("chats name : ", r.firstName, index);
-        //console.log(props.lastMsg[index])
+        console.log("r:",r)
         return (
           <Grid xs={6}>
-            <ListItem button onClick={() => history.push("/chat/" + r.email)}>
+            <ListItem button >
               <ListItemAvatar>
                 <img
                   src={r.img}
@@ -92,18 +104,32 @@ const SingleChat = (props) => {
                 {/*  {setText(r,chatRecipients.lastMsg[index],chatRecipients.msgType[index])}
                 {elem}
                  */}
+                 
                 <Typography className={classes.listText}>
-                  {r.name}
+                    {r.name}
                 </Typography>
+                
                 {props.lastMsg.emails.forEach((u,ind)=>{
                     if(u === r.email){
                       console.log(" email from map",u,props.lastMsg.msgs[ind])
-                      elem= ( <Typography className={classes.listText1}>
+                      if(props.lastMsg.types[ind] === 'read'){
+                        elem= ( <Typography className={classes.listText1} 
+                        onClick={()=>recipientClickHandler(r,props.lastMsg.types[ind],props.lastMsg.msgId[ind])}>
                                   {props.lastMsg.msgs[ind]}
                             </Typography>
-                      ) 
+                        )
+                      }
+                      else if(props.lastMsg.types[ind] === 'unread'){
+                        elem= ( <Typography style={{fontWeight: 'bold', color: 'black'}} 
+                        className={classes.listText1} 
+                        onClick={()=>recipientClickHandler(r,props.lastMsg.types[ind],props.lastMsg.msgId[ind])}>
+                                  {props.lastMsg.msgs[ind]}
+                            </Typography>
+                        )
+                      }
                     }
                 })}
+            
                 {elem}
               </ListItemText>
               <Divider />

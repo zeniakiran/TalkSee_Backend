@@ -42,7 +42,7 @@ router.get("/", async (req, res) => {
         });
         if(!messageFromDb) 
             return res.send("No messages from current email"); 
-        console.log(messageFromDb)
+        //console.log(messageFromDb)
         return res.send(messageFromDb); 
     }
     catch(err){
@@ -117,7 +117,9 @@ router.get("/lastmsg/:email",async (req, res) => {
 
         if(!messageFromDb) 
             return res.status(400).send("No messages from current email"); 
-        let obj ={lastMsg: messageFromDb[(messageFromDb.length)-1].messageBody, type: messageFromDb[(messageFromDb.length)-1].type }
+        let obj ={lastMsg: messageFromDb[(messageFromDb.length)-1].messageBody, 
+                msgId : messageFromDb[(messageFromDb.length)-1]._id,
+                type: messageFromDb[(messageFromDb.length)-1].type }
         return res.status(200).send(obj); 
     }
     catch(err){
@@ -171,6 +173,20 @@ router.post("/",async (req,res)=>{
         res.status(400).send("Invalid Id");
     }
 
+});
+
+router.put("/:id",async (req,res)=>{
+    try{
+        let msgId = await Messages.findById(req.params.id);
+    if(!msgId) 
+        return res.send("Message doesn't exist");
+    msgId.type= req.body.type;
+    await msgId.save();
+    return res.send("Type updated!");
+    }
+    catch(err){
+        console.log(err)
+    }
 });
 
 

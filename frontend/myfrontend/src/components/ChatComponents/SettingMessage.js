@@ -6,25 +6,65 @@ import Checkbox from '@material-ui/core/Checkbox';
 import "video-react/dist/video-react.css"
 export default function SettingMessage(props) {
   //console.log("From setting",props.chat)
-  const [checked, setChecked] = React.useState(true);
+  const [checked, setChecked] = React.useState(false);
   const [messages, setMessages] = React.useState()
+  let someArray=[]
   const handleChange = (event,message) => {
-    //console.log(message)
-    setMessages((m)=>{
-      if(m !== undefined){
-        let msgs = [...m.msgs]
-        msgs = [...msgs  ,message]
-        //console.log("mmmmm",m)
-        return {...m, msgs}
-        
-      }
-      else {
-        return {msgs: [message]};
-      }
-      
-    })
     
-    setChecked(event.target.checked);
+    setChecked((c)=>{
+      c= event.target.checked
+      console.log("check value",c)
+      if(c === true){
+        console.log("in iffff")
+        setMessages((m)=>{
+          console.log("in setMessage")
+          if(m !== undefined){
+            console.log("in if 1")
+            if(m.msgs !== undefined){
+              console.log("in if 2")
+            let msgs = [...m.msgs]
+            msgs = [...msgs  ,message]
+            console.log("mmmmm",m.length)
+            return {...m, msgs}
+            }
+            else {
+              console.log("in msg",m)
+              return {msgs: [message]};
+            } 
+          }
+          else {
+            console.log("in msg",m)
+            return {msgs: [message]};
+          }
+          
+        })
+    
+        }
+        else{
+          console.log("in elsey")
+          if(messages.msgs !== undefined){
+          someArray = messages.msgs
+          someArray = messages.msgs.filter ((m)=>{
+            return m._id !== message._id
+          })
+          setMessages((m)=>{
+            m = someArray
+            console.log("mmm",m)
+            return m
+          })
+        }
+        else{
+          console.log("undened",messages.msgs)
+          setMessages((m)=>{
+            return m = []
+          })
+        }
+          //console.log("msg 2: ",someArray)
+        }
+      return c
+    })
+      
+    
   };
 
   useEffect(()=>{
@@ -44,7 +84,6 @@ export default function SettingMessage(props) {
           {
             props.isDel ?
               <Checkbox 
-              
               onChange={(e) => {
               handleChange(e, message);
                }}
@@ -73,7 +112,6 @@ export default function SettingMessage(props) {
           {
             props.isDel ?
               <Checkbox 
-             
               onChange={(e) => {
               handleChange(e, message);
                }}

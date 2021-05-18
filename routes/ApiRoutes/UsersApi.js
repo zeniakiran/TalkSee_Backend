@@ -43,7 +43,7 @@ router.post('/userbyemail', async (req, res, next) => {
    let user = []
    usersArr.map((u)=>{
       user.push({email : u.email, name : u.firstName +" "+
-      u.lastName, id : u._id, img:u.profileImg})
+      u.lastName, id : u._id, img:u.profileImg, lang: u.langPreference,gender: u.gender})
       
    })
    console.log(user);

@@ -22,6 +22,9 @@ class ChatService extends GenericService{
     deleteMessage = (id) =>{
         return this.delete("chatapi/"+ id)
     }
+    changeMessageType = (data,id)=>{
+        return this.put("chatapi/"+id, data)
+    }
 }
 
 let chatservice = new ChatService();

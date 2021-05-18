@@ -9,6 +9,9 @@ import MoreVertIcon from '@material-ui/icons/MoreVert'
 import Header from "../FrontendComponents/components/Header";
 import Button from '@material-ui/core/Button';
 import chatservice from "../../services/ChatService";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function RenderChat(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -21,15 +24,23 @@ export default function RenderChat(props) {
   
   //console.log("props",props.msgsToDel)
   const deleteChat = ()=>{
-    //console.log("props",props.msgsToDel.msgs)
+    if(props.msgsToDel.msgs !== undefined){
+    console.log("props",props.msgsToDel.msgs)
     props.msgsToDel.msgs.map((msg) => {
-      console.log(msg._id)
+      //console.log(msg._id)
       chatservice.deleteMessage(msg._id).then((res)=>console.log("response: ",res))
       .catch((err)=>console.log(err))
     })
     props.getData()
-
   }
+  else{
+    toast.error("Please select a message to delete",{
+          position: toast.POSITION.TOP_LEFT,
+        })
+    //console.log("props", props.msgsToDel)
+  }
+  }
+  
   
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

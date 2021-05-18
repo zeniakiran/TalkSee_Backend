@@ -34,7 +34,7 @@ const AllChats = (props) => {
   let emails = useRef([])
   //let usersData = useRef([])
   const [usersData, setData] = useState([])
-  const [lastMsg, setLastMsg] = useState({msgs: [], emails:[]})
+  const [lastMsg, setLastMsg] = useState({msgs: [], msgId:[], emails:[], types:[]})
   //const [recipients, setRecipients] = useState([])
   let roomId = useRef()
   let count = useRef(0);
@@ -60,6 +60,7 @@ const AllChats = (props) => {
           userservice
           .getUserByEmail(emails.current).then((datafromdb)=> {
             recData=datafromdb
+            console.log("recdata",recData)
             setData((d)=>{
               d = recData
               return d
@@ -70,32 +71,24 @@ const AllChats = (props) => {
       
       chatservice.getLastMsg(uId, r)
       .then((data1)=>{
-        /* console.log("r :",r)
-        console.log("data last msg",data1.lastMsg) */
-          /* recMsgs.push(data1.lastMsg)
-          console.log(recMsgs)  */
-          ///console.log("data 1",data)
-          //console.log("Last Msg length", lastMsg.length, lastMsg)
-          /* if(lastMsg.msgs.length >=1){
-            console.log("in if",lastMsg)
-            setLastMsg({msgs : [...lastMsg.msgs, data.lastMsg]})
-          }
-          else{
-            
-            setLastMsg({ msgs: [data.lastMsg] });
-            console.log("first msg",lastMsg)
-          } */
+        console.log("data1",data1)
+        
           setLastMsg((msg) => {
-            if (msg.msgs.length>=1 && msg.emails.length>=1) {
+            console.log("msg",msg)
+            if (msg.msgs.length>=1 && msg.emails.length>=1 && msg.types.length>=1) {
               let newMsg = [...msg.msgs];
               let newR = [...msg.emails]
+              let newT = [...msg.types]
+              let id = [...msg.msgId]
               newMsg = [...newMsg, data1.lastMsg];
               newR = [...newR, r]
+              newT = [...newT, data1.type]
+              id = [...id,data1.msgId]
               console.log("newMsg: ",newR)
-              return { ...msg, msgs: newMsg, emails: newR };
+              return { ...msg, msgs: newMsg, msgId:id, emails: newR, types: newT };
             } else {
               console.log("first: ",data1.lastMsg,r)
-              return { msgs: [data1.lastMsg], emails: [r] };
+              return { msgs: [data1.lastMsg], msgId: [data1.msgId], emails: [r], types:[data1.type] };
 
             }
           });

@@ -169,7 +169,7 @@ export default function SingleChat(props) {
   };
   
   const chatDeleteHandler = (message)=>{
-    console.log(message)
+    console.log("Message",message)
     setMsgs(message)
 }
 
