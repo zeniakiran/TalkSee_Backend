@@ -77,11 +77,11 @@ const UserDashboard = ({uuId}) => {
             variant="outlined" 
             color="Primary"
             onClick={event =>  history.push('/all-my-friends/'+myId)}> My Friends</Button>
-    <Button className= "loginbtn"
+    {/* <Button className= "loginbtn"
              style={{marginLeft:"20rem",marginTop:"2rem",display:"block"}}
             variant="outlined" 
             color="Primary"
-            onClick={event =>  history.push('/mychats/'+myId)}> My Chats</Button>
+            onClick={event =>  history.push('/mychats/'+myId)}> My Chats</Button> */}
     <Button className= "loginbtn"
              style={{marginLeft:"20rem",marginTop:"2rem",display:"block"}}
             variant="outlined" 

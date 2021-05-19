@@ -93,11 +93,11 @@ export default function SettingMessage(props) {
           </div>
             <div className="received_msg">
               <div className="received_withd_msg">
-                <div className = "playerdiv"> 
+                <span className = "playerdiv1"> 
                 <Player >
                   <source src={message.messageVideo} />
               </Player>
-                </div>
+                </span>
               
                 <p>{message.messageBody}</p>
                 <span className="time_date"> {message.time}</span>
@@ -119,11 +119,11 @@ export default function SettingMessage(props) {
               name="gilad" />: null
           }
             <div class="sent_msg">
-            <div className = "playerdiv">
+            <span className = "playerdiv2">
             {<Player>
                   <source src={message.messageVideo} />
               </Player>}
-            </div>
+            </span>
             
               <p>{message.messageBody}</p>
               <span class="time_date"> {message.time}</span>

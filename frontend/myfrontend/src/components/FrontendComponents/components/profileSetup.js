@@ -164,9 +164,9 @@ const capture =  React.useCallback(() => {
        setValues({...values, infoMessage: "Picture Captured"}); 
        const data = new FormData();
       data.append("file", imageSrc);
-   //   axios.post("http://127.0.0.1:5000/webcam-face-detection",data)
-        // .then(async (response) => {
-          setValues({ ...values , errorMessage :"", successMsg:"response.data.successMessage"})
+      axios.post("http://127.0.0.1:5000/webcam-face-detection",data)
+         .then(async (response) => {
+          setValues({ ...values , errorMessage :"", successMsg:response.data.successMessage})
            setValues({...values, infoMessage: "Loading...."});
            data.append("file", imageSrc);
            data.append("upload_preset", "TalkSee");
@@ -176,7 +176,7 @@ const capture =  React.useCallback(() => {
              } ).then(response => response.json())
       .then(data =>   setValues({ ...values , img: data.url}))
       .catch(err => console.error('Error:', err));;   
-          // })
+          })
          }
  catch(err)
      {setValues({...values, errorMessage: "error in uploading photo"}); }
@@ -189,8 +189,8 @@ const capture =  React.useCallback(() => {
            const imageFile = e.target.files[0];
            const data = new FormData();
            data.append("file", imageFile);
-          // axios.post("http://127.0.0.1:5000/",data)
-         //.then(async (response) => {
+           axios.post("http://127.0.0.1:5000/",data)
+         .then(async (response) => {
          setValues({ ...values , errorMessage :"", successMsg:"response.data.successMessage"})
             const compressedImage = await resizeFile(imageFile);
            setValues({...values, infoMessage: "Loading...."});
@@ -202,10 +202,10 @@ const capture =  React.useCallback(() => {
              } );   
            const file =  await res.json();
            setValues({ ...values , img: file.secure_url});
-       /* })
+        })
         .catch((err) => {
             setValues({ ...values , errorMessage:err.response.data.errorMessage}); 
-        });*/
+        });
       }
  catch(err)
      {setValues({...values, errorMessage: "error in uploading photo"}); }

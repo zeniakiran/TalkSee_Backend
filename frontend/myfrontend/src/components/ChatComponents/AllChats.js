@@ -58,7 +58,7 @@ const AllChats = (props) => {
           }) */
           //console.log("data",emails)
           userservice
-          .getUserByEmail(emails.current).then((datafromdb)=> {
+          .getUserByEmail({userArray : emails.current}).then((datafromdb)=> {
             recData=datafromdb
             console.log("recdata",recData)
             setData((d)=>{

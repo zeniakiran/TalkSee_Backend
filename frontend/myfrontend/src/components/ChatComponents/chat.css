@@ -239,8 +239,18 @@
     top:0;
     background-color:rgb(216, 222, 224) ;
   }
-  .playerdiv{
+  .playerdiv1{
+    display: inline-flex;
     width: 200px;
-    height:150px;
+    height:50px;
+  }
+  .playerdiv2{
+    display: inline-flex;
+    width: 200px;
+    height:50px;
+  }
+  .load{
+    margin-right : 100px;
+    height: 80px;
   }
   

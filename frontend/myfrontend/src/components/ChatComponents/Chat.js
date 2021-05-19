@@ -4,6 +4,7 @@ import userservice from "../../services/UserService";
 import "./chat.css";
 import SettingMessage from "./SettingMessage";
 import { SocketContext } from "../../context/SocketContext";
+import axios from "axios";
 import RenderChat from './RenderChat'
 
 export default function SingleChat(props) {
@@ -34,16 +35,18 @@ export default function SingleChat(props) {
   }, []);
 
   const getData = () => {
-    console.log("in get Data")
+    console.log("in get Data",user)
     recipient.current = id[0];
     user.current.uId = us.email;
     user.current.uName = us.firstName + " " + us.lastName;
-    userservice
-      .getUserByEmail(user.current.uId)
+    /* userservice
+      .getUserByEmail({userEmail: user.current.uId})
       .then((data) => {
+        console.log("user data",data)
         user.current.uImg = data[0].profileImg;
       })
-      .catch((err) => console.log("Err in UserService", err));
+      .catch((err) => console.log("Err in UserService", err)); */
+      user.current.uImg = us.profileImg
 
     chatservice
       .getMessagesbyEmail(user.current.uId, recipient.current)
@@ -109,12 +112,12 @@ export default function SingleChat(props) {
       lang: recipientInfo.current.lang,
       userImgUrl: user.current.uImg,
     };
-    //console.log(data)
-    //axios.post('http://127.0.0.1:80/',data) // flask ka post method call kre ga
-    //.then((response )=> {
+    console.log(data)
+    axios.post('http://127.0.0.1:80/',data) // flask ka post method call kre ga
+    .then((response )=> {
     setLoading(false);
     // console.log(" Response" ,response.data);
-    //returndata = response.data
+    returndata = response.data
     console.log("room", roomId.current);
     let messageS = {
       from: user.current.uId,
@@ -130,9 +133,9 @@ export default function SingleChat(props) {
       console.log("in send");
       if (!err) {
         console.log("message sent successfully");
-        /* chatservice.createMessage(messageS)
+        chatservice.createMessage(messageS)
             .then((response)=>console.log(response))
-            .catch((err)=>console.log(err)) */
+            .catch((err)=>console.log(err))
         //console.log("MsgS",messageS)
         if (chat.messages) {
           setChat({ messages: [...chat.messages, messageS] });
@@ -166,6 +169,7 @@ export default function SingleChat(props) {
         else console.log(err);
       }
     );
+  }).catch((err)=>console.log(err))
   };
   
   const chatDeleteHandler = (message)=>{

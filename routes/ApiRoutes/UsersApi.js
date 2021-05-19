@@ -33,8 +33,10 @@ catch(err){
 
 router.post('/userbyemail', async (req, res, next) => {
   try {
-    const  users  = req.body;
-    console.log(users)
+    const  users  = req.body.userArray;
+    //console.log("user:",req.body)
+    if(users){
+    //console.log(users)
     const emails= []
      //users.forEach(function (item) {
          // emails.push(item.email);
@@ -49,6 +51,16 @@ router.post('/userbyemail', async (req, res, next) => {
    console.log(user);
     return res.status(200).send(user);
   }
+  else{
+    const us = req.body.userEmail
+    //console.log("us",us)
+    const user = await UserModel.find({email : us});
+    if(!user)
+      return res.status(400).send("User not found!")
+    return res.status(200).send(user)
+  }
+}
+
     catch (err) 
           {console.error(err.message);}
           
