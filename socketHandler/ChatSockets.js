@@ -86,9 +86,7 @@ const socketHandler = (clientSocket, serverSocket) => {
             type: "offline"
           })
           cb(undefined)
-          serverSocket.to(u.id).emit("newRecipient",{
-            payload
-          }); 
+
       }
       else{
         console.log("user exists",userExists,users.length)
