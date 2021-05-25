@@ -71,7 +71,7 @@ const socketHandler = (clientSocket, serverSocket) => {
             userExists =userExists+1
           }
       })
-      if(userExists === users.length){
+      if(userExists >= users.length){
           console.log("user does not exists")
           console.log("room",payload.room)
           clientSocket.to(payload.room).emit("messageReceived", {
@@ -86,7 +86,6 @@ const socketHandler = (clientSocket, serverSocket) => {
             type: "offline"
           })
           cb(undefined)
-
       }
       else{
         console.log("user exists",userExists,users.length)

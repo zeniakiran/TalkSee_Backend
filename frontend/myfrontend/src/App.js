@@ -17,13 +17,18 @@ import MyChats from "./components/ChatComponents/AllChats";
 import Users from "./components/ChatComponents/Users";
 import {SocketProvider} from './context/SocketContext';
 import {MyChatsProvider} from './context/MyChatsContext';
+import {ChatContextProvider} from './context/ChatContext';
 //import {SocketContext} from './context/SocketContext';
+import 'bootstrap/dist/css/bootstrap.min.css';
+//import Notification from './components/FrontendComponents/Alerts/Notification'
 import { ToastContainer } from 'react-toastify';
 import {useState, useEffect, useContext } from 'react';
+
 
 const App =() =>{
   const [userId,setId] = useState()
   const [dId,setDid] = useState()
+  //const [msg, setMsg] = useState()
   //const {messageEvent} = useContext(SocketContext);
   
   /* useEffect(()=>{
@@ -32,7 +37,9 @@ const App =() =>{
   },[]) */
   return (
     <div className="App">
-    <MyChatsProvider userId={userId}>
+  
+    <MyChatsProvider userId={userId} >
+    <ChatContextProvider userId={userId} >
     <SocketProvider id={dId} >
     <ToastContainer/>
     <Router>
@@ -63,6 +70,7 @@ const App =() =>{
       </Switch>
       </Router>
     </SocketProvider>
+    </ChatContextProvider>
     </MyChatsProvider>
     </div>
   );

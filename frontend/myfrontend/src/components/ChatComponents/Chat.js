@@ -113,11 +113,11 @@ export default function SingleChat(props) {
       userImgUrl: user.current.uImg,
     };
     console.log(data)
-    axios.post('http://127.0.0.1:80/',data) // flask ka post method call kre ga
-    .then((response )=> {
+    //axios.post('http://127.0.0.1:80/',data) // flask ka post method call kre ga
+    //.then((response )=> {
     setLoading(false);
     // console.log(" Response" ,response.data);
-    returndata = response.data
+    //returndata = response.data
     console.log("room", roomId.current);
     let messageS = {
       from: user.current.uId,
@@ -125,9 +125,9 @@ export default function SingleChat(props) {
       userName: user.current.uName,
       room: roomId.current,
       messageBody: message,
-      messageVideo: returndata,
+      messageVideo: "returndata",
       time: new Date().toLocaleString(),
-      type: "sent",
+      type: "offline",
     };
     clientSocket.emit("messageSend", messageS, (err) => {
       console.log("in send");
@@ -169,7 +169,7 @@ export default function SingleChat(props) {
         else console.log(err);
       }
     );
-  }).catch((err)=>console.log(err))
+  //}).catch((err)=>console.log(err))
   };
   
   const chatDeleteHandler = (message)=>{

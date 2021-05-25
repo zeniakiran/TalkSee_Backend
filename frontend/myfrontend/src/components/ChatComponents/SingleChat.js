@@ -66,70 +66,130 @@ const useStyles = makeStyles((theme) => ({
 const SingleChat = (props) => {
   const classes = useStyles();
   let history = useHistory();
-  console.log("props",props.recipients)
-  console.log("props",props.lastMsg)
   let elem = null;
-  let elem1=null
+  let user = JSON.parse(localStorage.getItem("user"));
+  let messages = useRef([]);
 
-  const recipientClickHandler = (fr,type,id) =>{
-    if(type === 'unread'){
+  console.log("props",props.lastMsg)
+  const recipientClickHandler = (fr, type) => {
+    chatservice.getMessagesbyEmail(user.email, fr.email).then((res) => {
+      messages.current = res;
+      messages.current.map((m) => {
+        if (m.type === "offline" && m.from !== user.email) {
+          chatservice
+            .changeMessageType({ type: "read" }, m._id)
+            .then((res) => console.log(res))
+            .catch((err) => console.log(err));
+        }
+        console.log("user matched")
+      });
+    });
+    /* if(type === 'unread' || type === 'offline'){
       chatservice.changeMessageType({type : 'read'},id)
       .then((res)=>console.log(res))
       .catch((err)=>console.log(err))
-    }
-    console.log("fr",fr)
-    localStorage.setItem("friendId",fr.id)
-    localStorage.setItem("recName",fr.name)
-    localStorage.setItem("recLang",fr.lang)
-    localStorage.setItem("profileUrl",fr.img)
-    history.push("/chat/"+fr.email+' '+fr.id)
-    
-  }
-  
+    }*/
+    console.log("fr", fr);
+    localStorage.setItem("friendId", fr.id);
+    localStorage.setItem("recName", fr.name);
+    localStorage.setItem("recLang", fr.lang);
+    localStorage.setItem("profileUrl", fr.img);
+    history.push("/chat/" + fr.email + " " + fr.id);
+  };
+
   return (
     <div>
       {props.recipients.map((r, index) => {
-        console.log("r:",r)
+        console.log("r:", r);
         return (
           <Grid xs={6}>
-            <ListItem button >
+            <ListItem button>
               <ListItemAvatar>
-                <img
-                  src={r.img}
-                  alt='img'
-                  className={classes.img}
-               />
+                <img src={r.img} alt='img' className={classes.img} />
               </ListItemAvatar>
               <ListItemText>
                 {/*  {setText(r,chatRecipients.lastMsg[index],chatRecipients.msgType[index])}
-                {elem}
-                 */}
-                 
-                <Typography className={classes.listText}>
-                    {r.name}
-                </Typography>
-                
-                {props.lastMsg.emails.forEach((u,ind)=>{
-                    if(u === r.email){
-                      console.log(" email from map",u,props.lastMsg.msgs[ind])
-                      if(props.lastMsg.types[ind] === 'read'){
-                        elem= ( <Typography className={classes.listText1} 
-                        onClick={()=>recipientClickHandler(r,props.lastMsg.types[ind],props.lastMsg.msgId[ind])}>
-                                  {props.lastMsg.msgs[ind]}
-                            </Typography>
-                        )
-                      }
-                      else if(props.lastMsg.types[ind] === 'unread'){
-                        elem= ( <Typography style={{fontWeight: 'bold', color: 'black'}} 
-                        className={classes.listText1} 
-                        onClick={()=>recipientClickHandler(r,props.lastMsg.types[ind],props.lastMsg.msgId[ind])}>
-                                  {props.lastMsg.msgs[ind]}
-                            </Typography>
-                        )
-                      }
+                {elem}*/
+                 }
+
+                <Typography className={classes.listText}>{r.name}</Typography>
+
+                {props.lastMsg.emails.forEach((u, ind) => {
+                  console.log("inside for each lastMsg", u,ind)
+                  console.log("inside map:",props.lastMsg.types[ind])
+                  console.log("inside map:",props.lastMsg.senders[ind])
+                   if (u === r.email) {
+                    if (props.lastMsg.types[ind] === "read") {
+                      console.log("in 1")
+                      elem = (
+                        <Typography
+                          className={classes.listText1}
+                          onClick={() =>
+                            recipientClickHandler(
+                              r,
+                              props.lastMsg.types[ind],
+                              props.lastMsg.msgId[ind]
+                            )
+                          }
+                        >
+                          {props.lastMsg.msgs[ind]}
+                        </Typography>
+                      );
+                    } else if (props.lastMsg.types[ind] === "unread") {
+                      console.log("in 2")
+                      elem = (
+                        <Typography
+                          style={{ fontWeight: "bold", color: "black" }}
+                          className={classes.listText1}
+                          onClick={() =>
+                            recipientClickHandler(
+                              r,
+                              props.lastMsg.types[ind],
+                              props.lastMsg.msgId[ind]
+                            )
+                          }
+                        >
+                          {props.lastMsg.msgs[ind]}
+                        </Typography>
+                      );
+                    } else if (
+                      props.lastMsg.types[ind] === "offline" &&
+                      props.lastMsg.senders[ind] !== user.email
+                    ) {
+                      console.log("in 3")
+                      elem = (
+                        <Typography
+                          style={{ fontWeight: "bold", color: "black" }}
+                          className={classes.listText1}
+                          onClick={() =>
+                            recipientClickHandler(
+                              r,
+                              props.lastMsg.types[ind]
+                            )
+                          }
+                        >
+                          {props.lastMsg.msgs[ind]}
+                        </Typography>
+                      );
+                    } else {
+                      console.log("in nothing", props.lastMsg.types[ind]);
+                      elem = (
+                        <Typography
+                          className={classes.listText1}
+                          onClick={() =>
+                            recipientClickHandler(
+                              r,
+                              props.lastMsg.types[ind],
+                            )
+                          }
+                        >
+                          {props.lastMsg.msgs[ind]}
+                        </Typography>
+                      );
                     }
+                  }
                 })}
-            
+
                 {elem}
               </ListItemText>
               <Divider />

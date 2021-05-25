@@ -37,8 +37,6 @@ router.get("/", async (req, res) => {
             $or: [ { from: email[0],
                 to : email[1]  }, { from: email[1],
                     to : email[0]  } ]
-            /* from : email[0],
-            to : email[1] */
         });
         if(!messageFromDb) 
             return res.send("No messages from current email"); 
@@ -49,6 +47,8 @@ router.get("/", async (req, res) => {
         res.status(400).send(err);
      } 
 }); 
+
+
 router.get("/msgbyuserid/:email",async (req, res) => {
     try {
         let emailAdd = req.params.email;
@@ -62,6 +62,49 @@ router.get("/msgbyuserid/:email",async (req, res) => {
         if(!messageFromDb) 
             return res.send("No messages from current email"); 
         return res.send(messageFromDb); 
+    }
+    catch(err){
+        res.status(400).send(err);
+     } 
+}); 
+
+router.get("/offlinemessages/:email",async (req, res) => {
+    try {
+        let emailAdd = req.params.email;
+        let messageFromDb = await Messages.find({
+             $or: [ { from: emailAdd},
+                    {to : emailAdd} ] 
+        });
+        if(!messageFromDb) 
+            return res.send("No messages from current email"); 
+
+        let myArray = messageFromDb;
+        console.log(myArray)
+        let myCount = 0;
+        let obj;
+        let arrayFrom = []
+        let arrayTo = []
+        myArray.map((elem)=>{
+            if(elem.type === 'offline'){
+                myCount = myCount +1
+                //obj.push({sender : elem.from, receiver : elem.to})
+                arrayFrom.push(elem.from)
+                arrayTo.push(elem.to)
+            }
+        })
+        /* obj.map((o)=>{
+            console.log("o",o)
+             arrayFrom.push(o.sender)
+             arrayTo = Array.from(new Set(o.receiver));
+        }) */
+        
+        
+        arrayFrom = Array.from(new Set(arrayFrom));
+        arrayTo = Array.from(new Set(arrayTo));
+        console.log("sender",arrayFrom)
+        obj = {sender: arrayFrom, receiver: arrayTo}
+        console.log("obj:",obj)
+        return res.send({count: myCount, info : obj}); 
     }
     catch(err){
         res.status(400).send(err);
@@ -119,7 +162,8 @@ router.get("/lastmsg/:email",async (req, res) => {
             return res.status(400).send("No messages from current email"); 
         let obj ={lastMsg: messageFromDb[(messageFromDb.length)-1].messageBody, 
                 msgId : messageFromDb[(messageFromDb.length)-1]._id,
-                type: messageFromDb[(messageFromDb.length)-1].type }
+                type: messageFromDb[(messageFromDb.length)-1].type,
+                sender: messageFromDb[(messageFromDb.length)-1].from }
         return res.status(200).send(obj); 
     }
     catch(err){
@@ -129,13 +173,6 @@ router.get("/lastmsg/:email",async (req, res) => {
 
 router.post("/",async (req,res)=>{
     try{
-
-   /*  let pusher = new Pusher({
-        appId: process.env.PUSHER_APP_ID,
-        key: process.env.PUSHER_APP_KEY,
-        secret: process.env.PUSHER_APP_SECRET,
-        cluster: process.env.PUSHER_APP_CLUSTER
-    }); */
     let message= new Messages();
     message.from= req.body.from;
     message.to= req.body.to;
@@ -145,19 +182,11 @@ router.post("/",async (req,res)=>{
     message.time = req.body.time ;
     message.type = req.body.type;
     await message.save();
-    /* pusher.trigger('private-my-channel', 'my-event', {
-        data: req.body.messageBody,
-      }//, {socket_id: req.headers['x-socket-id']}
-      ); */
-      //console.log("pusher",req.headers['x-socket-id'])
     return res.status(200).send("Message has been added to database successfully!");
     }
     catch(err){
         console.log(err)
     }
-
-    //pusher.trigger('notifications', 'post_updated', post, req.headers['x-socket-id']);
-    //sreturn res.send("Message has been added to database successfully!");
 
 });
 

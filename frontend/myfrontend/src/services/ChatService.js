@@ -25,6 +25,9 @@ class ChatService extends GenericService{
     changeMessageType = (data,id)=>{
         return this.put("chatapi/"+id, data)
     }
+    offlinemessages = (id)=>{
+        return this.get("chatapi/offlinemessages/"+id);
+    }
 }
 
 let chatservice = new ChatService();
