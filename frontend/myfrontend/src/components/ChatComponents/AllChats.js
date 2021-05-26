@@ -38,8 +38,9 @@ const AllChats = (props) => {
     emails: [],
     types: [],
     senders: [],
+    time : []
   });
-  const [newMsg, setNewMsg] = useState({msg:[]})
+  const [payload, setPayload] = useState()
   //const [recipients, setRecipients] = useState([])
   let roomId = useRef();
   let count = useRef(0);
@@ -50,23 +51,22 @@ const AllChats = (props) => {
   let dummy = [];
 
   const getRecData = (uId) => {
+    emails.current = []
+    lastMsg.msgs = []; lastMsg.msgId = []; lastMsg.emails = []; 
+    lastMsg.types = []; lastMsg.senders = []; lastMsg.time = []; 
     chatservice
       .getChatRecipients(uId)
       .then((data) => {
         if (data.length > 0) {
-          console.log("emails before sorting", data);
+          //console.log("emails before sorting", data);
           emails.current = data.sort();
+          emails.current = Array.from(new Set(emails.current));
           console.log("emails after sorting", emails.current);
-          /* setRecipients((r)=>{
-            r.email = emails.current
-            //console.log("r emails", r)
-          }) */
-          //console.log("data",emails)
           userservice
             .getUserByEmail({ userArray: emails.current })
             .then((datafromdb) => {
               recData = datafromdb;
-              console.log("recdata", recData);
+              //console.log("recdata", recData);
               setData((d) => {
                 d.uData = recData;
                 return d;
@@ -77,10 +77,9 @@ const AllChats = (props) => {
             chatservice
               .getLastMsg(uId, r)
               .then((data1) => {
-                console.log("data1", data1);
+                //console.log("data1", data1);
                 if(data1){
                   setLastMsg((msg) => {
-                    console.log("msg", msg);
                     if (
                       msg.msgs.length >= 1 &&
                       msg.emails.length >= 1 &&
@@ -93,12 +92,14 @@ const AllChats = (props) => {
                       let newT = [...msg.types];
                       let id = [...msg.msgId];
                       let sender = [...msg.senders];
+                      let newTime = [...msg.time]
                       newMsg = [...newMsg, data1.lastMsg];
                       newR = [...newR, r];
                       newT = [...newT, data1.type];
                       id = [...id, data1.msgId];
                       sender = [...sender, data1.sender];
-                      console.log("newMsg: ", newR);
+                      newTime = [...newTime, data1.time]
+                      
                       return {
                         ...msg,
                         msgs: newMsg,
@@ -106,59 +107,24 @@ const AllChats = (props) => {
                         emails: newR,
                         types: newT,
                         senders: sender,
+                        time : newTime
                       };
                     } else {
                       console.log("first: ", data1.lastMsg, r);
-                      return {
+                      let myMsg =  {
                         msgs: [data1.lastMsg],
                         msgId: [data1.msgId],
                         emails: [r],
                         types: [data1.type],
                         senders: [data1.sender],
+                        time : [data1.time]
                       };
+                      console.log("MY MSG: ",myMsg)
+                      return myMsg
                     }
                   });
                 }
 
-                /* setLastMsg((msg) => {
-                  console.log("msg", msg);
-                  if (
-                    msg.msgs.length >= 1 &&
-                    msg.emails.length >= 1 &&
-                    msg.types.length >= 1 &&
-                    msg.msgId.length >= 1 &&
-                    msg.senders.length >= 1
-                  ) {
-                    let newMsg = [...msg.msgs];
-                    let newR = [...msg.emails];
-                    let newT = [...msg.types];
-                    let id = [...msg.msgId];
-                    let sender = [...msg.senders];
-                    newMsg = [...newMsg, data1.lastMsg];
-                    newR = [...newR, r];
-                    newT = [...newT, data1.type];
-                    id = [...id, data1.msgId];
-                    sender = [...sender, data1.sender];
-                    console.log("newMsg: ", newR);
-                    return {
-                      ...msg,
-                      msgs: newMsg,
-                      msgId: id,
-                      emails: newR,
-                      types: newT,
-                      senders: sender,
-                    };
-                  } else {
-                    console.log("first: ", data1.lastMsg, r);
-                    return {
-                      msgs: [data1.lastMsg],
-                      msgId: [data1.msgId],
-                      emails: [r],
-                      types: [data1.type],
-                      senders: [data1.sender],
-                    };
-                  }
-                }); */
               })
               .catch((err) => console.log(err));
           });
@@ -172,16 +138,7 @@ const AllChats = (props) => {
   };
 
   useEffect(() => {
-    console.log("in useEffect 1");
-    getRecData(uId);
-    console.log("usersData 1", usersData);
-  }, []);
-
-  useEffect(() => {
-    console.log("in useEffect 2");
-  }, []);
-
-  useEffect(() => {
+    count.current = 0
     if (clientSocket) {
       clientSocket.emit(
         "myChatsRoom",
@@ -194,9 +151,26 @@ const AllChats = (props) => {
           }
         }
       );
+    }
+    //console.log("in useEffect 1");
+    getRecData(uId);
+    //console.log("usersData 1", usersData);
+  }, []);
 
+  useEffect(()=>{
+    if (clientSocket) {
       clientSocket.on("newRecipient", (payload) => {
-        console.log("new rec", payload.message);
+        setPayload((p)=>{
+          return p = payload
+        })
+      })
+    }
+  },[])
+
+  useEffect(() => {
+    console.log("IN PAYLOAD")
+    if (payload) {
+      console.log("payload",payload)
         let index;
 
         if (usersData.uData.length !== 0 && lastMsg.msgs.length !== 0) {
@@ -205,65 +179,64 @@ const AllChats = (props) => {
           /* present.current =0
         notPresent.current =0 */
           usersData.uData.forEach((u, indx) => {
-            console.log("in map");
-            console.log("emails from map", payload.message.from, u.email);
+            //console.log("emails from map", payload.message.from, u.email);
             if (payload.message.from === u.email) {
               index = indx;
               console.log("index: ", index);
               count.current = count.current + 1;
-              console.log("count: ", count.current);
+              console.log("count: ", count.current)
+              
             } else {
               //count.current.current = notPresent.current + 1 ;
-              console.log("false", count.current);
+              console.log("false");
             }
           });
           if (count.current !== 0) {
-            console.log("in setRecArray", count.current);
+            console.log("before setRecArray",lastMsg.msgs)
+            console.log("in setRecArray",count.current);
             setRecArray(
               index,
-              payload.message.messageBody,
-              payload.message.type
+              payload.message
             );
           } else if (count.current === 0) {
             setNewRecipient(
-              payload.message.from,
-              payload.message.messageBody,
-              payload.message.type,
+              payload.message
             );
-            console.log("in setNewArray", count.current);
+            console.log("in setNewArray",count.current);
           } else console.log("nothing ", count.current);
         } else {
-          console.log("no chat");
           console.log("usersData 1", lastMsg);
         }
-      });
+      //});
     }
-  }, [usersData,lastMsg.msgs]);
+  }, [payload]);
 
-  const setRecArray = (index, msg, type) => {
+  const setRecArray = (index, message) => {
     //if(lastMsg)
-    let items = [...lastMsg.msgs];
-    console.log("items before change", items, lastMsg.msgs);
-    items[index] = msg;
+    console.log("Last msg array and index",lastMsg.msgs, index )
+    let items = []
+    items = [...lastMsg.msgs];
+    let mtypes = [...lastMsg.types]
+    let mTime = [...lastMsg.time]
+    console.log("items before change", items);
+    items[index] = message.messageBody;
+    mtypes[index] = message.type
+    mTime[index] = message.time
     console.log("items", items);
     setLastMsg((m) => {
-      //if(lastMsg.msgs.length !== 0){
-
-      //console.log("items",items)
-      //console.log("users Msgs",m)
-      return { ...m, msgs: items };
+      return { ...m, msgs: items,types: mtypes, time: mTime };
       //}
     });
   };
 
-  const setNewRecipient = (rec, msg, type) => {
-    console.log("in new chattt",type)
+  const setNewRecipient = (message) => {
+    console.log("in new chattt",message.type)
     userservice
-      .getUserByEmail({ userEmail: rec })
+      .getUserByEmail({ userEmail: message.from })
       .then((data) => {
         console.log("data",data);
         setData((d) => {
-          let obj = { email: rec, gender : data[0].gender, id : data[0]._id, 
+          let obj = { email: message.from, gender : data[0].gender, id : data[0]._id, 
                       name : data[0].firstName + ' '+ data[0].lastName,
                       img : data[0].profileImg }
           let uData = [...d.uData]
@@ -296,12 +269,14 @@ const AllChats = (props) => {
             return myMsg
           
         });  */
-        setLastMsg({msgs: [...lastMsg.msgs,msg], emails: [...lastMsg.emails,rec], 
-                  types:[...lastMsg.types,type], senders:[...lastMsg.senders,rec]})
+        setLastMsg({msgs: [...lastMsg.msgs,message.messageBody], emails: [...lastMsg.emails,message.from], 
+                  types:[...lastMsg.types,message.type], senders:[...lastMsg.senders,message.from],
+                  time : [...lastMsg.time,message.time ]})
       }
       else{
         console.log("first recipient")
-        setLastMsg({msgs: [msg], emails: [rec], types:[type], senders:[rec]})
+        setLastMsg({msgs: [message.messageBody], emails: [message.from], 
+                    types:[message.type], senders:[message.from], time:[message.time]})
       }
       
    

@@ -37,12 +37,19 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1.5rem",
     fontFamily: "Roboto",
     marginLeft: "40px",
+   
   },
   listText1: {
     fontSize: "1.2rem",
     fontFamily: "Roboto",
     color: "gray",
     marginLeft: "40px",
+  },
+  listTime:{
+    fontSize: "0.7rem",
+    fontFamily: "Roboto",
+    color: "gray",
+    marginLeft: "200px"
   },
   listBtn: {
     backgroundColor: "rgb(0, 172, 193)",
@@ -84,11 +91,6 @@ const SingleChat = (props) => {
         console.log("user matched")
       });
     });
-    /* if(type === 'unread' || type === 'offline'){
-      chatservice.changeMessageType({type : 'read'},id)
-      .then((res)=>console.log(res))
-      .catch((err)=>console.log(err))
-    }*/
     console.log("fr", fr);
     localStorage.setItem("friendId", fr.id);
     localStorage.setItem("recName", fr.name);
@@ -100,7 +102,7 @@ const SingleChat = (props) => {
   return (
     <div>
       {props.recipients.map((r, index) => {
-        console.log("r:", r);
+        //console.log("r:", r);
         return (
           <Grid xs={6}>
             <ListItem button>
@@ -113,31 +115,39 @@ const SingleChat = (props) => {
                  }
 
                 <Typography className={classes.listText}>{r.name}</Typography>
-
+                
                 {props.lastMsg.emails.forEach((u, ind) => {
-                  console.log("inside for each lastMsg", u,ind)
-                  console.log("inside map:",props.lastMsg.types[ind])
-                  console.log("inside map:",props.lastMsg.senders[ind])
+                  //console.log("inside for each lastMsg", u,ind)
+                  //console.log("inside map:",props.lastMsg.types[ind])
+                  //console.log("inside map:",props.lastMsg.senders[ind])
                    if (u === r.email) {
                     if (props.lastMsg.types[ind] === "read") {
-                      console.log("in 1")
+                      //console.log("in 1",props.lastMsg.msgs[ind])
                       elem = (
-                        <Typography
-                          className={classes.listText1}
-                          onClick={() =>
-                            recipientClickHandler(
-                              r,
-                              props.lastMsg.types[ind],
-                              props.lastMsg.msgId[ind]
-                            )
-                          }
-                        >
-                          {props.lastMsg.msgs[ind]}
-                        </Typography>
+                        <div>
+                            <Typography
+                              className={classes.listText1}
+                              onClick={() =>
+                                recipientClickHandler(
+                                  r,
+                                  props.lastMsg.types[ind],
+                                  props.lastMsg.msgId[ind]
+                                )
+                              }
+                            >
+                              {props.lastMsg.msgs[ind]}
+                              
+                            </Typography>
+                            <Typography className={classes.listTime}>
+                            {props.lastMsg.time[ind]}
+                            </Typography>
+                        </div>
+                        
                       );
                     } else if (props.lastMsg.types[ind] === "unread") {
-                      console.log("in 2")
+                      //console.log("in 2")
                       elem = (
+                        <div>
                         <Typography
                           style={{ fontWeight: "bold", color: "black" }}
                           className={classes.listText1}
@@ -151,13 +161,18 @@ const SingleChat = (props) => {
                         >
                           {props.lastMsg.msgs[ind]}
                         </Typography>
+                        <Typography className={classes.listTime}>
+                            {props.lastMsg.time[ind]}
+                        </Typography>
+                        </div>
                       );
                     } else if (
                       props.lastMsg.types[ind] === "offline" &&
                       props.lastMsg.senders[ind] !== user.email
                     ) {
-                      console.log("in 3")
+                      //console.log("in 3")
                       elem = (
+                        <div>
                         <Typography
                           style={{ fontWeight: "bold", color: "black" }}
                           className={classes.listText1}
@@ -170,21 +185,31 @@ const SingleChat = (props) => {
                         >
                           {props.lastMsg.msgs[ind]}
                         </Typography>
+                        <Typography className={classes.listTime}>
+                            {props.lastMsg.time[ind]}
+                        </Typography>
+                        </div>
+                        
                       );
                     } else {
                       console.log("in nothing", props.lastMsg.types[ind]);
                       elem = (
-                        <Typography
-                          className={classes.listText1}
-                          onClick={() =>
-                            recipientClickHandler(
-                              r,
-                              props.lastMsg.types[ind],
-                            )
-                          }
-                        >
-                          {props.lastMsg.msgs[ind]}
-                        </Typography>
+                        <div>
+                          <Typography
+                            className={classes.listText1}
+                            onClick={() =>
+                              recipientClickHandler(
+                                r,
+                                props.lastMsg.types[ind],
+                              )
+                            }
+                          >
+                            {props.lastMsg.msgs[ind]}
+                          </Typography>
+                          <Typography className={classes.listTime}>
+                              {props.lastMsg.time[ind]}
+                          </Typography>
+                        </div>
                       );
                     }
                   }

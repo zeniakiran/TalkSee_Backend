@@ -22,6 +22,7 @@ const UserDashboard = ({uuId}) => {
   const [obj, setObj] = useState({})
   const myId= isAuthenticated()._id;
   const [count,setCount]= useState(0)
+  let showBtn = useRef(0)
   let userEmail = useRef()
   let history = useHistory()
   userEmail.current = JSON.parse(localStorage.getItem("user")).email
@@ -113,31 +114,32 @@ const UserDashboard = ({uuId}) => {
         obj.sender.forEach((o)=>{
             o !== userEmail.current ?
             
-            elem = (
-              <Badge badgeContent={count} color="secondary">
-              <ChatIcon className='chaticon'
-              onClick={event =>  history.push('/mychats/'+myId)}
-              color = "primary"
-              /> 
-            </Badge>
-           )
+            showBtn.current = showBtn.current + 1
           :
-          elem = (
-            null
-          )
+          showBtn.current = 0
           })
     :
-    elem = (
-      <Badge badgeContent={0} color="secondary">
+    showBtn.current = 0
+    }
+    
+        {
+          showBtn.current >= 1 ?
+            <Badge badgeContent={count} color="secondary">
               <ChatIcon className='chaticon'
               onClick={event =>  history.push('/mychats/'+myId)}
               color = "primary"
-              /> 
+              />  
             </Badge>
-    )
-    }
+          :
+        
+          <ChatIcon className='chaticon'
+              onClick={event =>  history.push('/mychats/'+myId)}
+              color = "primary"
+              />  
+            
+        }    
     
-    {elem}
+    
     {/* <Button className= "loginbtn"
              style={{marginLeft:"20rem",marginTop:"2rem",display:"block"}}
             variant="outlined" 

@@ -163,7 +163,8 @@ router.get("/lastmsg/:email",async (req, res) => {
         let obj ={lastMsg: messageFromDb[(messageFromDb.length)-1].messageBody, 
                 msgId : messageFromDb[(messageFromDb.length)-1]._id,
                 type: messageFromDb[(messageFromDb.length)-1].type,
-                sender: messageFromDb[(messageFromDb.length)-1].from }
+                sender: messageFromDb[(messageFromDb.length)-1].from,
+                time : messageFromDb[(messageFromDb.length)-1].time}
         return res.status(200).send(obj); 
     }
     catch(err){
