@@ -32,6 +32,7 @@ const UserDashboard = ({uuId}) => {
   let elem= null;
    
    window.onload = () => {
+     friendReq()
      messageEvent()
     let did = JSON.parse(localStorage.getItem('user'))._id
     roomJoin(did)
@@ -87,7 +88,7 @@ const UserDashboard = ({uuId}) => {
    },[],[clientSocket])
 
    useEffect (()=>{
-    friendReq()
+    //friendReq()
      messageEvent()
      //console.log("msg event")
    },[]);

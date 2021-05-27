@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useContext, useState } from "react";
 import { MyChatsContext } from "../../context/MyChatsContext";
 import { SocketContext } from "../../context/SocketContext";
+import io from "socket.io-client";
 import SingleChat from "./SingleChat";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -24,13 +25,8 @@ const AllChats = (props) => {
   let history = useHistory();
   const { clientSocket } = useContext(SocketContext);
   let uId = JSON.parse(localStorage.getItem("user")).email;
-  /* const [email,setEmail]= useState([])
-  const [lastMsg,setlastMsg]= useState([])
-  const [id,setId]= useState([])
-  const [url,setUrl]= useState([])
-  const [name,setName]= useState([]) */
+  const {setSocket,roomJoin,messageEvent, friendReq} = useContext(SocketContext);
   let emails = useRef([]);
-  //let usersData = useRef([])
   const [usersData, setData] = useState({uData:[]});
   const [lastMsg, setLastMsg] = useState({
     msgs: [],
@@ -49,6 +45,24 @@ const AllChats = (props) => {
   let recData = [];
   let recMsgs = [];
   let dummy = [];
+  let clientSocket1 = useRef()
+
+  window.onload = () => {
+    friendReq()
+    messageEvent()
+    let did = JSON.parse(localStorage.getItem('user'))._id
+    roomJoin(did)
+    clientSocket1 = io("http://127.0.0.1:5000")
+    setSocket((s)=>{
+      s = clientSocket1
+      s.on('connect' , () => {
+        console.log("connected",s.id);
+        s.emit("adduser",{id:s.id, name: uId})
+        
+      });
+      return s;
+    })
+  };
 
   const getRecData = (uId) => {
     emails.current = []

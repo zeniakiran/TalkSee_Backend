@@ -11,8 +11,8 @@ import Header from "./Header";
 import axios from 'axios';
 import accountService from "../../../services/accountService";
 import { isAuthenticated } from "../clientStorages/auth";
-//import {SocketContext} from '../../../context/SocketContext';
-//import io from "socket.io-client";
+import {SocketContext} from '../../../context/SocketContext';
+import io from "socket.io-client";
 import Webcam from "react-webcam";
 const useStyles = makeStyles({
   
@@ -28,9 +28,12 @@ const useStyles = makeStyles({
 
 const UpdateProfileSetup = ( ) => {
     const classes = useStyles();
-     const myId=isAuthenticated()._id;
-      const webcamRef = React.useRef(null);
-     const [capturedPic, setCapturedPic]=React.useState(false);
+    const myId=isAuthenticated()._id;
+    let uId = JSON.parse(localStorage.getItem("user")).email;
+    const {setSocket,roomJoin,messageEvent, friendReq} = useContext(SocketContext);
+    let clientSocket1 = useRef()
+    const webcamRef = React.useRef(null);
+    const [capturedPic, setCapturedPic]=React.useState(false);
 const options = [
   { label: 'Afrikaans',value:'af' },
   { label: 'Albanian',value:'sq'},
@@ -150,10 +153,28 @@ const options = [
     loading: false,
   });
   const { img,language, successMsg, errorMessage,infoMessage, loading } = values;
+
+  window.onload = () => {
+    friendReq()
+    messageEvent()
+    let did = JSON.parse(localStorage.getItem('user'))._id
+    roomJoin(did)
+    clientSocket1 = io("http://127.0.0.1:5000")
+    setSocket((s)=>{
+      s = clientSocket1
+      s.on('connect' , () => {
+        console.log("connected",s.id);
+        s.emit("adduser",{id:s.id, name: uId})
+        
+      });
+      return s;
+    })
+  };
+
  useEffect(() => {
      accountService.getMyAccount(myId).then((data) => {
      setValues({ ...values , img: data.profileImg, language:data.langPreference});
-    }) .catch((err) => {
+    }).catch((err) => {
            setValues({ ...values , errorMessage:err.response.data.errorMessage}); 
         });
   }, []);

@@ -24,6 +24,7 @@ import AlertBar from "../Alerts/AlertBar";
 import LinearBuffer from "../Alerts/ProgressBar";
 import { login } from "../api/auth";
 import PageTitle from "./pageTitle";
+import io from "socket.io-client";
 //import { toast } from "react-toastify";
 
 import {SocketContext} from '../../../context/SocketContext';
@@ -43,7 +44,8 @@ const useStyles = makeStyles((theme) => ({
 const LogIn = ({onIdSubmit,setId}) => {
   const classes = useStyles();
   let history = useHistory();
-  const {messageEvent} = useContext(SocketContext);
+  const {setSocket,roomJoin,messageEvent, friendReq} = useContext(SocketContext);
+  let clientSocket1 = React.useRef()
   useEffect(() => {
     if (isAuthenticated() && isAuthenticated().role === 1)
       history.push("/admin/dashboard");
@@ -52,13 +54,27 @@ const LogIn = ({onIdSubmit,setId}) => {
      
       
   }, [history]);
-  window.onload= ()=>{
-    //messageEvent()
-    console.log("in load")
-  }
+  window.onload = () => {
+    friendReq()
+    messageEvent()
+    let did = JSON.parse(localStorage.getItem('user'))._id
+    roomJoin(did)
+    clientSocket1 = io("http://127.0.0.1:5000")
+    setSocket((s)=>{
+      s = clientSocket1
+      s.on('connect' , () => {
+        console.log("connected",s.id);
+        s.emit("adduser",{id:s.id, name: isAuthenticated().email})
+        
+      });
+      return s;
+    })
+  };
 
   useEffect(()=>{
     //messageEvent()
+    //console.log("in event")
+    friendReq()
   },[])
   const [values, setValues] = useState({
     email: "",

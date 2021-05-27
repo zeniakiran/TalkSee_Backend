@@ -74,9 +74,17 @@ export function SocketProvider({id,children}) {
   }
 
   const friendReqEvent = () =>{
+    console.log("friend Req event")
     if(clientSocket){
       clientSocket.on("newRequest", (payload) => {
           console.log("payload : ",payload)
+          toast.info(
+          payload.sender+ ' has sent you a friend request!', {
+          position: toast.POSITION.TOP_LEFT,
+          //toastId: '009',
+          autoClose: 2000,
+          transition: Bounce
+        })
       })
     }
     else{

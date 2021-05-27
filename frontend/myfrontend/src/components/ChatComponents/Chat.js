@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import chatservice from "../../services/ChatService";
 import userservice from "../../services/UserService";
+import friendService from "../../services/friendService";
 import "./chat.css";
 import SettingMessage from "./SettingMessage";
 import { SocketContext } from "../../context/SocketContext";
@@ -8,9 +9,12 @@ import axios from "axios";
 import RenderChat from './RenderChat'
 
 export default function SingleChat(props) {
+  console.log(props.match)
   const [chat, setChat] = useState([{ from: "", to: "", messages: [] }]);
   const [loading, setLoading] = useState(false);
+  const [isFriend, setIsFriend] = useState(false)
   let chats = useRef([]);
+  let friends = useRef()
   let dummy = [];
   let user = useRef({ uId: "", uImg: "", uName: "" });
   let recipient = useRef("");
@@ -39,14 +43,7 @@ export default function SingleChat(props) {
     recipient.current = id[0];
     user.current.uId = us.email;
     user.current.uName = us.firstName + " " + us.lastName;
-    /* userservice
-      .getUserByEmail({userEmail: user.current.uId})
-      .then((data) => {
-        console.log("user data",data)
-        user.current.uImg = data[0].profileImg;
-      })
-      .catch((err) => console.log("Err in UserService", err)); */
-      user.current.uImg = us.profileImg
+    user.current.uImg = us.profileImg
 
     chatservice
       .getMessagesbyEmail(user.current.uId, recipient.current)
@@ -66,6 +63,17 @@ export default function SingleChat(props) {
   };
 
   useEffect(() => {
+    friendService.getAllFriends(us._id)
+    .then((data)=>{
+      friends.current = data
+      friends.current.forEach((f) => {
+        if(f.email === recipient.current)
+           setIsFriend(true)
+        
+      })
+      console.log("friends",friends.current)
+      })
+      .catch((err=>{console.log(err)}))
     getData();
   }, []);
 
@@ -197,6 +205,7 @@ export default function SingleChat(props) {
      isDel ={isDel}
      setDel = {setDel}
      msgsToDel ={messagesToDel}
+     isFriend = {isFriend}
      getData ={getData}
     />
   );

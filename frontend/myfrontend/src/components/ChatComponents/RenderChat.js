@@ -8,6 +8,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import Header from "../FrontendComponents/components/Header";
 import Button from '@material-ui/core/Button';
+import Alert from '../FrontendComponents/Alerts/AlertBar'
 import chatservice from "../../services/ChatService";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -59,7 +60,7 @@ export default function RenderChat(props) {
     <React.Fragment>
       <Header />
       <div className='singleChatContainer'>
-      
+      {console.log("isFriend?",props.isFriend)}
         <div className='mesgs'>
           <div className='msg_history'>
             <div className='profilediv'>
@@ -112,8 +113,19 @@ export default function RenderChat(props) {
                 <CircularProgress color='secondary' />
               </div>
             ) : null}
+            
           </div>
-          <TypeMessage sendMessage={props.sendMessage} />
+          {
+            props.isFriend === true?
+            <TypeMessage sendMessage={props.sendMessage} />
+            :
+            <Alert
+            type='error' 
+            message='This person is not your friend anymore. Add them again to start a chat.'
+            autoClose={5000}
+            />
+          }
+          
         </div>
       </div>
     </React.Fragment>

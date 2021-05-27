@@ -22,12 +22,12 @@ const AllFriends = (props) => {
     const onChangeSearch = (event) => 
         setSearchTerm(event.currentTarget.value)
      let clientSocket1 = useRef()
-     const {clientSocket, setSocket,roomJoin, messageEvent} =  useContext(SocketContext);
-     const {chatRecipients} = useContext(MyChatsContext);
+     const {setSocket,roomJoin, messageEvent, friendReq} =  useContext(SocketContext);
      let userEmail = useRef()
      userEmail.current = JSON.parse(localStorage.getItem("user")).email
 
      window.onload = () => {
+       friendReq()
        messageEvent()
       let did = JSON.parse(localStorage.getItem('user'))._id
       roomJoin(did)

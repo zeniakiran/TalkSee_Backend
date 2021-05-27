@@ -20,12 +20,13 @@ const AllFriendRequest = ({match}) => {
         setSearchTerm(event.currentTarget.value)
      let clientSocket1 = useRef()
      let userEmail = isAuthenticated().email
-     const {setSocket,roomJoin,messageEvent} = useContext(SocketContext);
+     const {setSocket,roomJoin,messageEvent,friendReq} = useContext(SocketContext);
      let roomId = useRef()
      roomId.current = '/'+match.params.id
      let history = useHistory()
 
      window.onload = () => {
+       friendReq()
        messageEvent()
       let did = JSON.parse(localStorage.getItem('user'))._id
       roomJoin(did)

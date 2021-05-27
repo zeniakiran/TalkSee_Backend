@@ -7,7 +7,7 @@ import { lightBlue, grey} from '@material-ui/core/colors';
 const SingleContact = (props) => {
      
     const { contact } = props;
-    const {roomId} =props
+    const roomId = '/'+contact._id
     var userData=JSON.parse(localStorage.getItem("user")) 
     const [showAddBtn, setAddBtn]=useState(userData.sentRequests.includes(contact._id)?false:true)
     const { clientSocket } = useContext(SocketContext);
@@ -21,6 +21,7 @@ const SingleContact = (props) => {
     const myLangPreference =isAuthenticated().langPreference;
     console.log("Props ",props.match)
     const sentFriendRequest=() => {
+        console.log("contact Id",contact._id)
         friendService.sendRequest(
             {friendId:contact._id,
             myId,myName,myProfileImg,myEmail,myGender,myLangPreference})
@@ -42,6 +43,7 @@ const SingleContact = (props) => {
           );
     }
      const cancelFriendRequest=()=>{
+         
         friendService.cancelRequest(
             {friendId:contact._id,myId})
          .then((data) => {
