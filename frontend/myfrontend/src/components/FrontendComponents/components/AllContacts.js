@@ -111,7 +111,7 @@ const AllContact = ({match}) => {
                  /* style= {{textAlign: "center",padding: "4rem"}}>
                Hey <span style ={{fontWeight:"bold"}}> {contact.firstName + " " + contact.lastName}</span> , All Users are your Friends <Link style ={{ fontWeight:"normal"}} to="/all-my-friends" >Click here</Link>
               </div> */
-            : <SingleContact key={index} contact={contact}/>
+            : <SingleContact key={index} contact={contact} roomId={roomId.current}/>
             } )
           }
            </Grid>

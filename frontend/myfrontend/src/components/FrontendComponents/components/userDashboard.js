@@ -27,7 +27,7 @@ const UserDashboard = ({uuId}) => {
   let history = useHistory()
   userEmail.current = JSON.parse(localStorage.getItem("user")).email
   console.log(userEmail)
-  const {clientSocket,setSocket,messageEvent,roomJoin} = useContext(SocketContext);
+  const {clientSocket,setSocket,messageEvent,roomJoin,friendReq} = useContext(SocketContext);
   let clientSocket1 = useRef()
   let elem= null;
    
@@ -87,6 +87,7 @@ const UserDashboard = ({uuId}) => {
    },[],[clientSocket])
 
    useEffect (()=>{
+    friendReq()
      messageEvent()
      //console.log("msg event")
    },[]);
@@ -119,7 +120,7 @@ const UserDashboard = ({uuId}) => {
           showBtn.current = 0
           })
     :
-    showBtn.current = 0
+    null
     }
     
         {

@@ -165,7 +165,7 @@ router.get("/lastmsg/:email",async (req, res) => {
                 type: messageFromDb[(messageFromDb.length)-1].type,
                 sender: messageFromDb[(messageFromDb.length)-1].from,
                 time : messageFromDb[(messageFromDb.length)-1].time}
-        return res.status(200).send(obj); 
+        return res.status(200).send(obj) 
     }
     catch(err){
         res.status(400).send(err);
