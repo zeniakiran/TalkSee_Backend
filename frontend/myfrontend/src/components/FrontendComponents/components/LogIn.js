@@ -24,6 +24,7 @@ import AlertBar from "../Alerts/AlertBar";
 import LinearBuffer from "../Alerts/ProgressBar";
 import { login } from "../api/auth";
 import PageTitle from "./pageTitle";
+import io from "socket.io-client";
 //import { toast } from "react-toastify";
 import io from "socket.io-client";
 
@@ -60,6 +61,7 @@ const LogIn = ({onIdSubmit,setId}) => {
     let did = isAuthenticated()._id;
     roomJoin(did)
     clientSocket1 = io("http://127.0.0.1:5000")
+ 
     setSocket((s)=>{
       s = clientSocket1
       s.on('connect' , () => {
@@ -72,9 +74,9 @@ const LogIn = ({onIdSubmit,setId}) => {
   }
   */
 
-
   useEffect(()=>{
    friendReq()
+ 
   },[])
   const [values, setValues] = useState({
     email: "",

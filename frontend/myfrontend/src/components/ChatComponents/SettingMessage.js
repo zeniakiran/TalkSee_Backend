@@ -6,6 +6,7 @@ import "video-react/dist/video-react.css"
 import {  Grid } from "@material-ui/core";
 export default function SettingMessage(props) {
  const [checked, setChecked] = React.useState(false);
+
   const [messages, setMessages] = React.useState();
   let someArray = [];
   const handleChange = (event, message) => {
@@ -47,6 +48,8 @@ export default function SettingMessage(props) {
   let msgArr = []
   if(props.term){
     console.log("term",props.term)
+
+
     indexOfTerm.push(props.message.messageBody.indexOf(props.term))
     msgArr.push(props.message.messageBody.split(""))
     console.log("term exists",indexOfTerm)
@@ -65,6 +68,7 @@ export default function SettingMessage(props) {
   }
 
   if (props.message.to === props.user) {
+
      elem = (
       <div >
         <div className='incoming_msg_img'>
@@ -148,6 +152,7 @@ export default function SettingMessage(props) {
   } 
 
    else {
+
     console.log("nothing");
   }
 

@@ -14,6 +14,7 @@ const Notification = ({msg}) => {
   return (
     
      <div>
+ 
       {console.log("not your friend")}
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>

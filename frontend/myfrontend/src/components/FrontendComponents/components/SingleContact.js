@@ -2,6 +2,7 @@ import { Button, Typography,Paper } from "@material-ui/core";
 import { isAuthenticated } from "../clientStorages/auth";
 import friendService from "../../../services/friendService";
 import React, { useState, useContext} from "react";
+import { useHistory } from 'react-router-dom';
 import { SocketContext } from "../../../context/SocketContext";
 import { lightBlue, grey} from '@material-ui/core/colors';
 import { useHistory } from 'react-router-dom';
@@ -13,6 +14,10 @@ const SingleContact = (props) => {
     var userData=JSON.parse(localStorage.getItem("user")) 
     const [showAddBtn, setAddBtn]=useState(userData.sentRequests.includes(contact._id)?false:true)
     const { clientSocket } = useContext(SocketContext);
+    var userData=JSON.parse(localStorage.getItem("user")) 
+    const [showAddBtn, setAddBtn]=useState(userData.sentRequests.includes(contact._id)?false:true)
+    const { clientSocket } = useContext(SocketContext);
+    let history = useHistory()
     //const [showAddBtn, setAddBtn]=useState(state?!state.sentRequests.includes(contact._id):true);
     const myId=isAuthenticated()._id;
     const myName =isAuthenticated().firstName + " " +isAuthenticated().lastName;
@@ -20,7 +25,6 @@ const SingleContact = (props) => {
     const myEmail =isAuthenticated().email;
     const myGender =isAuthenticated().gender;
     const myLangPreference =isAuthenticated().langPreference;
-    
     const sentFriendRequest=() => {
         console.log("contact Id",contact._id)
         friendService.sendRequest(
@@ -56,6 +60,7 @@ const SingleContact = (props) => {
          })
          .catch((err) => {console.log(err);});
     }
+ 
     const contactClickHandler = ()=>{
         localStorage.setItem('contact',JSON.stringify(contact))
         //console.log("clicked",'/profile'+props.roomId+'/'+contact._id)

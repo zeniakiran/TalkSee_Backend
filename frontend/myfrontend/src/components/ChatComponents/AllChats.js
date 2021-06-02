@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useContext, useState } from "react";
 import io from "socket.io-client";
 import { SocketContext } from "../../context/SocketContext";
+import io from "socket.io-client";
 import SingleChat from "./SingleChat";
 import { makeStyles } from "@material-ui/core/styles";
 import PageTitle from "../FrontendComponents/components/pageTitle";
@@ -27,7 +28,6 @@ const AllChats = (props) => {
   const {setSocket,roomJoin,messageEvent, friendReq} = useContext(SocketContext);
   let emails = useRef([]);
   //let usersData = useRef([])
-  
   const [usersData, setData] = useState({uData:[]});
   const [lastMsg, setLastMsg] = useState({
     msgs: [],

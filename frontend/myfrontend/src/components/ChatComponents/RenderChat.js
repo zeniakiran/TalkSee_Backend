@@ -9,6 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import Header from "../FrontendComponents/components/Header";
 import Button from '@material-ui/core/Button';
+import Alert from '../FrontendComponents/Alerts/AlertBar'
 import chatservice from "../../services/ChatService";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -17,6 +18,7 @@ import {Grid ,InputAdornment, TextField} from "@material-ui/core";
 import { grey } from '@material-ui/core/colors';
 import SearchIcon from '@material-ui/icons/Search';
  
+
 export default function RenderChat(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [isSearch, setSearch] = useState(false)
@@ -137,11 +139,13 @@ export default function RenderChat(props) {
               <Grid item xs ={1} md={2}></Grid>
               <Grid item xs ={10} md={8} style={{marginTop:"1rem" }}>
                 <div className='profilediv'>
+
               <img
                 className='profile'
                 src={props.recipientInfo.url}
                 alt='dp'
               />
+ 
               <span   style={{display:"inline",fontWeight:"bold", fontSize: "21px" }}>{props.recipientInfo.name}</span>
               
               {      
@@ -156,9 +160,11 @@ export default function RenderChat(props) {
                 <CircularProgress color='secondary' />
               </div>
             ) : null}
+ 
             </div>
            
             {
+ 
             props.isFriend === true?
             <TypeMessage sendMessage={props.sendMessage} />
             :
@@ -168,11 +174,11 @@ export default function RenderChat(props) {
             autoClose={5000}
             />
           }
-
               </Grid>
               <Grid item xs ={1} md={2}></Grid>
                 </Grid>
                 </div>
                 </React.Fragment>
+ 
   );
 }

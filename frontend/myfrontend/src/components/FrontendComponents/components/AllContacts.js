@@ -107,6 +107,7 @@ const AllContact = ({match}) => {
               return contact._id === myId ? 
               <div></div>
             : <SingleContact key={index} contact={contact}  roomId={roomId.current}/>
+                 
             } )
           }
            <Button className= "loginbtn"

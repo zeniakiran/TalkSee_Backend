@@ -11,7 +11,8 @@ import Header from "./Header";
 import axios from 'axios';
 import accountService from "../../../services/accountService";
 import { isAuthenticated } from "../clientStorages/auth";
- import {SocketContext} from '../../../context/SocketContext';
+import {SocketContext} from '../../../context/SocketContext';
+ 
 import io from "socket.io-client";
 import Webcam from "react-webcam";
 const useStyles = makeStyles({
@@ -34,7 +35,6 @@ const UpdateProfileSetup = ( ) => {
     let clientSocket1 = useRef()
     const webcamRef = React.useRef(null);
     const [capturedPic, setCapturedPic]=React.useState(false);
-     
 const options = [
   { label: 'Afrikaans',value:'af' },
   { label: 'Albanian',value:'sq'},
@@ -154,6 +154,7 @@ const options = [
     loading: false,
   });
   const { img,language, successMsg, errorMessage,infoMessage, loading } = values;
+ 
    window.onload = () => {
     friendReq()
     messageEvent()
@@ -165,7 +166,6 @@ const options = [
       s.on('connect' , () => {
         console.log("connected",s.id);
         s.emit("adduser",{id:s.id, name: uId})
-
       });
       return s;
     })
@@ -174,7 +174,7 @@ const options = [
  useEffect(() => {
      accountService.getMyAccount(myId).then((data) => {
      setValues({ ...values , img: data.profileImg, language:data.langPreference});
-    }) .catch((err) => {
+    }).catch((err) => {
            setValues({ ...values , errorMessage:err.response.data.errorMessage}); 
         });
   }, []);
