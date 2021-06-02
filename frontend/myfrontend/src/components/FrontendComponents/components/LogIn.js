@@ -26,7 +26,7 @@ import { login } from "../api/auth";
 import PageTitle from "./pageTitle";
 import io from "socket.io-client";
 //import { toast } from "react-toastify";
-import io from "socket.io-client";
+
 
 import {SocketContext} from '../../../context/SocketContext';
 //import { v4 as uuidv4 } from 'uuid';
@@ -55,10 +55,10 @@ const LogIn = ({onIdSubmit,setId}) => {
      
       
   }, [history]);
-  /*window.onload = () => {
+  window.onload = () => {
     friendReq()
     messageEvent()
-    let did = isAuthenticated()._id;
+   /* let did = isAuthenticated()._id;
     roomJoin(did)
     clientSocket1 = io("http://127.0.0.1:5000")
  
@@ -70,9 +70,9 @@ const LogIn = ({onIdSubmit,setId}) => {
 
       });
       return s;
-    })
+    })*/
   }
-  */
+  
 
   useEffect(()=>{
    friendReq()

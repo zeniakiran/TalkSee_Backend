@@ -12,7 +12,6 @@ import AllContact from "./components/FrontendComponents/components/AllContacts";
 import AllFriendRequest from "./components/FrontendComponents/components/AllFriendRequest";
 import AllFriends from "./components/FrontendComponents/components/AllFriends";
 import UpdateProfileSetup from "./components/FrontendComponents/components/updateProfileSetup";
- 
 import Chat from "./components/ChatComponents/Chat";
 import MyChats from "./components/ChatComponents/AllChats";
 import {SocketProvider} from './context/SocketContext';
@@ -24,6 +23,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 //import {SocketContext} from './context/SocketContext';
 import { ToastContainer } from 'react-toastify';
 import {useState} from 'react';
+import Profile from './components/FrontendComponents/components/Profile';
 
 const App =() =>{
   const [userId,setId] = useState()

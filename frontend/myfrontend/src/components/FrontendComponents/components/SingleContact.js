@@ -5,19 +5,14 @@ import React, { useState, useContext} from "react";
 import { useHistory } from 'react-router-dom';
 import { SocketContext } from "../../../context/SocketContext";
 import { lightBlue, grey} from '@material-ui/core/colors';
-import { useHistory } from 'react-router-dom';
+
 const SingleContact = (props) => {
-     
     const { contact } = props;
     const roomId = '/'+contact._id
     let history = useHistory()
     var userData=JSON.parse(localStorage.getItem("user")) 
     const [showAddBtn, setAddBtn]=useState(userData.sentRequests.includes(contact._id)?false:true)
     const { clientSocket } = useContext(SocketContext);
-    var userData=JSON.parse(localStorage.getItem("user")) 
-    const [showAddBtn, setAddBtn]=useState(userData.sentRequests.includes(contact._id)?false:true)
-    const { clientSocket } = useContext(SocketContext);
-    let history = useHistory()
     //const [showAddBtn, setAddBtn]=useState(state?!state.sentRequests.includes(contact._id):true);
     const myId=isAuthenticated()._id;
     const myName =isAuthenticated().firstName + " " +isAuthenticated().lastName;

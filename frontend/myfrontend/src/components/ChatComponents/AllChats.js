@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useContext, useState } from "react";
 import io from "socket.io-client";
 import { SocketContext } from "../../context/SocketContext";
-import io from "socket.io-client";
 import SingleChat from "./SingleChat";
 import { makeStyles } from "@material-ui/core/styles";
 import PageTitle from "../FrontendComponents/components/pageTitle";
@@ -9,7 +8,6 @@ import Header from "../FrontendComponents/components/Header";
 import { useHistory } from "react-router-dom";
 import chatservice from "../../services/ChatService";
 import userservice from "../../services/UserService";
-
 import "./chat.css";
 import { Grid } from "@material-ui/core";
 

@@ -23,7 +23,7 @@ const AllContact = ({match}) => {
     const [contacts, setContacts] = React.useState([]);
     let roomId = useRef()
     let clientSocket1 = useRef()
-    roomId.current = '/'+match.params.id
+    roomId.current = '/'+match.params.id;
     const {setSocket,roomJoin,messageEvent, friendReq} = useContext(SocketContext);
     window.onload = () => {
        friendReq()

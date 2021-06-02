@@ -9,7 +9,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import Header from "../FrontendComponents/components/Header";
 import Button from '@material-ui/core/Button';
-import Alert from '../FrontendComponents/Alerts/AlertBar'
 import chatservice from "../../services/ChatService";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
