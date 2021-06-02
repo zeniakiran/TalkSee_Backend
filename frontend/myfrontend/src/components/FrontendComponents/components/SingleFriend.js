@@ -1,4 +1,4 @@
-import { Button,Paper } from "@material-ui/core";
+import { Button,Grid,Paper } from "@material-ui/core";
 import { isAuthenticated } from "../clientStorages/auth";
 import friendService from "../../../services/friendService";
 import { useHistory } from 'react-router-dom';
@@ -30,32 +30,34 @@ const SingleFriend = (props) => {
     } 
     let history = useHistory()
     return (
-        <div>
-       <Paper style={{padding: '10px 20px', marginBottom:"2rem"}}  >
-              <img src={friend.profileImg}  className="img-fluid rounded-circle p-2"
-          style={{ width: "4.9em" ,display:"inline" }} alt="img"/>
-              <h4   style={{display:"inline"  }}>{friend.name}</h4>
-        
-     <div style={{display:"inline-flex",justifyContent:"space-between", position:"relative", float:"right",width: "170px",height: "auto",marginTop:"0.8rem"}}>
-           
-            <Button className= "loginbtn"
-              style={{ backgroundColor:lightGreen[700],color:"white"}}
+       <Paper style={{padding:  '12px 10px', marginBottom:"1rem" }}  >
+         <Grid container style={{display:"flex"}}>
+           <Grid item    xs ={12} sm={8} md={8}>
+              <img src={friend.profileImg}
+          style={{  marginRight:"0.3rem",height: "50px", width: "50px", borderRadius: "50%",display:"inline",padding:"0.2rem" }} alt="img"/>
+              <p   style={{display:"inline" ,fontWeight:"bolder",fontSize:"1.2rem" }}>{friend.name}</p>
+           </Grid>
+           <Grid item   xs={12} sm={4} md={4}  >
+             <Button className= "loginbtn"
+              style={{ backgroundColor:lightGreen[700],color:"white",margin:"0.4rem" }}
             variant="contained" 
             size="medium"
             onClick={()=> chatButtonHandler(friend)} 
             >Chat</Button>
-
+ 
             <Button className= "loginbtn"
              style={{  backgroundColor:red[400],color:"white" }}
             variant="contained" 
              onClick ={RemoveFriend}
             >Remove</Button>
-            
-           
-          </div>
+           </Grid>
+         </Grid>
+             
+        
+      
                </Paper> 
    
-    </div>);
+     );
 }
  
 export default SingleFriend;

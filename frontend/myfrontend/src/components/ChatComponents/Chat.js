@@ -1,16 +1,23 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import chatservice from "../../services/ChatService";
 import userservice from "../../services/UserService";
+import friendService from "../../services/friendService";
 import "./chat.css";
 import SettingMessage from "./SettingMessage";
 import { SocketContext } from "../../context/SocketContext";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 import RenderChat from './RenderChat'
 
 export default function SingleChat(props) {
   const [chat, setChat] = useState([{ from: "", to: "", messages: [] }]);
+  const [searchChats, setSearchChats] = useState({messages :[]})
+  const [searchTerm, setSearchTerm] = useState("")
   const [loading, setLoading] = useState(false);
+  const [isFriend, setIsFriend] = useState(true)
   let chats = useRef([]);
+  let friends = useRef()
   let dummy = [];
   let user = useRef({ uId: "", uImg: "", uName: "" });
   let recipient = useRef("");
@@ -24,7 +31,7 @@ export default function SingleChat(props) {
   const [isDel , setDel] = useState(false)
   var us = JSON.parse(localStorage.getItem("user"));
   const [messagesToDel, setMsgs] = useState([])
-  console.log("my socket", clientSocket);
+  //console.log("my socket", clientSocket);
 
   useEffect(() => {
     recipientInfo.current.name = localStorage.getItem("recName");
@@ -39,14 +46,7 @@ export default function SingleChat(props) {
     recipient.current = id[0];
     user.current.uId = us.email;
     user.current.uName = us.firstName + " " + us.lastName;
-    /* userservice
-      .getUserByEmail({userEmail: user.current.uId})
-      .then((data) => {
-        console.log("user data",data)
-        user.current.uImg = data[0].profileImg;
-      })
-      .catch((err) => console.log("Err in UserService", err)); */
-      user.current.uImg = us.profileImg
+    user.current.uImg = us.profileImg
 
     chatservice
       .getMessagesbyEmail(user.current.uId, recipient.current)
@@ -66,6 +66,16 @@ export default function SingleChat(props) {
   };
 
   useEffect(() => {
+    friendService.getAllFriends(us._id)
+    .then((data)=>{
+      friends.current = data
+      friends.current.forEach((f) => {
+        if(f.email !== recipient.current)
+           setIsFriend(false)
+        
+      })
+      })
+      .catch((err=>{console.log(err)}))
     getData();
   }, []);
 
@@ -106,13 +116,20 @@ export default function SingleChat(props) {
   }, []);
 
   const sendMessage = (message) => {
-    setLoading(true);
-    let data = {
+    
+    if (message == ""){
+       toast.error("Please Type something",{
+          position: toast.POSITION.TOP_LEFT,
+        })
+    }
+   else
+   {
+     setLoading(true); 
+     let data = {
       msg: message,
       lang: recipientInfo.current.lang,
       userImgUrl: user.current.uImg,
     };
-    console.log(data)
     //axios.post('http://127.0.0.1:80/',data) // flask ka post method call kre ga
     //.then((response )=> {
     setLoading(false);
@@ -130,7 +147,6 @@ export default function SingleChat(props) {
       type: "offline",
     };
     clientSocket.emit("messageSend", messageS, (err) => {
-      console.log("in send");
       if (!err) {
         console.log("message sent successfully");
         chatservice.createMessage(messageS)
@@ -139,10 +155,8 @@ export default function SingleChat(props) {
         //console.log("MsgS",messageS)
         if (chat.messages) {
           setChat({ messages: [...chat.messages, messageS] });
-          console.log("sent chat", chat);
         } else {
           setChat({ messages: [messageS] });
-          console.log("first message " + chat);
         }
       } else {
         console.log("error sending message:", err);
@@ -159,6 +173,7 @@ export default function SingleChat(props) {
         if (!err) console.log("testing");
         else console.log(err);
       }
+    
     );
 
     clientSocket.emit(
@@ -170,6 +185,7 @@ export default function SingleChat(props) {
       }
     );
   //}).catch((err)=>console.log(err))
+    }
   };
   
   const chatDeleteHandler = (message)=>{
@@ -177,15 +193,50 @@ export default function SingleChat(props) {
     setMsgs(message)
 }
 
+  const searchChatHandler = (keywords)=>{
+    setSearchTerm((term)=>{
+      //console.log("keywords",term)
+      term = keywords
+      return term
+    })
+    
+  }
+
+  useEffect(() => {
+    if(chat.messages){
+      
+    const list = chat.messages.filter(msg => msg.messageBody.toLowerCase().includes(searchTerm.toLowerCase()));
+    setSearchChats({messages : list});
+    }
+    else{
+      console.log("no chat")
+    }
+}, [searchTerm]);
+
   let elem = null;
-  if (!chat.messages) {
-    console.log("in if part");
+  if (chat.messages === undefined) {
     elem = (
       <h5 style={{ textAlign: "center" }}>There are currently no Messages</h5>
     );
   } else {
-    console.log("in else");
-    elem = <SettingMessage chat={chat} user={user.current.uId} isDel={isDel} delHandler = {chatDeleteHandler}/>;
+    
+    if(searchTerm !== "" && searchChats.messages !== undefined){
+      console.log("yess",searchChats.messages)
+      //elem = <SettingMessage chat={searchChats} user={user.current.uId} isDel={isDel} delHandler = {chatDeleteHandler}/>;
+      elem = (searchChats.messages.map((msg) =>{
+        return <SettingMessage message={msg} user={user.current.uId} isDel={isDel} delHandler = {chatDeleteHandler} term={searchTerm}/>;
+      })
+      )
+    }
+    else{
+      console.log("nooooo",chat.messages)
+      //elem = <SettingMessage chat={chat} user={user.current.uId} isDel={isDel} delHandler = {chatDeleteHandler}/>;
+      elem = (chat.messages.map((msg) =>{
+        return  <SettingMessage message={msg} user={user.current.uId} isDel={isDel} delHandler = {chatDeleteHandler}/>;
+      })
+      )
+    }
+    
   }
 
   
@@ -197,7 +248,11 @@ export default function SingleChat(props) {
      isDel ={isDel}
      setDel = {setDel}
      msgsToDel ={messagesToDel}
+     isFriend = {isFriend}
      getData ={getData}
+     searchTerm = {searchTerm}
+     setTerm = {setSearchTerm}
+     searchHandler ={searchChatHandler}
     />
   );
 }

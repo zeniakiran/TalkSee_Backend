@@ -29,8 +29,7 @@ export function SocketProvider({id,children}) {
     console.log(roomId)
   },[])
 
-  const newMessageEvent = ()=>{
-    count=0;
+  const newMessageEvent = () => {
     if(clientSocket){
       clientSocket.on("newMessage", (payload) => {
       <button onClick={()=>console.log("clicked")}>{toast(payload.RecipientName +':'+
@@ -45,10 +44,9 @@ export function SocketProvider({id,children}) {
       console.log("new message",payload)
       })
     }
-    else{
+    else {
       console.log("no socket")
-    }
-    
+    }  
   //return () => {clientSocket.removeAllListeners("newMessage");}
   }
 
@@ -74,13 +72,33 @@ export function SocketProvider({id,children}) {
       );
     }
   }
+
+  const friendReqEvent = () =>{
+    console.log("friend Req event")
+    if(clientSocket){
+      clientSocket.on("newRequest", (payload) => {
+          console.log("payload : ",payload)
+          toast.info(
+          payload.sender+ ' has sent you a friend request!', {
+          position: toast.POSITION.TOP_LEFT,
+          //toastId: '009',
+          autoClose: 7000,
+          transition: Bounce
+        })
+      })
+    }
+    else{
+      console.log("no socket")
+    }
+  }
   
 
   let value={
     clientSocket : clientSocket,
     setSocket : setSocket,
     messageEvent : newMessageEvent,
-    roomJoin: roomJoin
+    roomJoin : roomJoin,
+    friendReq : friendReqEvent
   }
   return (
     <SocketContext.Provider value={value}>
@@ -90,4 +108,3 @@ export function SocketProvider({id,children}) {
 
   
 }
-

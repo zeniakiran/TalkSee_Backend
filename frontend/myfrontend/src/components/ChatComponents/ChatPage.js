@@ -122,15 +122,13 @@ export default function ChatPage(props) {
         
       });     
       console.log("Received chat",chat)
-      
-    });
-
-  }; */
+    });*/
+  }; 
  
   useEffect(() => {
           
 
-//console.log("Chats",dispatch(getChats()))
+ //console.log("Chats",dispatch(getChats()))
     //console.log(activeCht)
      getRecipients()   
      //props.child("getRecipients")        
@@ -167,9 +165,10 @@ export default function ChatPage(props) {
     
           
 
-}, [activeChatHandler]);
+ }, [activeChatHandler]);
               
-  const sendMessage = (message)=>{
+  const sendMessage = (message)=>
+  {
       let messageS = {
         from: userId,
         to: recipientInfo.current.id,
@@ -202,25 +201,19 @@ export default function ChatPage(props) {
   }            
 
   let elem = null;
-  if(!chat.messages){
+  if(!chat.messages)
       console.log("in if part")
-  }
   else{
     console.log("in else")
       elem = (
         <SettingMessage chat={chat} user={userId}/>
       )
-  }
-  
-  return (
-    <div>
-    {console.log("return")}
-      
-         
+   }
+   return (
+    <div>     
         <div  >
         <h3 className="text-center">Chats</h3>
         <Grid container>
-         
         <Grid item xs={7} md={3} style={{borderRight:"lightgray 2px solid",height:"auto"}} >
             <Chats   recipients = {rec.recipients} setActiveChat={activeChatHandler}/> 
             </Grid> 
@@ -254,20 +247,13 @@ export default function ChatPage(props) {
                   color="primary"
                   onClick = {()=>sendMessage(message)}
                   >
-                  Send</Button>
-                  
+                  Send</Button> 
              </div> :
              null
-             
             }
             </Grid>
-            
-           
           </Grid>
-          
         </div>
-      
-      
     </div>
-  );
-}
+    );
+  }

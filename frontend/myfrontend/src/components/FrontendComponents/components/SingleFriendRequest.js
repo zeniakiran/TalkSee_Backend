@@ -1,4 +1,4 @@
-import { Button,Paper,  } from "@material-ui/core";
+import { Button,Grid,Paper,  } from "@material-ui/core";
 import { isAuthenticated } from "../clientStorages/auth";
 import friendService from "../../../services/friendService";
 import { lightBlue,grey} from '@material-ui/core/colors';
@@ -39,13 +39,17 @@ const SingleFriendRequest = (props) => {
 
   return (
       <div>
-   <Paper style={{padding: '10px 20px', marginBottom:"2rem"}}  >
-          <img src={friendreq.profileImg}  className="img-fluid rounded-circle p-2"
-      style={{ width: "4.9em" ,display:"inline" }} alt="img"/>
-       <h4   style={{display:"inline" }}>{friendreq.name}</h4>
-       <div style={{display:"inline-flex",justifyContent:"space-between", position:"relative", float:"right",width: "200px",height: "auto",marginTop:"0.8rem"}}>
-        <Button className= "loginbtn"
-          style={{ backgroundColor:lightBlue[700],color:"white"}}
+   <Paper style={{padding:'12px 10px', marginBottom:"1rem" }}  >
+      <Grid container style={{display:"flex"}}>
+           <Grid item    xs ={12} sm={8} md={8}>
+             <img src={friendreq.profileImg} 
+       style={{  marginRight:"0.3rem",height: "50px", width: "50px", borderRadius: "50%",display:"inline",padding:"0.2rem" }} alt="img"/>
+       <p   style={{display:"inline" ,fontWeight:"bolder",fontSize:"1.2rem" }}>{friendreq.name}</p>
+       
+           </Grid>
+           <Grid item   xs={12} sm={4} md={4}  >
+             <Button className= "loginbtn"
+          style={{ backgroundColor:lightBlue[700],color:"white",margin:"0.4rem" }}
         variant="contained" 
         size="medium" 
         onClick ={AcceptFriendRequest} 
@@ -55,9 +59,9 @@ const SingleFriendRequest = (props) => {
         variant="contained" 
         onClick ={RejectFriendRequest} 
         >Reject</Button>
-        
-       
-      </div>
+           </Grid>
+           </Grid>
+           
       
        </Paper>
  </div>

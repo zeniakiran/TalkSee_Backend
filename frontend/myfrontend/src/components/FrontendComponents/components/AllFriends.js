@@ -22,12 +22,12 @@ const AllFriends = (props) => {
     const onChangeSearch = (event) => 
         setSearchTerm(event.currentTarget.value)
      let clientSocket1 = useRef()
-     const {clientSocket, setSocket,roomJoin, messageEvent} =  useContext(SocketContext);
-     const {chatRecipients} = useContext(MyChatsContext);
+      const {setSocket,roomJoin, messageEvent, friendReq} =  useContext(SocketContext);
      let userEmail = useRef()
      userEmail.current = JSON.parse(localStorage.getItem("user")).email
 
      window.onload = () => {
+         friendReq()
        messageEvent()
       let did = JSON.parse(localStorage.getItem('user'))._id
       roomJoin(did)
@@ -77,39 +77,41 @@ const AllFriends = (props) => {
     },[])
 
      return ( 
-    <div>
+    <div style={{height:"100vh"}} className="back_divs">
       <Header/>
       <PageTitle name= {"My Friends"}/>
-       <Grid container   style={{display:"flex" ,marginTop:"1.8rem",justifyContent:"center"}}>
-          <Grid item xs ={1} md={5}> </Grid>
-          <Grid item xs ={10} md={4}  >
+           
+   
+     {
+      friends.length === 0 ? 
+        ( <div style= {{textAlign: "center",height:"100vh",
+    padding: "6rem", fontWeight:"bold"}}>No Friend Found</div>) 
+        :
+        (
+          <div>
+             
+        <Grid container   style={{marginTop:"0.9rem", display :"flex"}}>
+          <Grid item xs ={1} md={3}> </Grid>
+          <Grid item xs ={10} md={6}>
+            <Grid container   style={{marginBottom:"1rem"}}>
+          <Grid item xs ={0} md={7}> </Grid>
+          <Grid item xs ={12} md={5}  >
             <TextField
                 value={searchTerm}
                 onChange={onChangeSearch}
-                placeholder="Search By Name..."
-                variant="outlined"
+                placeholder="Search by typing name"
+                 
         InputProps={{
           startAdornment: (
             <InputAdornment position="end">
-             <SearchIcon style={{ color: grey[600] ,marginRight:"0.4rem",float:"right"}}/>
+             <SearchIcon style={{ color: "black" ,marginRight:"0.4rem",float:"right"}}/>
             </InputAdornment>
           ),
          }}
             />
             </Grid>
-              <Grid item xs ={1} md={4}> </Grid>
             </Grid>
-          
-   
-     {
-      friends.length === 0 ? 
-        ( <div style= {{textAlign: "center",
-    padding: "6rem", fontWeight:"bold"}}>No Friend Found</div>) 
-        :
-        (
-        <Grid container   style={{marginTop:"3rem", display :"flex"}}>
-          <Grid item xs ={1} md={3}> </Grid>
-          <Grid item xs ={10} md={6}>
+     
           {
           friends.filter((friend)=>{
              if(searchTerm == "") return friend
@@ -122,10 +124,10 @@ const AllFriends = (props) => {
           </Grid>
           <Grid item xs={1}   md={3}></Grid>
         </Grid>
-         )
+         </div>)
          
       }
-       <Grid container   style={{display:"flex" ,marginBottom:"2rem"}}>
+       <Grid container   style={{display:"flex" ,marginBottom:"0.9rem"}}>
           <Grid item xs ={1} md={3}> </Grid>
           <Grid item xs ={10} md={6}>
       

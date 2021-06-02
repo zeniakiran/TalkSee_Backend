@@ -5,7 +5,7 @@ import { Button, Grid ,InputAdornment, TextField} from "@material-ui/core";
 import friendService from "../../../services/friendService";
 import PageTitle from "./pageTitle";
 import { isAuthenticated } from "../clientStorages/auth";
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {SocketContext} from '../../../context/SocketContext';
 import io from "socket.io-client";
@@ -24,9 +24,9 @@ const AllContact = ({match}) => {
     let roomId = useRef()
     let clientSocket1 = useRef()
     roomId.current = '/'+match.params.id
-    const {setSocket,roomJoin,messageEvent} = useContext(SocketContext);
-
+    const {setSocket,roomJoin,messageEvent, friendReq} = useContext(SocketContext);
     window.onload = () => {
+       friendReq()
       messageEvent()
       let did = JSON.parse(localStorage.getItem('user'))._id
       roomJoin(did)
@@ -59,7 +59,7 @@ const AllContact = ({match}) => {
      getData();
      getSingleContact();
  }, []);
-
+ 
    useEffect(()=>{
     //roomJoin(myId)
     //messageEvent()
@@ -67,67 +67,49 @@ const AllContact = ({match}) => {
     
    
     return ( 
-    <div>
+    <div style={{height:"100vh"}} className="back_divs"  >
       <Header/>
       <PageTitle name= {"Add Friend"}/>
-      <Grid container   style={{display:"flex" ,marginTop:"1.8rem",justifyContent:"center"}}>
-          <Grid item xs ={1} md={5}> </Grid>
-          <Grid item xs ={10} md={4}  >
+      {
+      contacts.length === 0 ? 
+        ( <div style= {{textAlign: "center", height:"100vh",
+    padding: "6rem", fontWeight:"bold"}}>No User Found</div>) 
+        :
+        (<div >
+          
+            <Grid container  style={{marginTop:"0.9rem"}}>
+          <Grid item xs ={1} md={2}> </Grid>
+          <Grid item xs ={10} md={8} >
+            <Grid container   style={{marginBottom:"1rem" }}>
+          <Grid item xs ={0} md={8}> </Grid>
+          <Grid item xs ={12} md={4}  >
             <TextField
                 value={searchTerm}
                 onChange={onChangeSearch}
-                placeholder="Search By Name..."
-                variant="outlined"
+                placeholder="Search by typing name"
+                 
         InputProps={{
           startAdornment: (
             <InputAdornment position="end">
-             <SearchIcon style={{ color: grey[600] ,marginRight:"0.4rem",float:"right"}}/>
+             <SearchIcon style={{ color: "black" ,marginRight:"0.4rem",float:"right"}}/>
             </InputAdornment>
           ),
          }}
             />
             </Grid>
-              <Grid item xs ={1} md={4}> </Grid>
             </Grid>
-          
-         
-    
-      {
-      contacts.length === 0 ? 
-        ( <div style= {{textAlign: "center",
-    padding: "6rem", fontWeight:"bold"}}>No User Found</div>) 
-        :(
-            <Grid container  style={{marginTop:"3rem"}}>
-          <Grid item xs ={1} md={3}> </Grid>
-          <Grid item xs ={10} md={6}>
      
            { contacts.filter((contact)=>{
-             if(searchTerm == "") return contact
+             if(searchTerm === "") return contact
              else if (contact.firstName.toLowerCase().startsWith(searchTerm.toLowerCase()) || contact.lastName.toLowerCase().startsWith(searchTerm.toLowerCase()) )
                 return contact
            }).map((contact, index) => {
               return contact._id === myId ? 
               <div></div>
-                 /* style= {{textAlign: "center",padding: "4rem"}}>
-               Hey <span style ={{fontWeight:"bold"}}> {contact.firstName + " " + contact.lastName}</span> , All Users are your Friends <Link style ={{ fontWeight:"normal"}} to="/all-my-friends" >Click here</Link>
-              </div> */
-            : <SingleContact key={index} contact={contact}/>
+            : <SingleContact key={index} contact={contact}  roomId={roomId.current}/>
             } )
           }
-           </Grid>
-          <Grid item xs={1}   md={3}></Grid>
-        </Grid>
-         
-         
-        )
-          }
-        
-        
-      )
-          <Grid container   style={{display:"flex" ,marginBottom:"2rem"}}>
-          <Grid item xs ={1} md={3}> </Grid>
-          <Grid item xs ={10} md={6}>
-       <Button className= "loginbtn"
+           <Button className= "loginbtn"
             style={{textTransform:"capitalize",float:"right"}}
             variant="outlined" 
             color="Primary"
@@ -139,10 +121,17 @@ const AllContact = ({match}) => {
             color="Primary"
             onClick={event =>  history.push('/dashboard/'+myId)}><ArrowBackIcon/> Back
             </Button>
-         </Grid>
-       <Grid item xs ={1} md={3}> </Grid>
-       </Grid>
-      
+           </Grid>
+          <Grid item xs={1}   md={2}></Grid>
+        </Grid>
+         
+         
+       </div> )
+          }
+        
+        
+      )
+             
     </div> );
 }
  

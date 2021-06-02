@@ -20,12 +20,13 @@ const AllFriendRequest = ({match}) => {
         setSearchTerm(event.currentTarget.value)
      let clientSocket1 = useRef()
      let userEmail = isAuthenticated().email
-     const {setSocket,roomJoin,messageEvent} = useContext(SocketContext);
+     const {setSocket,roomJoin,messageEvent,friendReq} = useContext(SocketContext);
      let roomId = useRef()
      roomId.current = '/'+match.params.id
      let history = useHistory()
 
      window.onload = () => {
+        friendReq()
        messageEvent()
       let did = JSON.parse(localStorage.getItem('user'))._id
       roomJoin(did)
@@ -71,39 +72,38 @@ const AllFriendRequest = ({match}) => {
      },[]) */
 
      return ( 
-    <div>
+    <div  style={{height:"100vh"}} className="back_divs">
       <Header/>
       <PageTitle name= {"Friend Requests"}/>
-      <Grid container   style={{display:"flex" ,marginTop:"1.8rem",justifyContent:"center"}}>
-          <Grid item xs ={1} md={5}> </Grid>
-          <Grid item xs ={10} md={4}  >
+      {
+      friendreqs.length === 0 ? 
+        ( <div style= {{textAlign: "center",height:"100vh",
+    padding: "6rem", fontWeight:"bold"}}>No Friend Request</div>) 
+        :
+        (
+          <div>
+        <Grid container   style={{marginTop:"0.9rem" }}>
+          <Grid item xs ={1} md={3}> </Grid>
+          <Grid item xs ={10} md={6}>
+            <Grid container   style={{marginBottom:"1rem" }}>
+          <Grid item xs ={0} md={7}> </Grid>
+          <Grid item xs ={12} md={5}  >
             <TextField
                 value={searchTerm}
                 onChange={onChangeSearch}
-                placeholder="Search By Name..."
-                variant="outlined"
+                placeholder="Search by typing name"
+                 
         InputProps={{
           startAdornment: (
             <InputAdornment position="end">
-             <SearchIcon style={{ color: grey[600] ,marginRight:"0.4rem",float:"right"}}/>
+             <SearchIcon style={{ color: "black" ,marginRight:"0.4rem",float:"right"}}/>
             </InputAdornment>
           ),
          }}
             />
             </Grid>
-              <Grid item xs ={1} md={4}> </Grid>
+              
             </Grid>
-          
-  
-      {
-      friendreqs.length === 0 ? 
-        ( <div style= {{textAlign: "center",
-    padding: "6rem", fontWeight:"bold"}}>No Friend Request</div>) 
-        :
-        (
-        <Grid container   style={{marginTop:"3rem" }}>
-          <Grid item xs ={1} md={3}> </Grid>
-          <Grid item xs ={10} md={6}>
           {
           friendreqs.filter((friendreq)=>{
              if(searchTerm == "") return friendreq
@@ -112,25 +112,19 @@ const AllFriendRequest = ({match}) => {
            }).map((friendreq, index) => (
                <SingleFriendRequest key={index} friendreq={friendreq} onAcceptReject={getFriendRequest}/> )
           )}
-          </Grid>
-          <Grid item xs={1}   md={3}></Grid>
-        </Grid>
-         )
-         
-      }
-       <Grid container   style={{display:"flex" ,marginBottom:"2rem"}}>
-          <Grid item xs ={1} md={3}> </Grid>
-          <Grid item xs ={10} md={6}>
-      
- <Button className= "loginbtn"
+          <Button className= "loginbtn"
             style={{textTransform:"capitalize",float:"left"}}
             variant="outlined" 
             color="Primary"
             onClick={event =>  history.push('/all-contacts/'+myId)}><ArrowBackIcon/> Back
             </Button>
-         </Grid>
-       <Grid item xs ={1} md={3}> </Grid>
-       </Grid>
+          </Grid>
+          <Grid item xs={1}   md={3}></Grid>
+        </Grid>
+        </div> )
+         
+      }
+       
     </div> );
 
 }

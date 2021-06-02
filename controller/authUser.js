@@ -396,3 +396,26 @@ await user.save();
     });
   }
 }
+exports.deleteMyAccountController  = async (req, res) => {
+   try {
+   await UserModel.findByIdAndDelete(req.params.id)
+     await UserModel.updateMany(
+    {"friends":{$elemMatch:{id:req.params.id}}} ,
+  {$pull:{'friends':{"id":req.params.id}}}
+  );
+   
+   await UserModel.updateMany(
+    {"friendRequests":{$elemMatch:{id:req.params.id}}} ,
+  {$pull:{'friendRequests':{"id":req.params.id}}}
+  );
+     return res.status(200).json({
+      successMessage: "Your Account has been deleted",
+    });
+  }catch (error) {
+    console.log(error);
+    return res.status(400).json({
+      errorMessage: "Failed to Delete your Account",
+    });
+  }
+
+}

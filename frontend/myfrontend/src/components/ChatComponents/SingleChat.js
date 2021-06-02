@@ -1,15 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import { Grid } from "@material-ui/core";
+import { Grid, Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
 import { useHistory } from "react-router-dom";
 import chatservice from "../../services/ChatService";
-import userservice from "../../services/UserService";
 import Button from "@material-ui/core/Button";
 
 import "./chat.css";
@@ -30,26 +28,31 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: "calc(100vh - 112px)",
     overflowY: "auto",
   },
-  avatar: {
-    margin: theme.spacing(0, 3, 0, 1),
-  },
+   
   listText: {
     fontSize: "1.5rem",
     fontFamily: "Roboto",
-    marginLeft: "40px",
+    marginLeft: "0.5rem",
+    marginTop:"2rem",
+    fontWeight:"bold",
+    display:"inline"
    
   },
   listText1: {
-    fontSize: "1.2rem",
+    fontSize: "1.3rem",
     fontFamily: "Roboto",
     color: "gray",
-    marginLeft: "40px",
+   marginLeft: "0.5rem",
+    
+    
   },
   listTime:{
-    fontSize: "0.7rem",
+    fontSize: "0.8rem",
     fontFamily: "Roboto",
     color: "gray",
-    marginLeft: "200px"
+    marginLeft: "0.5rem",
+    display:"inline"
+     
   },
   listBtn: {
     backgroundColor: "rgb(0, 172, 193)",
@@ -91,7 +94,7 @@ const SingleChat = (props) => {
         console.log("user matched")
       });
     });
-    console.log("fr", fr);
+    //console.log("fr", fr);
     localStorage.setItem("friendId", fr.id);
     localStorage.setItem("recName", fr.name);
     localStorage.setItem("recLang", fr.lang);
@@ -102,21 +105,16 @@ const SingleChat = (props) => {
   return (
     <div>
       {props.recipients.map((r, index) => {
-        //console.log("r:", r);
         return (
-          <Grid xs={6}>
-            <ListItem button>
-              <ListItemAvatar>
-                <img src={r.img} alt='img' className={classes.img} />
-              </ListItemAvatar>
-              <ListItemText>
-                {/*  {setText(r,chatRecipients.lastMsg[index],chatRecipients.msgType[index])}
-                {elem}*/
-                 }
-
-                <Typography className={classes.listText}>{r.name}</Typography>
-                
-                {props.lastMsg.emails.forEach((u, ind) => {
+           
+             <Paper style={{padding:  '12px 10px', marginBottom:"1rem" }}  >
+              <Grid container>
+               <Grid item xs={1}  >
+                  <img src={r.img} alt='img'    style={{ height: "50px", width: "50px", borderRadius: "50%",display:"inline" }}/>
+               </Grid>
+           <Grid item    xs ={11}  >
+              <Typography className={classes.listText}>{r.name}</Typography>
+                 {props.lastMsg.emails.forEach((u, ind) => {
                   //console.log("inside for each lastMsg", u,ind)
                   //console.log("inside map:",props.lastMsg.types[ind])
                   //console.log("inside map:",props.lastMsg.senders[ind])
@@ -174,7 +172,7 @@ const SingleChat = (props) => {
                       elem = (
                         <div>
                         <Typography
-                          style={{ fontWeight: "bold", color: "black" }}
+                       style={{ fontWeight: "bold", color: "black" }}
                           className={classes.listText1}
                           onClick={() =>
                             recipientClickHandler(
@@ -193,9 +191,11 @@ const SingleChat = (props) => {
                       );
                     } else {
                       console.log("in nothing", props.lastMsg.types[ind]);
+                       console.log("in nothing1", props.lastMsg.senders[ind]);
                       elem = (
                         <div>
                           <Typography
+                         //  style={{ fontWeight: "bold", color: "black" }}
                             className={classes.listText1}
                             onClick={() =>
                               recipientClickHandler(
@@ -216,11 +216,19 @@ const SingleChat = (props) => {
                 })}
 
                 {elem}
-              </ListItemText>
-              <Divider />
-            </ListItem>
-            <Divider />
-          </Grid>
+           </Grid>
+               
+               
+                
+              <div>
+                {/*  {setText(r,chatRecipients.lastMsg[index],chatRecipients.msgType[index])}
+                {elem}*/
+                 }
+              </div>
+              
+          
+           </Grid>
+          </Paper>
         );
       })}
     </div>

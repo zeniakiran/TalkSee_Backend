@@ -14,7 +14,8 @@ const {
     deleteFriendController,
     getFriendRequestsController,
     getSentFriendRequestsController,
-    getAllFriendController
+    getAllFriendController,
+    getFriendRequestCountController
  } = require("../../controller/authFriend");
 
 router.post("/send-friend-request", sendFriendRequestValidation, sendFriendRequestController);
@@ -25,4 +26,5 @@ router.post("/delete-friend",deleteFriendValidation, deleteFriendController );
 router.get("/my-friend-requests/:id",getFriendRequestsController)
 router.get("/sent-friend-requests/:id",getSentFriendRequestsController)
 router.get("/my-friends-list/:id",getAllFriendController)
+router.get("/my-friend-requests-count/:id",getFriendRequestCountController)
 module.exports = router;

@@ -3,7 +3,10 @@
   margin: 0px;
   box-sizing: border-box;
 }
-
+html,
+body {
+  height: 100%;
+}
 /**Header Component*/
 .navbar {
   background: #8dadaf;
@@ -118,4 +121,26 @@
   background-color: #5a9ba034;
 }
 
+::-webkit-scrollbar {
+  width: 5px;
+}
 
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #b9b9b9;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #b9b9b9;
+}
+.back_divs {
+  overflow: auto;
+  background-color: #ebebeb;
+}

@@ -14,24 +14,25 @@ import AllFriends from "./components/FrontendComponents/components/AllFriends";
 import UpdateProfileSetup from "./components/FrontendComponents/components/updateProfileSetup";
 import Chat from "./components/ChatComponents/Chat";
 import MyChats from "./components/ChatComponents/AllChats";
-import Users from "./components/ChatComponents/Users";
 import {SocketProvider} from './context/SocketContext';
 import {MyChatsProvider} from './context/MyChatsContext';
 import {ChatContextProvider} from './context/ChatContext';
-//import {SocketContext} from './context/SocketContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 //import Notification from './components/FrontendComponents/Alerts/Notification'
+//import Users from "./components/ChatComponents/Users";
+//import {SocketContext} from './context/SocketContext';
 import { ToastContainer } from 'react-toastify';
-import {useState, useEffect, useContext } from 'react';
+import {useState} from 'react';
+import Profile from "./components/FrontendComponents/components/Profile";
+ 
 
 
 const App =() =>{
   const [userId,setId] = useState()
   const [dId,setDid] = useState()
-  //const [msg, setMsg] = useState()
+   /*const [msg, setMsg] = useState()
   //const {messageEvent} = useContext(SocketContext);
-  
-  /* useEffect(()=>{
+  useEffect(()=>{
     messageEvent()
 
   },[]) */
@@ -56,8 +57,8 @@ const App =() =>{
             <Route exact path ="/all-contacts/:id" component= {AllContact}/>
             <Route exact path = "/all-friend-requests/:id" component ={AllFriendRequest}/>
             <Route exact path ="/all-my-friends/:id" component ={AllFriends} />
+             <Route exact path ="/profile/:id/:id" component ={Profile} />
             <Route exact path="/notfound" component={notFound} />
-
             <Route path="/chat/:id" render={(props) => (
               <Chat {...props} key={props.location.key} />
             )} exact>
@@ -66,6 +67,7 @@ const App =() =>{
               <MyChats {...props} key={props.location.key}/>
             )} exact>
             </Route>
+             
             <Redirect to="/notfound" />  
       </Switch>
       </Router>

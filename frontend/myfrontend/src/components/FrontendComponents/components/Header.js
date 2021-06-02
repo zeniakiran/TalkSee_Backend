@@ -22,8 +22,8 @@ const myProfileImg =isAuthenticated().profileImg;
         <img
           src= {myProfileImg}
           alt="Profile"
-          className="img-fluid rounded-circle p-1"
-          style={{ maxWidth: "3em" }}
+           
+          style={{ height: "50px", width: "50px", borderRadius: "50%",display:"inline" }}
          onclick={()=>history.push('/update-my-profile-setup/'+myId)}
         /> </Link> 
         <span style ={{fontWeight:"bold", fontSize:"25px" }}>{firstName +" " + lastName}</span></div>
@@ -63,7 +63,7 @@ const myProfileImg =isAuthenticated().profileImg;
                 </li>
                  <li className="nav-item">
                   <button
-                    className="btn text-decoration-none btn-link   pl-0"
+                    className="btn text-decoration-none btn-link   pl-0 nav-link"
                     style={{textDecoration:"none"}}
                     onClick={handleLogOut}
                   >

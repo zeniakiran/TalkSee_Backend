@@ -40,7 +40,7 @@ router.get("/", async (req, res) => {
         });
         if(!messageFromDb) 
             return res.send("No messages from current email"); 
-        //console.log(messageFromDb)
+        console.log(messageFromDb)
         return res.send(messageFromDb); 
     }
     catch(err){
@@ -79,7 +79,7 @@ router.get("/offlinemessages/:email",async (req, res) => {
             return res.send("No messages from current email"); 
 
         let myArray = messageFromDb;
-        console.log(myArray)
+       // console.log(myArray)
         let myCount = 0;
         let obj;
         let arrayFrom = []
@@ -103,7 +103,7 @@ router.get("/offlinemessages/:email",async (req, res) => {
         arrayTo = Array.from(new Set(arrayTo));
         console.log("sender",arrayFrom)
         obj = {sender: arrayFrom, receiver: arrayTo}
-        console.log("obj:",obj)
+       console.log("obj:",obj)
         return res.send({count: myCount, info : obj}); 
     }
     catch(err){
@@ -114,7 +114,7 @@ router.get("/offlinemessages/:email",async (req, res) => {
 router.get("/chatrecipients/:email",async (req, res) => {
     try {
         let emailAdd = req.params.email;
-        console.log("add",emailAdd)
+       // console.log("add",emailAdd)
         let chatsFromDb = await Messages.find({
              $or: [ { from: emailAdd},
                     {to : emailAdd} ] 
@@ -165,7 +165,7 @@ router.get("/lastmsg/:email",async (req, res) => {
                 type: messageFromDb[(messageFromDb.length)-1].type,
                 sender: messageFromDb[(messageFromDb.length)-1].from,
                 time : messageFromDb[(messageFromDb.length)-1].time}
-        return res.status(200).send(obj); 
+        return res.status(200).send(obj) 
     }
     catch(err){
         res.status(400).send(err);

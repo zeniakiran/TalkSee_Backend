@@ -1,7 +1,7 @@
 import React ,{createContext, useEffect} from 'react'
 import chatservice from '../services/ChatService'
-import {showNotification} from '../components/FrontendComponents/Alerts/showMessage'
-import Notification from '../components/FrontendComponents/Alerts/Notification'
+//import {showNotification} from '../components/FrontendComponents/Alerts/showMessage'
+//import Notification from '../components/FrontendComponents/Alerts/Notification'
 import { toast } from 'react-toastify';
 import { Slide, Zoom, Flip, Bounce } from 'react-toastify';
 export const ChatContext = createContext();

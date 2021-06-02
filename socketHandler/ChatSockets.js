@@ -63,7 +63,7 @@ const socketHandler = (clientSocket, serverSocket) => {
                 notification: payload
               }); */
               /* serverSocket.to(u.id).emit("newRecipient",{
-                payload
+                payload 
               });  */
           }
           else{
@@ -108,15 +108,22 @@ const socketHandler = (clientSocket, serverSocket) => {
     })
 
     clientSocket.on("myChats", (payload,cb) =>{  
-            console.log("emitted myChats",payload.roomId)
-            serverSocket.to(payload.roomId).emit("newRecipient",{
-            message : payload.message,
-            userImg : payload.userImg
-            });
-        cb(undefined)
+      console.log("emitted myChats",payload.roomId)
+      serverSocket.to(payload.roomId).emit("newRecipient",{
+      message : payload.message,
+      userImg : payload.userImg
+      });
+    cb(undefined)
     })
 
-    
+    clientSocket.on("friendRequest", (payload,cb) => {   
+      console.log(payload)
+      serverSocket.to(payload.roomId).emit("newRequest",{
+        sender : payload.myName
+        });
+      cb(undefined)  
+    })
+
     clientSocket.on('adduser', (payload)=> {
       console.log("in add user",payload.id)
       let flag=0
@@ -169,4 +176,3 @@ const socketHandler = (clientSocket, serverSocket) => {
   };
   
   module.exports = { socketHandler };
-  

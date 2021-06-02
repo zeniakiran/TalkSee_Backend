@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useContext, useState } from "react";
-import { MyChatsContext } from "../../context/MyChatsContext";
+import io from "socket.io-client";
 import { SocketContext } from "../../context/SocketContext";
 import SingleChat from "./SingleChat";
 import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
 import PageTitle from "../FrontendComponents/components/pageTitle";
 import Header from "../FrontendComponents/components/Header";
 import { useHistory } from "react-router-dom";
@@ -11,6 +10,7 @@ import chatservice from "../../services/ChatService";
 import userservice from "../../services/UserService";
 
 import "./chat.css";
+import { Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   mygrid: {
@@ -24,13 +24,10 @@ const AllChats = (props) => {
   let history = useHistory();
   const { clientSocket } = useContext(SocketContext);
   let uId = JSON.parse(localStorage.getItem("user")).email;
-  /* const [email,setEmail]= useState([])
-  const [lastMsg,setlastMsg]= useState([])
-  const [id,setId]= useState([])
-  const [url,setUrl]= useState([])
-  const [name,setName]= useState([]) */
+  const {setSocket,roomJoin,messageEvent, friendReq} = useContext(SocketContext);
   let emails = useRef([]);
   //let usersData = useRef([])
+  
   const [usersData, setData] = useState({uData:[]});
   const [lastMsg, setLastMsg] = useState({
     msgs: [],
@@ -49,7 +46,24 @@ const AllChats = (props) => {
   let recData = [];
   let recMsgs = [];
   let dummy = [];
+ let clientSocket1 = useRef()
 
+  window.onload = () => {
+    friendReq()
+    messageEvent()
+    let did = JSON.parse(localStorage.getItem('user'))._id
+    roomJoin(did)
+    clientSocket1 = io("http://127.0.0.1:5000")
+    setSocket((s)=>{
+      s = clientSocket1
+      s.on('connect' , () => {
+        console.log("connected",s.id);
+        s.emit("adduser",{id:s.id, name: uId})
+
+      });
+      return s;
+    })
+  };
   const getRecData = (uId) => {
     emails.current = []
     lastMsg.msgs = []; lastMsg.msgId = []; lastMsg.emails = []; 
@@ -257,7 +271,6 @@ const AllChats = (props) => {
             newR = [...newR, rec];
             newT = [...newT, type];
             sender = [...sender, rec];
-
             let myMsg = {
               ...msg,
               msgs: newMsg,
@@ -306,23 +319,27 @@ const AllChats = (props) => {
             senders: sender,
           };
     });
-
-
       }).catch((err)=>console.log(err))
       */
     
   };
 
   return (
-    <div>
+      <div  style={{height:"100vh"}} className="back_divs">
       <Header />
       <PageTitle name={"My Chats"} />
-
-      {console.log("in return")}
       {usersData.uData.length !== 0  && lastMsg.msgs.length !==0? (
-        <Paper md={8} xs={4} className={classes.mygrid}>
+        <div>
+            <Grid container   style={{marginTop:"0.9rem" }}>
+          <Grid item xs ={1} md={3}> </Grid>
+          <Grid item xs ={10} md={6}>
+     
           <SingleChat recipients={usersData.uData} lastMsg={lastMsg} />
-        </Paper>
+         
+        </Grid>
+        <Grid item xs ={1} md={3}> </Grid>
+        </Grid>
+        </div>
       ) : (
         <h5 style={{ textAlign: "center" }}>No Chats Yet!</h5>
       )}

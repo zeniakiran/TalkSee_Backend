@@ -12,10 +12,6 @@ import Paper from '@material-ui/core/Paper';
 import PageTitle from "../FrontendComponents/components/pageTitle";
 import Header from "../FrontendComponents/components/Header";
 import { useHistory } from 'react-router-dom';
-import chatservice from "../../services/ChatService"
-import userservice from "../../services/UserService"
-import Button from '@material-ui/core/Button';
-
 import "./chat.css"
 
 const useStyles = makeStyles((theme) => ({
@@ -72,13 +68,12 @@ const MyChats = (props)=> {
   const classes = useStyles();
   let history = useHistory()
   const {chatRecipients,getRecData,setRecipients} = useContext(MyChatsContext);
-
   const [loaded,isLoaded]= useState("hi")
   const {clientSocket} = useContext(SocketContext);
   let uId = JSON.parse(localStorage.getItem("user"))
   let roomId = useRef()
   let count = useRef(0)
-  roomId.current = 'mychats/'+props.match.params.id
+  roomId.current = 'chit-chat/'+props.match.params.id
   let recData = []
   let recMsgs = []
   let msgType = []
@@ -269,12 +264,6 @@ const MyChats = (props)=> {
           
         }
       </div>
-      
-  /* }
-  else{
-    console.log("no final array")
-  }
-    */
  )
   
   return (

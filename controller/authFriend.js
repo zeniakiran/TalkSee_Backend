@@ -1,3 +1,4 @@
+const { countBy } = require("lodash");
 const { UserModel } = require("../models/UserModel");
 exports.sendFriendRequestController = async (req, res) => {
     const{friendId, myId,myName, myProfileImg ,myEmail,myGender,myLangPreference} =req.body
@@ -191,3 +192,21 @@ exports.getAllFriendController =  async (req, res) => {
   }
     
 };
+exports.getFriendRequestCountController =  async (req, res) => {
+  try{
+    var count =0;
+  
+let data = await UserModel.findById(req.params.id, {friendRequests:true});
+  if (!data)
+      return res.status(400).json({
+        errorMessage: "ID is not Present",
+      });
+    return res.send((data.friendRequests.length).toString());
+  }
+  catch (err) {
+    console.log(err)
+    return res.status(400).json({
+      errorMessage: "Friend Request Counter error",
+    });
+  }
+}

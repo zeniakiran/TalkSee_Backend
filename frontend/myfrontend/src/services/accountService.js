@@ -7,6 +7,7 @@ class AccountService extends GenericService {
    profileSetup =(data)=>this.post("users/profile-setup",data);
    updateProfileSetup = (_id, data) =>this.put("users/update-profile-setup/" + _id, data);
    getMyAccount =(id) => this.get("users/my-account/" + id);
+   deleteMyAccount =(id)=> this.delete("users/delete-my-account/"+id);
 }
 let accountService = new AccountService();
 export default accountService;
