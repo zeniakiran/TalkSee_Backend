@@ -12,6 +12,7 @@ import AllContact from "./components/FrontendComponents/components/AllContacts";
 import AllFriendRequest from "./components/FrontendComponents/components/AllFriendRequest";
 import AllFriends from "./components/FrontendComponents/components/AllFriends";
 import UpdateProfileSetup from "./components/FrontendComponents/components/updateProfileSetup";
+import Profile from "./components/FrontendComponents/components/Profile";
 import Chat from "./components/ChatComponents/Chat";
 import MyChats from "./components/ChatComponents/AllChats";
 import Users from "./components/ChatComponents/Users";
@@ -56,6 +57,7 @@ const App =() =>{
             <Route exact path ="/all-contacts/:id" component= {AllContact}/>
             <Route exact path = "/all-friend-requests/:id" component ={AllFriendRequest}/>
             <Route exact path ="/all-my-friends/:id" component ={AllFriends} />
+            <Route exact path ="/profile/:id/:id" component ={Profile} />
             <Route exact path="/notfound" component={notFound} />
 
             <Route path="/chat/:id" render={(props) => (

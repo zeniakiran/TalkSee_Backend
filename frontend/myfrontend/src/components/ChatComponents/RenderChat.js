@@ -12,10 +12,14 @@ import Alert from '../FrontendComponents/Alerts/AlertBar'
 import chatservice from "../../services/ChatService";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import {Grid ,InputAdornment, TextField} from "@material-ui/core";
+import { Search } from "@material-ui/icons";
+import { grey } from '@material-ui/core/colors';
+import SearchIcon from '@material-ui/icons/Search';
 
 export default function RenderChat(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [isSearch, setSearch] = useState(false)
   const open = Boolean(anchorEl);
   const options = [
     'Search',
@@ -52,10 +56,80 @@ export default function RenderChat(props) {
   };
 
   const itemClickHandler= (option)=>{
-    console.log(option)
-    props.setDel(!props.isDel)
+    
+    if(option === 'Delete')
+      props.setDel(!props.isDel)
+    else if(option === 'Search')
+      setSearch(!isSearch)
   }
-  
+
+  const onChangeSearch = (event)=>{
+    //props.setTerm(event.currentTarget.value)
+    props.searchHandler(event.currentTarget.value)
+  }
+  useEffect(()=>{
+    let imgUrl = props.recipientInfo.url;
+    
+  })
+  let elem = null;
+  if(!props.isDel && !isSearch){
+    elem = (
+      <div>
+      <IconButton
+    aria-label="more"
+    aria-controls="long-menu"
+    aria-haspopup="true"
+    onClick={handleClick}
+    >
+    <MoreVertIcon />
+    </IconButton>
+    <Menu
+        id="long-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+        style: {
+            maxHeight: 48 * 4.5,
+            width: '20ch',
+        },
+        }}
+    >
+        {options.map((option) => (
+        <MenuItem key={option} selected={option === 'Search'} onClick={()=>itemClickHandler(option)}>
+            {option}
+        </MenuItem>
+        ))}
+    </Menu>
+      </div>
+    )
+  }
+  else if(props.isDel){
+    elem = (
+      <Button onClick={deleteChat}>
+          Delete
+      </Button>
+    )
+  }
+  else if(isSearch){
+    elem = (
+      <TextField
+       value={props.searchTerm}
+       onChange={onChangeSearch}
+        placeholder="Search By Name..."
+        variant="outlined"
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="end">
+             <SearchIcon style={{ color: grey[600] ,marginRight:"1rem",float:"right"}}/>
+            </InputAdornment>
+          ),
+         }}
+            />
+    )
+  }
+
   return (
     <React.Fragment>
       <Header />
@@ -71,40 +145,7 @@ export default function RenderChat(props) {
               />
               <span className='recName'>{props.recipientInfo.name}</span>
               {
-                  !(props.isDel) ?
-                  <div>
-                  <IconButton
-                aria-label="more"
-                aria-controls="long-menu"
-                aria-haspopup="true"
-                onClick={handleClick}
-                >
-                <MoreVertIcon />
-                </IconButton>
-                <Menu
-                    id="long-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={open}
-                    onClose={handleClose}
-                    PaperProps={{
-                    style: {
-                        maxHeight: 48 * 4.5,
-                        width: '20ch',
-                    },
-                    }}
-                >
-                    {options.map((option) => (
-                    <MenuItem key={option} selected={option === 'Search'} onClick={()=>itemClickHandler(option)}>
-                        {option}
-                    </MenuItem>
-                    ))}
-                </Menu>
-                  </div>
-                  :
-                  <Button onClick={deleteChat}>
-                  Delete
-                  </Button>
+                  elem
               }
             </div>
             {props.element}

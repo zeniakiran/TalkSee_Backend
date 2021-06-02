@@ -57,9 +57,7 @@ const LogIn = ({onIdSubmit,setId}) => {
   window.onload = () => {
     friendReq()
     messageEvent()
-    let did = JSON.parse(localStorage.getItem('user'))._id
-    roomJoin(did)
-    clientSocket1 = io("http://127.0.0.1:5000")
+    /* clientSocket1 = io("http://127.0.0.1:5000")
     setSocket((s)=>{
       s = clientSocket1
       s.on('connect' , () => {
@@ -68,7 +66,7 @@ const LogIn = ({onIdSubmit,setId}) => {
         
       });
       return s;
-    })
+    }) */
   };
 
   useEffect(()=>{

@@ -103,7 +103,7 @@ const AllContact = ({match}) => {
           <Grid item xs ={10} md={6}>
      
            { contacts.filter((contact)=>{
-             if(searchTerm == "") return contact
+             if(searchTerm === "") return contact
              else if (contact.firstName.toLowerCase().startsWith(searchTerm.toLowerCase()) || contact.lastName.toLowerCase().startsWith(searchTerm.toLowerCase()) )
                 return contact
            }).map((contact, index) => {
