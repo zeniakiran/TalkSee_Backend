@@ -66,14 +66,17 @@ export default function SingleChat(props) {
   };
 
   useEffect(() => {
+    let mycount=0;
     friendService.getAllFriends(us._id)
     .then((data)=>{
       friends.current = data
       friends.current.forEach((f) => {
-        if(f.email !== recipient.current)
-           setIsFriend(false)
+        if(f.email === recipient.current)
+          mycount=mycount+1
         
       })
+      if(mycount<1)
+       setIsFriend(false)
       })
       .catch((err=>{console.log(err)}))
     getData();

@@ -161,10 +161,8 @@ export default function RenderChat(props) {
             ) : null}
  
             </div>
-           
-            {
- 
-            props.isFriend === true?
+           {/*  <TypeMessage sendMessage={props.sendMessage} /> */}
+           { props.isFriend === true?
             <TypeMessage sendMessage={props.sendMessage} />
             :
             <Alert
