@@ -11,7 +11,7 @@ import { Zoom } from 'react-toastify';
 
 export default function SingleChat(props) {
   const [chat, setChat] = useState([{ from: "", to: "", messages: [] }]);
-  const [searchChats, setSearchChats] = useState({messages :[]})
+  const [searchChats, setSearchChats] = useState({messages :['']})
   const [searchTerm, setSearchTerm] = useState("")
   const [loading, setLoading] = useState(false);
   const [isFriend, setIsFriend] = useState(true)
@@ -240,14 +240,7 @@ export default function SingleChat(props) {
       <h5 style={{ textAlign: "center" }}>There are currently no Messages</h5>
     );
   } else {
-    if(searchChats.messages.length === 0){
-      console.log("no match")
-      elem = (
-        <h5 style={{ textAlign: "center" }}>No match found!</h5>
-      )
-    }
-    
-    else if(searchTerm !== "" && searchChats.messages !== undefined){
+    if(searchTerm !== "" && searchChats.messages !== undefined){
       elem = (searchChats.messages.map((msg) =>{
         return <SettingMessage message={msg} user={user.current.uId} isDel={isDel} isOpen={myOpen} term={searchTerm}/>;
       })
@@ -259,6 +252,14 @@ export default function SingleChat(props) {
       })
       )
     }
+
+    if(searchChats.messages.length === 0){
+      console.log("no match")
+      elem = (
+        <h5 style={{ textAlign: "center" }}>No match found!</h5>
+      )
+    }
+    
     
   }
 
