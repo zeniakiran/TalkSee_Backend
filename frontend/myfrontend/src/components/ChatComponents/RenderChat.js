@@ -6,16 +6,20 @@ import IconButton from '@material-ui/core/IconButton';
 import Alert from '../FrontendComponents/Alerts/AlertBar'
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import MoreVertIcon from '@material-ui/icons/MoreVert'
+import SearchIcon from '@material-ui/icons/Search';
+import DeleteIcon from '@material-ui/icons/Delete';
 import Header from "../FrontendComponents/components/Header";
+import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
 import chatservice from "../../services/ChatService";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import DeleteIcon from '@material-ui/icons/Delete';
+import CancelIcon from '@material-ui/icons/Cancel';
 import {Grid ,InputAdornment, TextField} from "@material-ui/core";
 import { grey } from '@material-ui/core/colors';
-import SearchIcon from '@material-ui/icons/Search';
+
  
 
 export default function RenderChat(props) {
@@ -26,26 +30,13 @@ export default function RenderChat(props) {
     'Search',
     'Delete'
   ];
-  const deleteChat = ()=>{
-    if(props.msgsToDel.msgs !== undefined){
-    console.log("props",props.msgsToDel.msgs)
-    props.msgsToDel.msgs.map((msg) => {
-      chatservice.deleteMessage(msg._id).then((res)=>console.log("response: ",res))
-      .catch((err)=>  console.log(err))
-    })
-    props.getData()
-  }
-  else{
-    toast.error("Please select a message to delete",{
-          position: toast.POSITION.TOP_LEFT,
-        })
-    //console.log("props", props.msgsToDel)
-  }
-  }
-  
-  
+  const [openMenu, setMenu] = useState(true)
+  const [open1, setOpen] = useState(false)
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+    //props.setMyOpen(true)
+    setOpen(true)
   };
 
   const handleClose = (option) => {
@@ -53,8 +44,10 @@ export default function RenderChat(props) {
   };
 
   const itemClickHandler= (option)=>{
-   if(option === 'Delete')
-      props.setDel(!props.isDel)
+   if(option === 'Delete'){
+      props.setDel(true)
+      setMenu(false)
+   }
     else if(option === 'Search')
       setSearch(!isSearch)
   }
@@ -69,7 +62,7 @@ export default function RenderChat(props) {
 
   })
   let elem = null;
-  if(!props.isDel && !isSearch){
+  if(openMenu){
     elem = (
       <div  style={{display:"inline",float:"right",marginTop:"0.6rem"}}>
       <IconButton
@@ -81,7 +74,8 @@ export default function RenderChat(props) {
     >
     <MoreVertIcon />
     </IconButton>
-    <Menu
+    {open1 ?
+      <Menu
         id="long-menu"
         anchorEl={anchorEl}
         keepMounted
@@ -89,28 +83,46 @@ export default function RenderChat(props) {
         onClose={handleClose}
         PaperProps={{
         style: {
+            marginTop: '40px',
             maxHeight: 48 * 4.5,
             width: '20ch',
         },
-        }}
-    >
-        {options.map((option) => (
-        <MenuItem key={option} selected={option === 'Search'} onClick={()=>itemClickHandler(option)}>
-            {option}
+      }}
+      >
+        <MenuItem onClick={()=>itemClickHandler('Search')}>
+          <ListItemIcon>
+            <SearchIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Search" />
         </MenuItem>
-        ))}
+        <MenuItem onClick={()=>itemClickHandler('Delete')}>
+          <ListItemIcon>
+            <DeleteIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Delete" />
+        </MenuItem>
     </Menu>
+    :
+    null
+    }
+      
+    
       </div>
     )
   }
-  else if(props.isDel){
+  if(props.isDel){
     elem = (
-     <Button onClick={deleteChat} className="Allbtn" style={{textTransform:"capitalize" ,float:"right",marginTop:"0.8rem"}}>
-                  <DeleteIcon style={{color:"gray"}} />
-        </Button>
+     <Button className="Allbtn" style={{textTransform:"capitalize" ,float:"right",marginTop:"0.8rem"}}>
+          <CancelIcon style={{color:"gray"}} onClick={() => {
+            console.log(props.isDel)
+            props.setDel(false)
+            setOpen(false)
+            setMenu(true)
+            }} />
+      </Button>
     )
   }
-  else if(isSearch){
+  if(isSearch){
     elem = (
       <TextField
        style={{float:"right",marginRight:"1rem",marginTop:"0.8rem",backgroundColor:"white",borderRadius:"1rem"}}
@@ -122,12 +134,22 @@ export default function RenderChat(props) {
         InputProps={{
           startAdornment: (
             <InputAdornment position="end">
-             <SearchIcon style={{ color: grey[600] ,marginRight:"0.4rem",float:"right"}}/>
+              <SearchIcon style={{ color: grey[600] ,marginRight:"0.4rem",float:"right"}}/>
+              <Button className="Allbtn" style={{textTransform:"capitalize" ,float:"right",marginTop:"0.8rem"}}>
+          <CancelIcon style={{color:"gray"}} onClick={() => {
+            console.log(props.isDel)
+            setSearch(false)
+            setOpen(false)
+            setMenu(true)
+            }} />
+      </Button>
             </InputAdornment>
           ),
           disableUnderline: true 
          }}
-            />
+         
+      />
+      
     )
   }
   return (
@@ -161,7 +183,6 @@ export default function RenderChat(props) {
             ) : null}
  
             </div>
-           {/*  <TypeMessage sendMessage={props.sendMessage} /> */}
            { props.isFriend === true?
             <TypeMessage sendMessage={props.sendMessage} />
             :
@@ -173,9 +194,9 @@ export default function RenderChat(props) {
           }
               </Grid>
               <Grid item xs ={1} md={2}></Grid>
-                </Grid>
-                </div>
-                </React.Fragment>
+              </Grid>
+              </div>
+              </React.Fragment>
  
   );
 }
