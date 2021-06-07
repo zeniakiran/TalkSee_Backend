@@ -3,17 +3,15 @@ import "./chat.css"
 import { Player } from 'video-react';
 import "video-react/dist/video-react.css"
 import {  Grid, Button } from "@material-ui/core";
-import DeleteIcon from '@material-ui/icons/Delete';
-
 import DeleteMessage from './DeleteMsg'
-
+import chatservice from "../../services/ChatService";
 export default function SettingMessage(props) {
  
-
+  var boxchecked = JSON.parse(localStorage.getItem("deletion"));
   const [open, setOpen] = React.useState(false);
   const [show,setShow] = React.useState(false)
   const [messageId, setId] = useState()
-
+ 
   const handleClose = () => {
     setOpen(false);
   };
@@ -23,8 +21,19 @@ export default function SettingMessage(props) {
   let msgArr = []
   
   const handleClickOpen= (msgId)=>{
+     if(boxchecked.state === true){
+        console.log("mid in settingmsg1",msgId);
+        setShow(false)
+           chatservice.deleteMessage(msgId).then((res)=>{
+          console.log("response: ",res)
+          props.getData()
+        })
+        .catch((err)=>  console.log(err))
+     }
+     else{
     setShow(true)
-    setId(msgId)
+    console.log("mid in settingmsg2",msgId);
+    setId(msgId)}
   }
 
   if (props.message.to === props.user) {
@@ -32,13 +41,7 @@ export default function SettingMessage(props) {
      elem = (
       <div >
         <div className='incoming_msg_img'>
-           {
-            props.isDel ?
-            <Button className="Allbtn" style={{textTransform:"capitalize" ,marginTop:"0.8rem", color:"gray"}}>
-              <DeleteIcon onClick={()=>handleClickOpen(props.message._id)}/>
-            </Button>
-            : null
-          }
+          
         </div>
         <Grid container >
               <Grid item xs={6} md={3}>  
@@ -46,13 +49,21 @@ export default function SettingMessage(props) {
                 <Player   >
                  <source src={props.message.messageVideo} />
               </Player>
+
               
-                </div></Grid>
-              <Grid item xs={6} md={9}  ></Grid> 
+                </div>
+                </Grid>
+              <Grid item xs={6} md={9}  >  {
+            props.isDel ?
+            <Button className="Allbtn"  style={{textTransform:"capitalize" ,marginTop:"0.8rem", color:"#EC5454",fontSize:"1.2rem"}}>
+              <i class="fas fa-trash-alt"   onClick={()=>handleClickOpen(props.message._id)}></i>
+            </Button>
+
+            : null
+          }</Grid> 
               </Grid>
                <div class="chat-message is-received">
                 <div class="message-block">
-                  
                <div class="message-text">{props.message.messageBody}</div>
                    <span className="received_time_date"> {props.message.time}</span>
                 </div>
@@ -65,15 +76,15 @@ export default function SettingMessage(props) {
     elem = (
       <div >
         
-          {
+         
+          <Grid container >
+              <Grid item xs={6} md={9}>  {
             props.isDel ?
-            <Button className="Allbtn" style={{textTransform:"capitalize" ,float:"right",marginTop:"0.8rem",color:"gray"}}>
-              <DeleteIcon onClick={()=>handleClickOpen(props.message._id)}/>
+            <Button className="Allbtn" style={{textTransform:"capitalize" ,float:"right",marginTop:"0.8rem",color:"#EC5454",fontSize:"1.2rem"}}  >
+               <i class="fas fa-trash-alt"  onClick={()=>handleClickOpen(props.message._id)}></i>
             </Button>
             : null
-               }
-          <Grid container >
-              <Grid item xs={6} md={9}></Grid>
+               }</Grid>
               <Grid item xs={6} md={3}  >
                  <div style={{marginRight:"15px",marginTop:"12px",marginBottom:"8px"}}> 
                 <Player   >
@@ -97,6 +108,7 @@ export default function SettingMessage(props) {
   }
   return (
     <div>
+        
         {elem}
         {
         show ?

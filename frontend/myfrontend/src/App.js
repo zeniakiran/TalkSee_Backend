@@ -24,6 +24,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { ToastContainer } from 'react-toastify';
 import {useState} from 'react';
 import Profile from './components/FrontendComponents/components/Profile';
+import DeletePermissionProvider from './context/DeletePermissionContext';
+import UserRoute from './components/FrontendComponents/components/userRoutes';
 
 const App =() =>{
   const [userId,setId] = useState()
@@ -35,11 +37,11 @@ const App =() =>{
 
   },[]) */
   return (
-    <div className="App">
-  
+    <div className="App"> 
     <MyChatsProvider userId={userId} >
     <ChatContextProvider userId={userId} >
     <SocketProvider id={dId} >
+    <DeletePermissionProvider> 
     <ToastContainer/>
     <Router>
       <Switch>
@@ -47,21 +49,21 @@ const App =() =>{
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/login"><LogIn onIdSubmit={setId}  setId={setDid}/></Route>
             <Route exact path="/user/activate/:token" component={Activate} />
-            <Route exact path="/dashboard/:id"  component ={UserDashboard} />
+            <UserRoute exact path="/dashboard/:id"  component ={UserDashboard} />
             <Route exact path="/reset-password/:token" component={ResetPassword} />
             <Route exact path="/forgot-password" component={ForgotPassword} />
             <Route exact path="/profile-setup/:token" component={ProfileSetup}/>
-            <Route exact path="/update-my-profile-setup/:id" component={UpdateProfileSetup}/>
-            <Route exact path ="/all-contacts/:id" component= {AllContact}/>
-            <Route exact path = "/all-friend-requests/:id" component ={AllFriendRequest}/>
-            <Route exact path ="/all-my-friends/:id" component ={AllFriends} />
-             <Route exact path ="/profile/:id/:id" component ={Profile} />
+            <UserRoute exact path="/update-my-profile-setup/:id" component={UpdateProfileSetup}/>
+            <UserRoute exact path ="/all-contacts/:id" component= {AllContact}/>
+            <UserRoute exact path = "/all-friend-requests/:id" component ={AllFriendRequest}/>
+            <UserRoute exact path ="/all-my-friends/:id" component ={AllFriends} />
+             <UserRoute exact path ="/profile/:id/:id" component ={Profile} />
  
-            <Route exact path="/notfound" component={notFound} />
-            <Route path="/chat/:id" render={(props) => (
+            <UserRoute exact path="/notfound" component={notFound} />
+            <UserRoute path="/chat/:id" render={(props) => (
               <Chat {...props} key={props.location.key} />
             )} exact>
-            </Route>
+            </UserRoute>
             <Route path="/mychats/:id" render={(props) => (
               <MyChats {...props} key={props.location.key}/>
             )} exact>
@@ -70,9 +72,11 @@ const App =() =>{
             <Redirect to="/notfound" />  
       </Switch>
       </Router>
+       </DeletePermissionProvider>  
     </SocketProvider>
     </ChatContextProvider>
     </MyChatsProvider>
+  
     </div>
   );
 }

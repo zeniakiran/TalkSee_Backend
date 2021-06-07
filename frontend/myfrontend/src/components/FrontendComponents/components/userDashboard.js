@@ -178,13 +178,13 @@ useEffect(()=>{
          {
           friendCount >= 1 ?
            <Button className= "loginbtn"
-             style={{ padding:"10px 20px" , marginTop:"2rem",display:"block",backgroundColor:"#F08080 "}}
+             style={{ padding:"10px 20px" , marginTop:"2rem",display:"block",backgroundColor:"#8298D5"}}
            variant="contained" 
             color="Secondary" 
             fullWidth
              onClick={event =>  history.push('/all-friend-requests/'+myId)}>
             <Badge badgeContent={friendCount} color="secondary" style={{marginRight:"0.5rem"}}>
-              <PeopleAltIcon className='chaticon'
+              <GroupAddRoundedIcon className='chaticon'
               onClick={event =>  history.push('/all-friend-requests/'+myId)}
               color = "white"
               />  
@@ -193,12 +193,12 @@ useEffect(()=>{
             </Button>
           :
          <Button className= "loginbtn"
-             style={{ padding:"10px 50px" ,marginTop:"2rem",display:"block",backgroundColor:"#F08080 "}}
+             style={{ padding:"10px 50px" ,marginTop:"2rem",display:"block",backgroundColor:"#8298D5"}}
            variant="contained" 
             color="Secondary" 
             fullWidth
              onClick={event =>  history.push('/all-friend-requests/'+myId)}>
-          <PeopleAltIcon className='chaticon'
+          <GroupAddRoundedIcon className='chaticon'
               color = "white"
               />  My Friend Requests
             </Button>
@@ -213,15 +213,7 @@ useEffect(()=>{
               <SettingsIcon className='chaticon'
               color = "white"/>Update Profile
             </Button>
-       <Button className= "loginbtn"
-             style={{ padding:"10px 21px",marginTop:"2rem",display:"block",backgroundColor:"#8298D5"}}
-           variant="contained" 
-            color="Secondary"
-            fullWidth
-            onClick={event =>  history.push('/all-friend-requests/'+myId)}>
-              <GroupAddRoundedIcon className='chaticon'
-              color = "white"/>Friend Requests
-            </Button>
+       
              <Button className= "loginbtn"
              style={{padding:"10px 20px",marginTop:"2rem",display:"block",backgroundColor:"#C3767F"}}
             variant="contained" 

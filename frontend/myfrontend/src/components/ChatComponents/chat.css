@@ -306,3 +306,7 @@ img {
   width: 5rem;
   margin-right: 0.3rem;
 }
+.Menu_div:hover {
+  background: #05728f !important;
+  color: white !important;
+}

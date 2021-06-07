@@ -237,7 +237,7 @@ export default function SingleChat(props) {
   
   if (chat.messages === undefined) {
     elem = (
-      <h5 style={{ textAlign: "center" }}>There are currently no Messages</h5>
+      <h5 style={{ textAlign: "center" }}>Loading...</h5>
     );
   } else {
     if(searchTerm !== "" && searchChats.messages !== undefined){

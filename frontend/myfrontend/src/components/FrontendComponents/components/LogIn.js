@@ -30,8 +30,8 @@ import io from "socket.io-client";
 
 import {SocketContext} from '../../../context/SocketContext';
 //import { v4 as uuidv4 } from 'uuid';
-
 import { authentication, isAuthenticated } from "../clientStorages/auth";
+import { DeletePermission } from "../../../context/DeletePermissionContext";
  
 const useStyles = makeStyles((theme) => ({
    textField: {
@@ -43,9 +43,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 const LogIn = ({onIdSubmit,setId}) => {
-  const classes = useStyles();
   let history = useHistory();
   const {setSocket,roomJoin,messageEvent, friendReq} = useContext(SocketContext);
+  const classes = useStyles(); 
+  const { dispatch } = useContext(DeletePermission);
   let clientSocket1 = React.useRef()
   useEffect(() => {
     if (isAuthenticated() && isAuthenticated().role === 1)
@@ -127,8 +128,12 @@ const LogIn = ({onIdSubmit,setId}) => {
           else {
         history.push("/dashboard/"+isAuthenticated()._id);};
           setValues({ ...values, loading: false });
-          console.log(isAuthenticated()._id)
           setId(isAuthenticated()._id)
+         var del=  JSON.parse(localStorage.getItem("deletion"));
+         if (del == "")
+            dispatch({ type: "updatePermission", value: false })
+         
+           
         })
         .catch((err) => {
           setValues({

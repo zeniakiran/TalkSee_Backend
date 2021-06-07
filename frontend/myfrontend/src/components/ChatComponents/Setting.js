@@ -1,4 +1,4 @@
-import React, {useEffect,useRef} from "react";
+/*import React, {useEffect,useRef} from "react";
 import "./chat.css"
 import { Player } from 'video-react';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -6,7 +6,7 @@ import "video-react/dist/video-react.css"
 import {  Grid } from "@material-ui/core";
 export default function Setting(props) {
  const [checked, setChecked] = React.useState(false);
-//let checked = false
+let checked = false
 let count = useRef(0)
   const [messages, setMessages] = React.useState({msg : []});
   let someArray = [];
@@ -15,10 +15,10 @@ let count = useRef(0)
     setChecked(event.target.checked)
     count.current = count.current + 1
     console.log(count.current)
-    //checked = event.target.checked
+    checked = event.target.checked
     console.log(checked)
     if(checked===true){
-      //console.log(messages.msg.length)
+      console.log(messages.msg.length)
       if(messages.msg.length === 0){
         setMessages({msg : [message]})
         console.log("if",messages)
@@ -37,7 +37,7 @@ let count = useRef(0)
   let elem = null;
   let indexOfTerm = []
   let msgArr = []
-  /* if(props.term){
+   if(props.term){
     console.log("term",props.term)
 
 
@@ -48,7 +48,7 @@ let count = useRef(0)
   }
   else{
     console.log("no term")
-  } */
+  } 
 
 
   if (props.message.to === props.user) {
@@ -143,11 +143,11 @@ let count = useRef(0)
     console.log("nothing");
   }
 
-  /* useEffect(() => {
+   useEffect(() => {
     props.delHandler(messages);
-  }, [messages.msg]); */
+  }, [messages.msg]); 
 
   return (
     elem
   );
-}
+}*/

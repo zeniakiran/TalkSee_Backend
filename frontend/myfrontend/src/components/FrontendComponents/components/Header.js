@@ -67,8 +67,8 @@ const myProfileImg =isAuthenticated().profileImg;
                     style={{textDecoration:"none"}}
                     onClick={handleLogOut}
                   >
-                    <i className="fa fa-sign-out" aria-hidden="true"></i> Logout
-                  </button>
+                    <i className="fas fa-sign-out-alt" aria-hidden="true"></i> Logout
+                  </button> 
                 </li>
               </Fragment>
             )}

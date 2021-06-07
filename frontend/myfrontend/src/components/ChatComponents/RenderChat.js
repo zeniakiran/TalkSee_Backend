@@ -19,7 +19,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import CancelIcon from '@material-ui/icons/Cancel';
 import {Grid ,InputAdornment, TextField} from "@material-ui/core";
 import { grey } from '@material-ui/core/colors';
-
+import ReactTooltip from 'react-tooltip';
  
 
 export default function RenderChat(props) {
@@ -86,20 +86,22 @@ export default function RenderChat(props) {
             marginTop: '40px',
             maxHeight: 48 * 4.5,
             width: '20ch',
+            
         },
       }}
       >
-        <MenuItem onClick={()=>itemClickHandler('Search')}>
-          <ListItemIcon>
-            <SearchIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Search" />
+        <MenuItem className ="Menu_div" onClick={()=>itemClickHandler('Search')}>
+          <div >
+            <SearchIcon fontSize="small" style={{width:"2rem"}}/>
+            <p style={{display:"inline"}}>Search</p>
+          </div>
         </MenuItem>
-        <MenuItem onClick={()=>itemClickHandler('Delete')}>
-          <ListItemIcon>
-            <DeleteIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Delete" />
+        <MenuItem  className ="Menu_div" onClick={()=>itemClickHandler('Delete')}>
+          <div>
+            <DeleteIcon fontSize="small" style={{width:"2rem",paddingBottom:"0.1rem"}} />
+               <p style={{display:"inline"}}>Delete</p>
+          </div>
+      
         </MenuItem>
     </Menu>
     :
@@ -112,14 +114,16 @@ export default function RenderChat(props) {
   }
   if(props.isDel){
     elem = (
-     <Button className="Allbtn" style={{textTransform:"capitalize" ,float:"right",marginTop:"0.8rem"}}>
-          <CancelIcon style={{color:"gray"}} onClick={() => {
+      <div style={{color:"gray",cursor:"pointer",float:"right",marginTop:"1rem",marginRight:"1rem"}} data-tip='Close delete Menu' data-for='delete'>
+          <CancelIcon onClick={() => {
             console.log(props.isDel)
             props.setDel(false)
             setOpen(false)
             setMenu(true)
             }} />
-      </Button>
+          
+            </div>
+
     )
   }
   if(isSearch){
@@ -134,16 +138,19 @@ export default function RenderChat(props) {
         InputProps={{
           startAdornment: (
             <InputAdornment position="end">
-              <SearchIcon style={{ color: grey[600] ,marginRight:"0.4rem",float:"right"}}/>
-              <Button className="Allbtn" style={{textTransform:"capitalize" ,float:"right",marginTop:"0.8rem"}}>
-          <CancelIcon style={{color:"gray"}} onClick={() => {
+              <SearchIcon style={{ color: grey[600] ,marginRight:"0.2rem",float:"right"}}/>
+       
+            </InputAdornment>
+          ),
+          endAdornment :(
+               <CancelIcon style={{color:"gray",cursor:"pointer",marginRight:"0.4rem"}} onClick={() => {
             console.log(props.isDel)
+            props.setTerm("")
             setSearch(false)
             setOpen(false)
             setMenu(true)
             }} />
-      </Button>
-            </InputAdornment>
+      
           ),
           disableUnderline: true 
          }}
@@ -156,6 +163,7 @@ export default function RenderChat(props) {
     <React.Fragment>
        <div  style={{ height:"100vh"}} className="chat_div"> 
       <Header />     
+        <ReactTooltip id='delete'/>
             <Grid container spacing={0} style={{display:"flex"}}>
               <Grid item xs ={1} md={2}></Grid>
               <Grid item xs ={10} md={8} style={{marginTop:"1rem" }}>

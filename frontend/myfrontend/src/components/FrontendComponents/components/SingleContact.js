@@ -63,7 +63,8 @@ const SingleContact = (props) => {
     }
     return (
         <div>
-       <Paper style={{padding: '10px 20px', marginBottom:"2rem"}} onClick={contactClickHandler} >
+       <Paper style={{padding: '10px 20px', marginBottom:"2rem"}} //onClick={contactClickHandler}
+        >
               <img src={contact.profileImg}  className="img-fluid rounded-circle p-2"
           style={{ width: "4.9em" ,display:"inline" }} alt="img"/>
               <h4   style={{display:"inline"  }}>{contact.firstName + " "+ contact.lastName}</h4>
