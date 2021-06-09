@@ -58,16 +58,15 @@ const App =() =>{
             <UserRoute exact path = "/all-friend-requests/:id" component ={AllFriendRequest}/>
             <UserRoute exact path ="/all-my-friends/:id" component ={AllFriends} />
              <UserRoute exact path ="/profile/:id/:id" component ={Profile} />
- 
-            <UserRoute exact path="/notfound" component={notFound} />
+            <Route exact path="/notfound" component={notFound} />
             <UserRoute path="/chat/:id" render={(props) => (
               <Chat {...props} key={props.location.key} />
-            )} exact>
+            )} exact component={Chat}>
             </UserRoute>
-            <Route path="/mychats/:id" render={(props) => (
+            <UserRoute path="/mychats/:id" render={(props) => (
               <MyChats {...props} key={props.location.key}/>
-            )} exact>
-            </Route>
+            )} exact component={MyChats}>
+            </UserRoute>
              
             <Redirect to="/notfound" />  
       </Switch>
