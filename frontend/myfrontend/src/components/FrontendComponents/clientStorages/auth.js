@@ -15,5 +15,9 @@ export const isAuthenticated = () => {
 export const logout = (next) => {
   removeCookie("token");
   removeLocalStorage("user");
+  removeLocalStorage("friendId");
+  removeLocalStorage("recName");
+  removeLocalStorage("profileUrl");
+  removeLocalStorage("recLang");
   next();
 };

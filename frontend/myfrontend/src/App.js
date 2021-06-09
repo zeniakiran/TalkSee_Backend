@@ -67,7 +67,6 @@ const App =() =>{
               <MyChats {...props} key={props.location.key}/>
             )} exact component={MyChats}>
             </UserRoute>
-             
             <Redirect to="/notfound" />  
       </Switch>
       </Router>
