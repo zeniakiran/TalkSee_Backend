@@ -143,11 +143,11 @@ const LogIn = ({onIdSubmit,setId}) => {
             errorMessage: err.response.data.errorMessage,
           });
         });
-        //var id 
+       
         onIdSubmit(email)
         
         console.log("email",email)
-        //generateUU(uuidv4())
+        
     }
   };
   

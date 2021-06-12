@@ -11,7 +11,8 @@ var messagesSchema = mongoose.Schema({
         default : new Date().toLocaleString()
     },
     type: String,
-    messageVideo: String
+    messageVideo: String,
+    msgId : String
 });
 
 var Messages = mongoose.model("Messages", messagesSchema);

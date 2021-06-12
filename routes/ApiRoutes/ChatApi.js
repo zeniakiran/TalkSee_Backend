@@ -7,15 +7,7 @@ var { Messages } = require("../../models/MessageModel");
 //const admin = require("../../Middlewares/admin");
 //let Pusher = require('pusher');
 var cors = require("cors")
-let Pusher = require('pusher');
 
-
-  let pusher = new Pusher({
-    appId: process.env.PUSHER_APP_ID,
-    key: process.env.PUSHER_APP_KEY,
-    secret: process.env.PUSHER_APP_SECRET,
-    cluster: process.env.PUSHER_APP_CLUSTER
-});
 router.get("/", async (req, res) => {
     try {
         let chatFromDb = await Messages.find();
@@ -182,6 +174,7 @@ router.post("/",async (req,res)=>{
     message.messageVideo = req.body.messageVideo;
     message.time = req.body.time ;
     message.type = req.body.type;
+    message.msgId = req.body.msgId
     await message.save();
     return res.status(200).send("Message has been added to database successfully!");
     }
@@ -193,7 +186,8 @@ router.post("/",async (req,res)=>{
 
   router.delete("/:id", async (req,res)=>{
     try{
-        let msgId = await Messages.findByIdAndDelete(req.params.id);
+        console.log(req.params.id)
+        let msgId = await Messages.findOneAndDelete({msgId : req.params.id});
         if(!msgId) 
             return res.send("Message does not exist");
 
