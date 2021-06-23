@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import RenderChat from './RenderChat'
 import { toast } from 'react-toastify';
 import { Zoom } from 'react-toastify';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function SingleChat(props) {
   const [chat, setChat] = useState([{ from: "", to: "", messages: [] }]);
@@ -28,11 +29,11 @@ export default function SingleChat(props) {
   let id = props.match.params.id.split(" ");
   const { clientSocket } = useContext(SocketContext);
   const [isDel , setDel] = useState(false)
-  const [myOpen, setMyOpen] = React.useState(true)
+  const [isChat, setIsChat] = React.useState(false)
   var us = JSON.parse(localStorage.getItem("user"));
   //const [messagesToDel, setMsgs] = useState([])
   
-  useEffect(() => {
+  //useEffect(() => {
     recipientInfo.current.name = localStorage.getItem("recName");
     recipientInfo.current.lang = localStorage.getItem("recLang");
     recipientInfo.current.url = localStorage.getItem("profileUrl");
@@ -42,15 +43,21 @@ export default function SingleChat(props) {
     user.current.uId = us.email;
     user.current.uName = us.firstName + " " + us.lastName;
     user.current.uImg = us.profileImg
-  }, []);
+ // }, [us]);
 
   const getData = () => {
     console.log("in get Data",user)
     chatservice
       .getMessagesbyEmail(user.current.uId, recipient.current)
       .then((data) => {
-        chats.current = data;
-        setChat({ messages: chats.current });
+        if(data)
+        {
+          console.log("This data",data)
+          chats.current = data;
+          setChat({ messages: chats.current });
+          setIsChat(true)
+        }
+        
       })
       .catch((err) => toast.error(
         'Database Connection Error', {
@@ -60,6 +67,8 @@ export default function SingleChat(props) {
       }));
       
   };
+
+  
 
   useEffect (()=>{
     let mycount=0;
@@ -149,6 +158,7 @@ export default function SingleChat(props) {
       messageVideo: "returndata",
       time: new Date().toLocaleString(),
       type: "offline",
+      msgId : uuidv4()
     };
     clientSocket.emit("messageSend", messageS, (err) => {
       if (!err) {
@@ -219,14 +229,6 @@ export default function SingleChat(props) {
     if(chat.messages){
       
     const list = chat.messages.filter(msg => msg.messageBody.toLowerCase().includes(searchTerm.toLowerCase()));
-    /* if(list.length === 0)
-      {
-        elem = (
-          <div>
-            No match
-          </div>
-        )
-      } */
     setSearchChats({messages : list});
     }
     else{
@@ -236,19 +238,20 @@ export default function SingleChat(props) {
 
   
   if (chat.messages === undefined) {
+    
     elem = (
       <h5 style={{ textAlign: "center" }}>Loading...</h5>
     );
   } else {
     if(searchTerm !== "" && searchChats.messages !== undefined){
       elem = (searchChats.messages.map((msg) =>{
-        return <SettingMessage message={msg} user={user.current.uId} isDel={isDel} isOpen={myOpen} term={searchTerm}/>;
+        return <SettingMessage message={msg} user={user.current.uId} isDel={isDel} term={searchTerm}/>;
       })
       )
     }
     else{
       elem = (chat.messages.map((msg) =>{
-        return  <SettingMessage message={msg} user={user.current.uId} isDel={isDel} getData = {getData} isOpen={myOpen} id={id[1]} rec={recipient.current}/>;
+        return  <SettingMessage message={msg} user={user.current.uId} isDel={isDel} getData = {getData} id={id[1]} rec={recipient.current}/>;
       })
       )
     }
@@ -271,9 +274,8 @@ export default function SingleChat(props) {
      sendMessage = {sendMessage}
      isDel ={isDel}
      setDel = {setDel}
-     myOpen={myOpen}
-     setMyOpen={setMyOpen}
      isFriend = {isFriend}
+     isChat={isChat}
      getData ={getData}
      searchTerm = {searchTerm}
      setTerm = {setSearchTerm}

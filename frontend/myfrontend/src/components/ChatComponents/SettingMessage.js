@@ -21,19 +21,19 @@ export default function SettingMessage(props) {
   let msgArr = []
   
   const handleClickOpen= (msgId)=>{
-     if(boxchecked.state === true){
-        console.log("mid in settingmsg1",msgId);
-        setShow(false)
-           chatservice.deleteMessage(msgId).then((res)=>{
-          console.log("response: ",res)
-          props.getData()
-        })
-        .catch((err)=>  console.log(err))
-     }
-     else{
-    setShow(true)
-    console.log("mid in settingmsg2",msgId);
-    setId(msgId)}
+    if(boxchecked.state === true){
+      console.log("mid in settingmsg1",msgId);
+      setShow(false)
+         chatservice.deleteMessage(msgId).then((res)=>{
+        console.log("response: ",res)
+        props.getData()
+      })
+      .catch((err)=>  console.log(err))
+   }
+   else{
+  setShow(true)
+  console.log("mid in settingmsg2",msgId);
+  setId(msgId)}
   }
 
   if (props.message.to === props.user) {
@@ -56,7 +56,7 @@ export default function SettingMessage(props) {
               <Grid item xs={6} md={9}  >  {
             props.isDel ?
             <Button className="Allbtn"  style={{textTransform:"capitalize" ,marginTop:"0.8rem", color:"#EC5454",fontSize:"1.2rem"}}>
-              <i class="fas fa-trash-alt"   onClick={()=>handleClickOpen(props.message._id)}></i>
+              <i class="fas fa-trash-alt"   onClick={()=>handleClickOpen(props.message.msgId)}></i>
             </Button>
 
             : null
@@ -81,7 +81,7 @@ export default function SettingMessage(props) {
               <Grid item xs={6} md={9}>  {
             props.isDel ?
             <Button className="Allbtn" style={{textTransform:"capitalize" ,float:"right",marginTop:"0.8rem",color:"#EC5454",fontSize:"1.2rem"}}  >
-               <i class="fas fa-trash-alt"  onClick={()=>handleClickOpen(props.message._id)}></i>
+               <i class="fas fa-trash-alt"  onClick={()=>handleClickOpen(props.message.msgId)}></i>
             </Button>
             : null
                }</Grid>
