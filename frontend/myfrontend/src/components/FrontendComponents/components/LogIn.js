@@ -32,7 +32,7 @@ import {SocketContext} from '../../../context/SocketContext';
 //import { v4 as uuidv4 } from 'uuid';
 import { authentication, isAuthenticated } from "../clientStorages/auth";
 import { DeletePermission } from "../../../context/DeletePermissionContext";
- 
+import LogoPage from "./LogoPage"
 const useStyles = makeStyles((theme) => ({
    textField: {
     marginTop: theme.spacing(2),
@@ -68,7 +68,6 @@ const LogIn = ({onIdSubmit,setId}) => {
       s.on('connect' , () => {
         console.log("connected",s.id);
         s.emit("adduser",{id:s.id, name: isAuthenticated().email})
-
       });
       return s;
     })*/
@@ -143,20 +142,21 @@ const LogIn = ({onIdSubmit,setId}) => {
             errorMessage: err.response.data.errorMessage,
           });
         });
-        //var id 
+       
         onIdSubmit(email)
         
         console.log("email",email)
-        //generateUU(uuidv4())
+        
     }
   };
   
   const LogInForm = () => (
-    <div className="Login-container">
+    <div >
       <Grid container>
         <Grid item xs={1} sm={3} md={4}></Grid>
         <Grid item xs={10} sm={6} md={4}>
-           <Paper style={{padding: '30px 50px'}} > 
+         
+           <Paper  className="Login-container" style={{padding: '30px 50px'}} > 
             <Grid container style={{textAlign:"center"}}>
           <Grid item xs={6} >
             <Link className="active-header"  to="/login">Sign In</Link>      
@@ -171,7 +171,7 @@ const LogIn = ({onIdSubmit,setId}) => {
            style={{marginTop:"2rem"}}
             label={
               <div> 
-             <Typography variant="headline" style={{fontWeight:"bold",fontStyle:"italic"  }}> Email Address </Typography>
+             <Typography variant="headline" style={{fontWeight:"bold",fontStyle:"italic"   }}> Email Address </Typography>
              <Typography variant="headline" style={{color:"red"}}>*</Typography>
                   </div>
                   }
@@ -191,7 +191,7 @@ const LogIn = ({onIdSubmit,setId}) => {
           
          <FormControl className={clsx(classes.margin, classes.textField)} fullWidth>
          <InputLabel htmlFor="standard-adornment-password"> 
-             <Typography variant="headline" style={{fontWeight:"bold",fontStyle:"italic"  }}> Password</Typography>
+             <Typography variant="headline" style={{fontWeight:"bold",fontStyle:"italic"    }}> Password</Typography>
              <Typography variant="headline" style={{color:"red",marginLeft:"0.4rem"}}>*</Typography>
          </InputLabel>
                     <Input
@@ -236,18 +236,23 @@ const LogIn = ({onIdSubmit,setId}) => {
             Sign in
           </Button>
            <Link to="/forgot-password" style={{textDecoration:"none",marginLeft:"1rem auto"}}  >Forgot Password?</Link>
+
    </Paper>
+   
          </Grid>
-        <Grid item xs={1} sm={3} md={4}></Grid>
+        <Grid item xs={1} sm={3} md={4} >
+        </Grid>
+         
       </Grid>
     </div>
   );
   return (
-    <div>
+    <div className="login_div">
       {loading && <LinearBuffer />}
-     
-             <PageTitle name= {"TalkSee"}/>
-      {LogInForm()}
+    
+           
+             <LogoPage className="title" name= {"TalkSee"}/>
+                  {LogInForm()} 
       
      
       {errorMessage && (

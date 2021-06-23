@@ -9,14 +9,15 @@ body {
 }
 /**Header Component*/
 .navbar {
-  background: #8dadaf;
+  background: #2188a8;
   z-index: 1;
   text-transform: capitalize;
 }
 .navbar .nav-link {
   color: rgb(231, 226, 221) !important;
+  font-family: "Tangerine", serif;
+  text-shadow: 4px 4px 4px #aaa;
   font-size: 18px;
-  font-weight: bold;
   text-transform: capitalize;
 }
 .btn-link {
@@ -50,24 +51,25 @@ body {
   text-decoration: none;
   color: rgb(0, 172, 193);
 }
-
+.header_name {
+  color: whitesmoke !important;
+  font-family: "Tangerine", serif;
+  font-weight: bold;
+  text-shadow: 2px 2px 2px #c2bebe;
+  font-size: 1.5rem;
+}
 .loginbtn:focus {
   outline: none !important;
 }
 
 /**ProfileSetup*/
 .profile-page {
-  margin-top: 10px;
   height: 40vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 .profile-container {
-  height: 330px;
-  width: 300px;
+  height: 320px;
+  width: 365px;
   border-radius: 10px;
-  margin-top: 2rem;
   background-color: #5a9ba034;
 }
 
@@ -75,14 +77,15 @@ body {
   margin: auto;
   width: 175px;
   height: 175px;
-  border: 3px black solid;
   border-radius: 5px;
-  margin-top: 1rem;
 }
 .profile-img {
   width: 175px;
   height: 175px;
   object-fit: cover;
+  margin-top: 5px !important;
+  border: 3px black solid;
+  border-radius: 5px;
 }
 #input[type="file"] {
   display: none;
@@ -97,19 +100,19 @@ body {
   margin: auto;
   width: 220px;
   height: 45px;
-  color: white;
+  color: #2188a8;
   border-radius: 30px;
-  background-color: rgb(0, 172, 193);
+  background-color: rgb(236, 235, 235);
   text-align: center;
   cursor: pointer;
 }
 .take-photo {
   width: 220px;
   height: 45px;
-  color: white;
+  color: #2188a8;
   border-radius: 30px;
-  border: 1px solid rgb(0, 172, 193);
-  background-color: rgb(0, 172, 193);
+  border: 1px solid rgb(236, 235, 235);
+  background-color: rgb(236, 235, 235);
   text-align: center;
   cursor: pointer;
 }
@@ -143,4 +146,162 @@ body {
 .back_divs {
   overflow: auto;
   background-color: #ebebeb;
+}
+.wrapper {
+  display: flex;
+  position: fixed;
+}
+
+.wrapper .sidebar {
+  width: 200px;
+  height: 100vh;
+  background: #2188a8;
+  padding: 30px 0px;
+  font-family: "Tangerine", serif;
+  text-shadow: 4px 4px 4px #aaa;
+}
+
+.wrapper .sidebar h4 {
+  color: rgb(231, 222, 222);
+  text-transform: capitalize;
+  text-align: center;
+  margin-top: 5px;
+  margin-bottom: 2rem;
+}
+.wrapper .sidebar #profile_div {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.wrapper .sidebar ul li {
+  padding: 15px;
+  border-bottom: 3px solid #ffff;
+  border-bottom: 1px solid rgba(13, 95, 133, 0.05);
+  border-top: 1px solid rgba(13, 95, 133, 0.05);
+}
+
+.wrapper .sidebar ul li a {
+  color: white;
+  display: block;
+}
+
+.wrapper .sidebar ul li a .fas {
+  width: 25px;
+}
+
+.wrapper .sidebar ul li:hover {
+  background-color: #ebebeb;
+}
+
+.wrapper .sidebar ul li:hover a {
+  color: #2188a8;
+}
+
+.wrapper .sidebar .social_media {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+}
+
+.wrapper .sidebar .social_media button {
+  display: block;
+  width: 190px;
+  background: #c3cbce;
+  padding: 0.3rem;
+  text-align: center;
+  margin: 0 5px;
+  color: rgb(66, 63, 63) !important;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.wrapper .sidebar .social_media i {
+  color: rgb(196, 15, 15) !important;
+}
+
+.wrapper .main_content {
+  width: 100%;
+  margin-left: 200px;
+}
+
+.wrapper .main_content .header {
+  padding: 20px;
+  background: #fff;
+  color: #717171;
+  border-bottom: 1px solid #e0e4e8;
+}
+
+.wrapper .main_content .info {
+  margin: 20px;
+  color: #717171;
+  line-height: 25px;
+}
+
+.wrapper .main_content .info div {
+  margin-bottom: 20px;
+}
+/*17c3ba*/
+.user_names {
+  font-family: "Tangerine", serif;
+  display: inline;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.login_div {
+  position: relative;
+  height: 100vh;
+
+  overflow: auto;
+}
+
+.login_div::before {
+  content: "";
+  background-image: url("https://images.unsplash.com/photo-1605456259003-30d0e01864d2?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTgwfHxyb3lhbCUyMGJsdWUlMjBjaXJjbGUlMjBiYWNrZ3JvdW5kfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=60");
+  background-size: cover;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  opacity: 0.95;
+}
+.signup_div {
+  position: relative;
+  overflow: auto;
+}
+.signup_div::before {
+  content: "";
+  background-image: url("https://images.unsplash.com/photo-1605456259003-30d0e01864d2?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTgwfHxyb3lhbCUyMGJsdWUlMjBjaXJjbGUlMjBiYWNrZ3JvdW5kfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=60");
+  background-size: cover;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  opacity: 0.95;
+}
+.Login-container {
+  position: relative;
+  background: whitesmoke !important;
+}
+.title {
+  position: relative;
+  color: black !important;
+}
+.loginImg {
+  position: relative;
+  width: 100px;
+  height: 60px;
+  display: inline;
+}
+/*rgb(161, 136, 127)*/
+.friendCounter {
+  color: white !important;
+  background-color: red !important ;
+  padding: 0.2rem 0.3rem;
+  border-radius: 50%;
+  position: absolute;
+  font-size: 12px;
+  margin-top: -10px;
+  margin-left: -3px;
 }

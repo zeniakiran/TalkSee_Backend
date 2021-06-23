@@ -32,7 +32,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { signup } from "../api/auth";
 import PageTitle from "./pageTitle";
 import { isAuthenticated } from "../clientStorages/auth";
- 
+import LogoPage from "./LogoPage"
 
 const useStyles = makeStyles((theme) => ({
    
@@ -153,7 +153,7 @@ const SignUp = () => {
       <Grid container>
         <Grid item xs={1} sm={3} md={4}></Grid>
         <Grid item xs={10} sm ={6} md={4}>
-          <Paper style={{padding: '30px 40px'}} >
+          <Paper  className="Login-container" style={{padding: '30px 30px'}} >
               <Grid container style={{textAlign:"center"}}>
           <Grid item xs={6} >
             <Link className="header"  to="/login">Sign In</Link>      
@@ -324,7 +324,7 @@ const SignUp = () => {
     </div>
   );
   return (
-    <div>
+    <div className="signup_div">
       {loading && <LinearBuffer />}
       {errorMessage && (
         <AlertBar type="error" message={errorMessage} autoClose={4000} />
@@ -332,7 +332,7 @@ const SignUp = () => {
       {successMsg && (
         <AlertBar type="success" message={successMsg} autoClose={4000} />
       )}
-       <PageTitle name= {"TalkSee"}/>
+       <LogoPage className="title" name= {"TalkSee"}/>
       {SignUpForm()}
     </div>
   );
