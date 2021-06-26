@@ -6,7 +6,7 @@ import {  Grid, Button } from "@material-ui/core";
 import DeleteMessage from './DeleteMsg'
 import chatservice from "../../services/ChatService";
 export default function SettingMessage(props) {
- 
+
   var boxchecked = JSON.parse(localStorage.getItem("deletion"));
   const [open, setOpen] = React.useState(false);
   const [show,setShow] = React.useState(false)
@@ -37,7 +37,7 @@ export default function SettingMessage(props) {
   }
 
   if (props.message.to === props.user) {
-
+console.log(props.message.msgId)
      elem = (
       <div >
         <div className='incoming_msg_img'>
@@ -73,6 +73,7 @@ export default function SettingMessage(props) {
   
   }
   else if (props.message.from === props.user) {
+    console.log(props.message.msgId)
     elem = (
       <div >
         

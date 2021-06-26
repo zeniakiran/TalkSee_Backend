@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useRef,useState } from "react";
 import SingleFriendRequest from "./SingleFriendRequest";
 import friendService from "../../../services/friendService";
-import { Button, Grid,InputAdornment, TextField  } from "@material-ui/core";
+import { Button, Grid,Hidden,InputAdornment, TextField  } from "@material-ui/core";
 import PageTitle from "./pageTitle";
 import { isAuthenticated } from "../clientStorages/auth";
 import { useHistory } from 'react-router-dom';
@@ -11,6 +11,7 @@ import { grey } from '@material-ui/core/colors';
 import {SocketContext} from '../../../context/SocketContext';
 import SearchIcon from '@material-ui/icons/Search';
 import io from "socket.io-client";
+import SideBar from "./SideBar";
  
 const AllFriendRequest = ({match}) => {
      const myId=isAuthenticated()._id;
@@ -20,7 +21,7 @@ const AllFriendRequest = ({match}) => {
         setSearchTerm(event.currentTarget.value)
      let clientSocket1 = useRef()
      let userEmail = isAuthenticated().email
-     const {setSocket,roomJoin,messageEvent,friendReq} = useContext(SocketContext);
+     const {setSocket,roomJoin,messageEvent,friendReq,getRequest,acceptRejectCounter} = useContext(SocketContext);
      let roomId = useRef()
      roomId.current = '/'+match.params.id
      let history = useHistory()
@@ -28,6 +29,7 @@ const AllFriendRequest = ({match}) => {
      window.onload = () => {
         friendReq()
        messageEvent()
+       getRequest()
       let did = JSON.parse(localStorage.getItem('user'))._id
       roomJoin(did)
       clientSocket1 = io("http://127.0.0.1:5000")
@@ -45,7 +47,9 @@ const AllFriendRequest = ({match}) => {
      const getFriendRequest = () => 
      {
       friendService.getFriendRequest(myId).then((data)=>{
-                setFrndRequest(data)})
+                setFrndRequest(data)
+                acceptRejectCounter();
+              })
             .catch((err=>{console.log(err)}))
      }
     useEffect(getFriendRequest , []);
@@ -73,7 +77,14 @@ const AllFriendRequest = ({match}) => {
 
      return ( 
     <div  style={{height:"100vh"}} className="back_divs">
-      <Header/>
+     <Grid container>
+       <Hidden only={['xs', 'sm']}>
+          <Grid item xs ={5} md={2}><SideBar/></Grid>
+          </Hidden>
+            <Hidden only={['md', 'lg']}>
+          <Grid item xs={12} ><Header/></Grid>
+          </Hidden>
+           <Grid item xs={12} md={10}>
       <PageTitle name= {"Friend Requests"}/>
       {
       friendreqs.length === 0 ? 
@@ -83,8 +94,8 @@ const AllFriendRequest = ({match}) => {
         (
           <div>
         <Grid container   style={{marginTop:"0.9rem" }}>
-          <Grid item xs ={1} md={3}> </Grid>
-          <Grid item xs ={10} md={6}>
+          <Grid item xs ={1} md={1}> </Grid>
+          <Grid item xs ={10} md={10}>
             <Grid container   style={{marginBottom:"1rem" }}>
           <Grid item xs ={0} md={7}> </Grid>
           <Grid item xs ={12} md={5}  >
@@ -112,19 +123,16 @@ const AllFriendRequest = ({match}) => {
            }).map((friendreq, index) => (
                <SingleFriendRequest key={index} friendreq={friendreq} onAcceptReject={getFriendRequest}/> )
           )}
-          <Button className= "loginbtn"
-            style={{textTransform:"capitalize",float:"left"}}
-            variant="outlined" 
-            color="Primary"
-            onClick={event =>  history.push('/all-contacts/'+myId)}><ArrowBackIcon/> Back
-            </Button>
+           
           </Grid>
-          <Grid item xs={1}   md={3}></Grid>
+          <Grid item xs={1}   md={10}></Grid>
         </Grid>
         </div> )
          
       }
-       
+         </Grid>
+  
+      </Grid>
     </div> );
 
 }

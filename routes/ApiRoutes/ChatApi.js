@@ -7,7 +7,15 @@ var { Messages } = require("../../models/MessageModel");
 //const admin = require("../../Middlewares/admin");
 //let Pusher = require('pusher');
 var cors = require("cors")
+let Pusher = require('pusher');
 
+
+  let pusher = new Pusher({
+    appId: process.env.PUSHER_APP_ID,
+    key: process.env.PUSHER_APP_KEY,
+    secret: process.env.PUSHER_APP_SECRET,
+    cluster: process.env.PUSHER_APP_CLUSTER
+});
 router.get("/", async (req, res) => {
     try {
         let chatFromDb = await Messages.find();
@@ -32,7 +40,7 @@ router.get("/", async (req, res) => {
         });
         if(!messageFromDb) 
             return res.send("No messages from current email"); 
-        console.log(messageFromDb)
+     //   console.log(messageFromDb)
         return res.send(messageFromDb); 
     }
     catch(err){
@@ -84,18 +92,11 @@ router.get("/offlinemessages/:email",async (req, res) => {
                 arrayTo.push(elem.to)
             }
         })
-        /* obj.map((o)=>{
-            console.log("o",o)
-             arrayFrom.push(o.sender)
-             arrayTo = Array.from(new Set(o.receiver));
-        }) */
-        
         
         arrayFrom = Array.from(new Set(arrayFrom));
-        arrayTo = Array.from(new Set(arrayTo));
-        console.log("sender",arrayFrom)
+        arrayTo = Array.from(new Set(arrayTo)); 
         obj = {sender: arrayFrom, receiver: arrayTo}
-       console.log("obj:",obj)
+       console.log("obj:",myCount)
         return res.send({count: myCount, info : obj}); 
     }
     catch(err){
@@ -174,7 +175,6 @@ router.post("/",async (req,res)=>{
     message.messageVideo = req.body.messageVideo;
     message.time = req.body.time ;
     message.type = req.body.type;
-    message.msgId = req.body.msgId
     await message.save();
     return res.status(200).send("Message has been added to database successfully!");
     }
@@ -186,8 +186,7 @@ router.post("/",async (req,res)=>{
 
   router.delete("/:id", async (req,res)=>{
     try{
-        console.log(req.params.id)
-        let msgId = await Messages.findOneAndDelete({msgId : req.params.id});
+        let msgId = await Messages.findByIdAndDelete(req.params.id);
         if(!msgId) 
             return res.send("Message does not exist");
 

@@ -1,17 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
-
+import React, { useEffect, useRef, useState ,useContext} from "react";
 import { Grid, Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 import { useHistory } from "react-router-dom";
 import chatservice from "../../services/ChatService";
-import Button from "@material-ui/core/Button";
-
+import { format } from "timeago.js";
 import "./chat.css";
-
+import {SocketContext} from '../../context/SocketContext';
 const useStyles = makeStyles((theme) => ({
   subheader: {
     display: "flex",
@@ -79,7 +74,7 @@ const SingleChat = (props) => {
   let elem = null;
   let user = JSON.parse(localStorage.getItem("user"));
   let messages = useRef([]);
-
+const {msgNotify}=useContext(SocketContext);
   console.log("props",props.lastMsg)
   const recipientClickHandler = (fr, type) => {
     chatservice.getMessagesbyEmail(user.email, fr.email).then((res) => {
@@ -88,7 +83,9 @@ const SingleChat = (props) => {
         if (m.type === "offline" && m.from !== user.email) {
           chatservice
             .changeMessageType({ type: "read" }, m._id)
-            .then((res) => console.log(res))
+            .then((res) => {
+              console.log("The response is here",res) 
+              msgNotify();})
             .catch((err) => console.log(err));
         }
         console.log("user matched")
@@ -100,6 +97,7 @@ const SingleChat = (props) => {
     localStorage.setItem("recLang", fr.lang);
     localStorage.setItem("profileUrl", fr.img);
     history.push("/chat/" + fr.email + " " + fr.id);
+    
   };
 
   return (
@@ -137,7 +135,7 @@ const SingleChat = (props) => {
                               
                             </Typography>
                             <Typography className={classes.listTime}>
-                            {props.lastMsg.time[ind]}
+                            {format(props.lastMsg.time[ind])}
                             </Typography>
                         </div>
                         
@@ -160,7 +158,7 @@ const SingleChat = (props) => {
                           {props.lastMsg.msgs[ind]}
                         </Typography>
                         <Typography className={classes.listTime}>
-                            {props.lastMsg.time[ind]}
+                            {format(props.lastMsg.time[ind])}
                         </Typography>
                         </div>
                       );
@@ -184,7 +182,7 @@ const SingleChat = (props) => {
                           {props.lastMsg.msgs[ind]}
                         </Typography>
                         <Typography className={classes.listTime}>
-                            {props.lastMsg.time[ind]}
+                            {format(props.lastMsg.time[ind])}
                         </Typography>
                         </div>
                         
@@ -207,7 +205,7 @@ const SingleChat = (props) => {
                             {props.lastMsg.msgs[ind]}
                           </Typography>
                           <Typography className={classes.listTime}>
-                              {props.lastMsg.time[ind]}
+                              {format(props.lastMsg.time[ind])}
                           </Typography>
                         </div>
                       );

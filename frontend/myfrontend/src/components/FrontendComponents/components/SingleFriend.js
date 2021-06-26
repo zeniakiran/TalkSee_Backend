@@ -30,14 +30,14 @@ const SingleFriend = (props) => {
     } 
     let history = useHistory()
     return (
-       <Paper style={{padding:  '12px 10px', marginBottom:"1rem" }}  >
+       <Paper style={{padding:  '20px 10px', marginBottom:"1rem" }}  >
          <Grid container style={{display:"flex"}}>
-           <Grid item    xs ={12} sm={8} md={8}>
+           <Grid item    xs ={12} sm={12} md={9}>
               <img src={friend.profileImg}
-          style={{  marginRight:"0.3rem",height: "50px", width: "50px", borderRadius: "50%",display:"inline",padding:"0.2rem" }} alt="img"/>
-              <p   style={{display:"inline" ,fontWeight:"bolder",fontSize:"1.2rem" }}>{friend.name}</p>
+          style={{  marginRight:"0.5rem",height: "60px", width: "60px", borderRadius: "20%",display:"inline",padding:"0.2rem" }} alt="img"/>
+              <p   className="user_names"  >{friend.name}</p>
            </Grid>
-           <Grid item   xs={12} sm={4} md={4}  >
+           <Grid item   xs={12} sm={12} md={3}  >
              <Button className= "loginbtn"
               style={{ backgroundColor:lightGreen[700],color:"white",margin:"0.4rem" }}
             variant="contained" 

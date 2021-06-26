@@ -6,7 +6,7 @@ import Select from "react-select";
 import { makeStyles } from '@material-ui/core/styles';
 import Resizer from 'react-image-file-resizer';
 import { grey, cyan} from '@material-ui/core/colors';
-import {Button} from "@material-ui/core";
+import {Button, Grid, Hidden} from "@material-ui/core";
 import Header from "./Header";
 import axios from 'axios';
 import accountService from "../../../services/accountService";
@@ -15,6 +15,7 @@ import {SocketContext} from '../../../context/SocketContext';
  
 import io from "socket.io-client";
 import Webcam from "react-webcam";
+import SideBar from "./SideBar";
 const useStyles = makeStyles({
   
   textfield: {
@@ -255,8 +256,10 @@ const updateProfile =()=>{
 }
  
   const ProfilePage = () =>( 
+    <Grid container>
+      <Grid item xs={1} sm={4} md={4}></Grid>
+      <Grid item xs={10} sm={4} md={4}>
   <div className="profile-page">
-    
       <div className="profile-container">
           <div className="img-holder">
              <img src={img} className="profile-img"/>
@@ -291,10 +294,12 @@ const updateProfile =()=>{
              style={{ color: grey[50],
               backgroundColor:cyan[600],
               fontWeight:"bold", 
+              fontSize:"1rem",
               borderRadius:"0.5rem" , 
               marginTop: "1rem",
               marginBottom: "0.8rem",
               padding: "0.5rem",
+              textTransform:"capitalize"
                }}
             className= "loginbtn"
             variant="contained"
@@ -340,11 +345,21 @@ const updateProfile =()=>{
   </div>
 </div>             
   </div>
+  </Grid>
+  <Grid item xs={1} sm={4} md={3}></Grid>
+  </Grid>
 )
-return (<div>
-    
+return (
+ <div  style={{height:"100vh"}} className="back_divs">    
     {loading && <LinearBuffer />}
-    <Header/>
+        <Grid container>
+          <Hidden only={['xs', 'sm']}>
+          <Grid item     md={2}><SideBar/></Grid>
+          </Hidden>
+           <Hidden only={['md', 'lg']}>
+          <Grid item xs={12} sm={12}><Header/></Grid>
+          </Hidden>
+       <Grid item  xs={12} sm={12} md={10}>
      <PageTitle name= {"Update Profile "}/>
       {errorMessage && (
         <AlertBar type="error" message={errorMessage} autoClose={3000} />
@@ -356,6 +371,8 @@ return (<div>
         <AlertBar type="success" message={successMsg} autoClose={2500} />
       )}
       {ProfilePage()}
+      </Grid>
+       </Grid>
     </div>
     )
 };

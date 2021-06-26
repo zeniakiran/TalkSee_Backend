@@ -1,4 +1,4 @@
-import { Button, Typography,Paper } from "@material-ui/core";
+import { Button, Typography,Paper, Grid, Hidden } from "@material-ui/core";
 import { isAuthenticated } from "../clientStorages/auth";
 import friendService from "../../../services/friendService";
 import React, { useState, useContext} from "react";
@@ -54,6 +54,14 @@ const SingleContact = (props) => {
              
          })
          .catch((err) => {console.log(err);});
+         clientSocket.emit(
+            "rejectfriendRequest",
+            { myName,roomId },
+            (err) => {
+              if (!err) console.log("emitted event");
+              else console.log(err);
+            }
+          );
     }
  
     const contactClickHandler = ()=>{
@@ -63,23 +71,33 @@ const SingleContact = (props) => {
     }
     return (
         <div>
-       <Paper style={{padding: '10px 20px', marginBottom:"2rem"}} //onClick={contactClickHandler}
+       <Paper style={{padding: '10px 20px', marginBottom:"1rem"}} //onClick={contactClickHandler}
         >
-              <img src={contact.profileImg}  className="img-fluid rounded-circle p-2"
-          style={{ width: "4.9em" ,display:"inline" }} alt="img"/>
-              <h4   style={{display:"inline"  }}>{contact.firstName + " "+ contact.lastName}</h4>
+            <Grid container>
+                 <Grid item xs={3} md={1}>  <img src={contact.profileImg}   
+          style={{ height: "60px", width: "60px", borderRadius: "20%" ,display:"inline" }} alt="img"/> </Grid>
+                <Grid item xs={9} md={9}> 
+            
+             <div style={{display:"inline"}}><p  className="user_names"   >{contact.firstName + " "+ contact.lastName}</p>
+               <Typography style={{color:"gray",  fontStyle: "italic" , fontSize:"0.9rem" }}>{contact.email}</Typography>
+               </div>
+               </Grid>
+               <Hidden only={['md', 'lg']}> 
+                   <Grid item xs={3}></Grid></Hidden>
+               <Grid item xs={9} md={2}>
         {showAddBtn ?  
          <Button className= "loginbtn"
-             style={{display:"inline-block"  ,position:"relative",float:"right",marginTop:"1rem", backgroundColor:lightBlue[600],color:"white"}}
+             style={{marginTop:"0.7rem",backgroundColor:lightBlue[600],color:"white"}}
             variant="contained" 
             onClick={sentFriendRequest}>Add friend</Button>
         : 
         <Button className= "loginbtn"
-              style={{display:"inline-block" ,position:"relative",float:"right" ,marginTop:"1rem", backgroundColor:grey[500],color:"white"}}
+              style={{marginTop:"0.7rem",backgroundColor:grey[500],color:"white"}}
             variant="contained" 
             onClick={cancelFriendRequest}>Requested</Button> 
              }
-        <Typography style={{color:"gray",marginLeft:"5rem" ,  fontStyle: "italic" , fontSize:"0.9rem" }}>{contact.email}</Typography>
+             </Grid>
+      </Grid>
      </Paper>       
    
     </div>);

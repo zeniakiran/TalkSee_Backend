@@ -14,9 +14,9 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import GroupAddRoundedIcon from '@material-ui/icons/GroupAddRounded';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Badge from '@material-ui/core/Badge';
-import chatservice from '../../../services/ChatService';
+//import chatservice from '../../../services/ChatService';
 import accountService from '../../../services/accountService';
-import friendService from '../../../services/friendService';
+//import friendService from '../../../services/friendService';
  //import { ToastContainer } from 'react-toastify';
 //import Toast from 'react-bootstrap/Toast' 
 import '../../ChatComponents/chat.css'
@@ -25,22 +25,22 @@ import PageTitle from "./pageTitle";
 
 const UserDashboard = ({uuId}) => {
   //const {chatRecipients,setRecipients,getRecData} = useContext(MyChatsContext);
-  const [obj, setObj] = useState({})
+  //const [obj, setObj] = useState({})
   const myId= isAuthenticated()._id;
-  const [count,setCount]= useState(0)
-  const [friendCount,setFriendCount]=useState(0);
+ // const [count,setCount]= useState(0)
+  //const [friendCount,setFriendCount]=useState(0);
   let showBtn = useRef(0)
   let userEmail = useRef()
   let history = useHistory()
   userEmail.current = JSON.parse(localStorage.getItem("user")).email
-  console.log(userEmail)
-  const {clientSocket,setSocket,messageEvent,roomJoin,friendReq} = useContext(SocketContext);
+  const {clientSocket,setSocket,messageEvent,roomJoin,friendReq,getRequest,frndcounter,msgCounter} = useContext(SocketContext);
 
   let clientSocket1 = useRef()
    
    window.onload = () => {
        friendReq()
      messageEvent()
+     getRequest()
     roomJoin(myId)
     clientSocket1 = io("http://127.0.0.1:5000")
   setSocket((s)=>{
@@ -58,7 +58,7 @@ accountService.deleteMyAccount(myId)
  .then((res) =>history.push('/signup'))
   .catch((err) => console.log(err));
 }
-  useEffect(()=>{
+ /* useEffect(()=>{
     chatservice.offlinemessages(isAuthenticated().email)
         .then((res)=>{
             if(res.count > 0){
@@ -67,7 +67,6 @@ accountService.deleteMyAccount(myId)
                 return o
               })
               //obj = {sender: res.info.sender, receiver: res.info.receiver}
-              console.log("obj",obj)
               setCount((c)=>{
                 c = res.count
                 return c
@@ -85,7 +84,7 @@ useEffect(()=>{
      setFriendCount(res)
   })
   .catch((err)=>console.log(err))
-},[])
+},[])*/
   
   
    useEffect(()=>{
@@ -101,7 +100,6 @@ useEffect(()=>{
    useEffect (()=>{
     //friendReq()
      messageEvent()
-     //friendReq()
    },[]);
 
    useEffect (()=>{
@@ -133,7 +131,7 @@ useEffect(()=>{
               < PeopleAltIcon className='chaticon'
               color = "white"/> My Friends
             </Button>
-            {
+           {/*  {
     obj.sender !== undefined ?
         obj.sender.forEach((o)=>
         {
@@ -144,17 +142,17 @@ useEffect(()=>{
           })
     :
     null
-    }
+    } */}
     
         {
-          showBtn.current >= 1 ?
+          msgCounter >= 1 ?
            <Button className= "loginbtn"
              style={{ padding:"10px 20px" , marginTop:"2rem",display:"block",backgroundColor:"#D582BD"}}
            variant="contained" 
             color="Secondary" 
             fullWidth
              onClick={event =>  history.push('/mychats/'+myId)}>
-            <Badge badgeContent={count} color="secondary" style={{marginRight:"0.5rem"}}>
+            <Badge badgeContent={msgCounter} color="secondary" style={{marginRight:"0.5rem"}}>
               <ChatIcon className='chaticon'
               onClick={event =>  history.push('/mychats/'+myId)}
               color = "white"
@@ -176,14 +174,14 @@ useEffect(()=>{
             
         }    
          {
-          friendCount >= 1 ?
+          frndcounter >= 1 ?
            <Button className= "loginbtn"
              style={{ padding:"10px 20px" , marginTop:"2rem",display:"block",backgroundColor:"#8298D5"}}
            variant="contained" 
             color="Secondary" 
             fullWidth
              onClick={event =>  history.push('/all-friend-requests/'+myId)}>
-            <Badge badgeContent={friendCount} color="secondary" style={{marginRight:"0.5rem"}}>
+            <Badge badgeContent={frndcounter} color="secondary" style={{marginRight:"0.5rem"}}>
               <GroupAddRoundedIcon className='chaticon'
               onClick={event =>  history.push('/all-friend-requests/'+myId)}
               color = "white"

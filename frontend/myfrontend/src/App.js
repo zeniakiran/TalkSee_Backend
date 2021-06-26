@@ -26,6 +26,7 @@ import {useState} from 'react';
 import Profile from './components/FrontendComponents/components/Profile';
 import DeletePermissionProvider from './context/DeletePermissionContext';
 import UserRoute from './components/FrontendComponents/components/userRoutes';
+import ContactManagement from './components/FrontendComponents/components/ContactManagement';
 
 const App =() =>{
   const [userId,setId] = useState()
@@ -58,6 +59,7 @@ const App =() =>{
             <UserRoute exact path = "/all-friend-requests/:id" component ={AllFriendRequest}/>
             <UserRoute exact path ="/all-my-friends/:id" component ={AllFriends} />
              <UserRoute exact path ="/profile/:id/:id" component ={Profile} />
+            <UserRoute exact path ="/my-contact-list/:id" component ={ContactManagement} />
             <Route exact path="/notfound" component={notFound} />
             <UserRoute path="/chat/:id" render={(props) => (
               <Chat {...props} key={props.location.key} />

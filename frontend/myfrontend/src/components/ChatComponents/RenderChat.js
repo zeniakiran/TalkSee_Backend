@@ -3,6 +3,7 @@ import React , {useEffect,useState}from "react";
 import "./chat.css";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import IconButton from '@material-ui/core/IconButton';
+import { useHistory } from 'react-router-dom';
 import Alert from '../FrontendComponents/Alerts/AlertBar'
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -11,20 +12,21 @@ import MoreVertIcon from '@material-ui/icons/MoreVert'
 import SearchIcon from '@material-ui/icons/Search';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Header from "../FrontendComponents/components/Header";
-import ListItemText from '@material-ui/core/ListItemText';
-import Button from '@material-ui/core/Button';
 import chatservice from "../../services/ChatService";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CancelIcon from '@material-ui/icons/Cancel';
-import {Grid ,InputAdornment, TextField} from "@material-ui/core";
+import {Button, Grid ,Hidden,InputAdornment, TextField} from "@material-ui/core";
 import { grey } from '@material-ui/core/colors';
 import ReactTooltip from 'react-tooltip';
- 
-
+import SideBar from "../FrontendComponents/components/SideBar";
+import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
+import {isAuthenticated} from '../FrontendComponents/clientStorages/auth';
 export default function RenderChat(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [isSearch, setSearch] = useState(false)
+  let history = useHistory()
+    const myId = isAuthenticated()._id;
   const open = Boolean(anchorEl);
   const options = [
     'Search',
@@ -162,13 +164,20 @@ export default function RenderChat(props) {
   return (
     <React.Fragment>
        <div  style={{ height:"100vh"}} className="chat_div"> 
-      <Header />     
+       <Grid container>
+           <Hidden only={['sm', 'xs']}>
+          <Grid item  md={2}><SideBar/></Grid>
+          </Hidden>
+            
+       <Grid item xs={12} md={10}>
         <ReactTooltip id='delete'/>
-            <Grid container spacing={0} style={{display:"flex"}}>
-              <Grid item xs ={1} md={2}></Grid>
-              <Grid item xs ={10} md={8} style={{marginTop:"1rem" }}>
+            <Grid container spacing={0} style={{display:"flex",marginTop:"1rem"}}>
+               <Grid xs={0} md={1}></Grid>
+              <Grid item xs={12} md ={10}   >
                 <div className='profilediv'>
-
+                  <Hidden only={['md','lg']}>
+                   <KeyboardBackspaceIcon style={{marginRight:"0.1rem",marginLeft:"0.1rem",cursor:"pointer"}}  onClick={event =>  history.push('/mychats/'+myId)} /> 
+                  </Hidden>
               <img
                 className='profile'
                 src={props.recipientInfo.url}
@@ -201,8 +210,10 @@ export default function RenderChat(props) {
             />
           }
               </Grid>
-              <Grid item xs ={1} md={2}></Grid>
+              <Grid xs={0} md={1}></Grid>
               </Grid>
+              </Grid>
+       </Grid>
               </div>
               </React.Fragment>
  

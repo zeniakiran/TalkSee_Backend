@@ -22,11 +22,10 @@ const myProfileImg =isAuthenticated().profileImg;
         <img
           src= {myProfileImg}
           alt="Profile"
-           
-          style={{ height: "50px", width: "50px", borderRadius: "50%",display:"inline" }}
+          style={{ height: "50px", width: "50px", borderRadius: "50%",display:"inline"}}
          onclick={()=>history.push('/update-my-profile-setup/'+myId)}
         /> </Link> 
-        <span style ={{fontWeight:"bold", fontSize:"25px" }}>{firstName +" " + lastName}</span></div>
+        <span className="header_name">{firstName +" " + lastName}</span></div>
         <button
           className="navbar-toggler"
           type="button"
@@ -58,7 +57,7 @@ const myProfileImg =isAuthenticated().profileImg;
                 </li>
                  <li className="nav-item" style ={{marginRight:"1rem"}}>
                   <Link to={{pathname: '/dashboard/'+myId}} className="nav-link">
-                     <i className="fa fa-home" aria-hidden="true"></i>  Dashboard
+                     <i className="fa fa-home" aria-hidden="true"> </i>  Dashboard
                   </Link>
                 </li>
                  <li className="nav-item">

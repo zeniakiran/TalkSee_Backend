@@ -9,7 +9,8 @@ import { useHistory } from "react-router-dom";
 import chatservice from "../../services/ChatService";
 import userservice from "../../services/UserService";
 import "./chat.css";
-import { Grid } from "@material-ui/core";
+import { Grid, Hidden } from "@material-ui/core";
+import SideBar from "../FrontendComponents/components/SideBar";
 
 const useStyles = makeStyles((theme) => ({
   mygrid: {
@@ -324,23 +325,31 @@ const AllChats = (props) => {
 
   return (
       <div  style={{height:"100vh"}} className="back_divs">
-      <Header />
+        <Grid container>
+           <Hidden only={['xs', 'sm']}>
+          <Grid item xs ={5} md={2}><SideBar/></Grid>
+          </Hidden>
+            <Hidden only={['md', 'lg']}>
+          <Grid item xs={12} ><Header/></Grid>
+          </Hidden>
+       <Grid item xs={12} md={10}>
       <PageTitle name={"My Chats"} />
       {usersData.uData.length !== 0  && lastMsg.msgs.length !==0? (
         <div>
             <Grid container   style={{marginTop:"0.9rem" }}>
-          <Grid item xs ={1} md={3}> </Grid>
-          <Grid item xs ={10} md={6}>
-     
+          <Grid item xs ={1} md={1}> </Grid>
+          <Grid item xs ={10} md={10}>
           <SingleChat recipients={usersData.uData} lastMsg={lastMsg} />
          
         </Grid>
-        <Grid item xs ={1} md={3}> </Grid>
+        <Grid item xs ={1} md={1}> </Grid>
         </Grid>
         </div>
       ) : (
         <h5 style={{ textAlign: "center" }}>No Chats Yet!</h5>
       )}
+      </Grid>
+       </Grid>
     </div>
   );
 };

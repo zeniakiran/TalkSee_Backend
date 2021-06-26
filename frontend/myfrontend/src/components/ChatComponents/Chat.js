@@ -18,6 +18,7 @@ export default function SingleChat(props) {
   const [isFriend, setIsFriend] = useState(true)
   let chats = useRef([]);
   let friends = useRef()
+  const scrollRef = useRef();
   let dummy = [];
   let user = useRef({ uId: "", uImg: "", uName: "" });
   let recipient = useRef("");
@@ -32,7 +33,9 @@ export default function SingleChat(props) {
   const [isChat, setIsChat] = React.useState(false)
   var us = JSON.parse(localStorage.getItem("user"));
   //const [messagesToDel, setMsgs] = useState([])
-  
+    useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chat]); 
   //useEffect(() => {
     recipientInfo.current.name = localStorage.getItem("recName");
     recipientInfo.current.lang = localStorage.getItem("recLang");
@@ -138,6 +141,7 @@ export default function SingleChat(props) {
     }
    else
    {
+     var msgId=uuidv4();
      setLoading(true); 
      let data = {
       msg: message,
@@ -147,6 +151,7 @@ export default function SingleChat(props) {
     //axios.post('http://127.0.0.1:80/',data) // flask ka post method call kre ga
     //.then((response )=> {
     setLoading(false);
+
     // console.log(" Response" ,response.data);
     //returndata = response.data
     let messageS = {
@@ -158,12 +163,12 @@ export default function SingleChat(props) {
       messageVideo: "returndata",
       time: new Date().toLocaleString(),
       type: "offline",
-      msgId : uuidv4()
+      msgId : msgId
     };
     clientSocket.emit("messageSend", messageS, (err) => {
       if (!err) {
         chatservice.createMessage(messageS)
-            .then((response)=>console.log(response))
+            .then((response)=>console.log(response,msgId))
             .catch((err)=>toast.error(
               'Database Connection Error! Please try again', {
               position: toast.POSITION.TOP_LEFT,
@@ -251,7 +256,10 @@ export default function SingleChat(props) {
     }
     else{
       elem = (chat.messages.map((msg) =>{
-        return  <SettingMessage message={msg} user={user.current.uId} isDel={isDel} getData = {getData} id={id[1]} rec={recipient.current}/>;
+        return ( <div ref={scrollRef}>
+        <SettingMessage message={msg} user={user.current.uId} isDel={isDel} getData = {getData} id={id[1]} rec={recipient.current}/>
+        </div>)
+         
       })
       )
     }

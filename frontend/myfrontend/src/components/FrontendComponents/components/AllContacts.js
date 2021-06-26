@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useRef,useState } from "react";
 import SingleContact from "./SingleContact";
 import contactService from "../../../services/contactService";
-import { Button, Grid ,InputAdornment, TextField} from "@material-ui/core";
+import { Button, Grid ,Hidden,InputAdornment, TextField} from "@material-ui/core";
 import friendService from "../../../services/friendService";
 import PageTitle from "./pageTitle";
 import { isAuthenticated } from "../clientStorages/auth";
@@ -12,6 +12,8 @@ import io from "socket.io-client";
 import Header from "./Header";
 import { grey } from '@material-ui/core/colors';
 import SearchIcon from '@material-ui/icons/Search';
+import SideBar from "./SideBar";
+ 
 
 const AllContact = ({match}) => {
     const myId=isAuthenticated()._id;
@@ -68,7 +70,14 @@ const AllContact = ({match}) => {
    
     return ( 
     <div style={{height:"100vh"}} className="back_divs"  >
-      <Header/>
+       <Grid container>
+       <Hidden only={['xs', 'sm']}>
+          <Grid item xs ={5} md={2}><SideBar/></Grid>
+          </Hidden>
+            <Hidden only={['md', 'lg']}>
+          <Grid item xs={12} ><Header/></Grid>
+          </Hidden>
+           <Grid item xs={12} md={10}>
       <PageTitle name= {"Add Friend"}/>
       {
       contacts.length === 0 ? 
@@ -78,8 +87,8 @@ const AllContact = ({match}) => {
         (<div >
           
             <Grid container  style={{marginTop:"0.9rem"}}>
-          <Grid item xs ={1} md={2}> </Grid>
-          <Grid item xs ={10} md={8} >
+          <Grid item xs ={1} md={1}> </Grid>
+          <Grid item xs ={10} md={10} >
             <Grid container   style={{marginBottom:"1rem" }}>
           <Grid item xs ={0} md={8}> </Grid>
           <Grid item xs ={12} md={4}  >
@@ -110,20 +119,9 @@ const AllContact = ({match}) => {
                  
             } )
           }
-           <Button className= "loginbtn"
-            style={{textTransform:"capitalize",float:"right"}}
-            variant="outlined" 
-            color="Primary"
-            onClick={event =>  history.push('/all-friend-requests/'+myId)}> My Friend Requests</Button>
-        
-        <Button className= "loginbtn"
-            style={{textTransform:"capitalize",float:"left"}}
-            variant="outlined" 
-            color="Primary"
-            onClick={event =>  history.push('/dashboard/'+myId)}><ArrowBackIcon/> Back
-            </Button>
+           
            </Grid>
-          <Grid item xs={1}   md={2}></Grid>
+          <Grid item xs={1}   md={1}></Grid>
         </Grid>
          
          
@@ -131,7 +129,10 @@ const AllContact = ({match}) => {
           }
         
         
-      )
+      
+        </Grid>
+  
+      </Grid>
              
     </div> );
 }

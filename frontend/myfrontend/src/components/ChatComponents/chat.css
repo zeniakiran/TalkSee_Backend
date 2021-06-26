@@ -223,7 +223,9 @@ img {
 .profilediv {
   position: sticky;
   top: 0;
-  background-color: rgb(171, 196, 204) !important;
+  background-color: #73abbb !important;
+  color: #ebebeb;
+  font-family: "Tangerine", serif;
 }
 /*.playerdiv1 {
   display: inline-flex;
@@ -292,11 +294,11 @@ img {
 }
 /*max-height: calc(100vh - calc(75vh / 2))*/
 .content_body {
-  height: 63vh;
+  height: 75vh;
   overflow: auto;
   border-radius: 10px;
   padding: 1px 3px 1px 3px;
-  background-color: rgb(235, 234, 234) !important;
+  background-color: #e4e6e7 !important;
 }
 .chat_div {
   background-color: #ebebeb;

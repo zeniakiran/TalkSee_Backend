@@ -1,7 +1,7 @@
 import React, { useEffect,useRef,useContext,useState } from "react";
 import SingleFriend from "./SingleFriend";
 import friendService from "../../../services/friendService";
-import { Button, Grid,InputAdornment, TextField  } from "@material-ui/core";
+import { Button, Grid,Hidden,InputAdornment, TextField  } from "@material-ui/core";
 import PageTitle from "./pageTitle";
 import { isAuthenticated } from "../clientStorages/auth";
 import { useHistory } from 'react-router-dom';
@@ -13,6 +13,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { grey } from '@material-ui/core/colors';
 import io from "socket.io-client";
 import SearchIcon from '@material-ui/icons/Search';
+import SideBar from "./SideBar";
 
 const AllFriends = (props) => {
      const myId=isAuthenticated()._id;
@@ -78,10 +79,15 @@ const AllFriends = (props) => {
 
      return ( 
     <div style={{height:"100vh"}} className="back_divs">
-      <Header/>
+      <Grid container>
+       <Hidden only={['xs', 'sm']}>
+          <Grid item xs ={5} md={2}><SideBar/></Grid>
+          </Hidden>
+            <Hidden only={['md', 'lg']}>
+          <Grid item xs={12} ><Header/></Grid>
+          </Hidden>
+           <Grid item xs={12} md={10}>
       <PageTitle name= {"My Friends"}/>
-           
-   
      {
       friends.length === 0 ? 
         ( <div style= {{textAlign: "center",height:"100vh",
@@ -91,8 +97,8 @@ const AllFriends = (props) => {
           <div>
              
         <Grid container   style={{marginTop:"0.9rem", display :"flex"}}>
-          <Grid item xs ={1} md={3}> </Grid>
-          <Grid item xs ={10} md={6}>
+          <Grid item xs ={1} md={1}> </Grid>
+          <Grid item xs ={10} md={10}>
             <Grid container   style={{marginBottom:"1rem"}}>
           <Grid item xs ={0} md={7}> </Grid>
           <Grid item xs ={12} md={5}  >
@@ -122,26 +128,14 @@ const AllFriends = (props) => {
           )}
             
           </Grid>
-          <Grid item xs={1}   md={3}></Grid>
+          <Grid item xs={1}   md={1}></Grid>
         </Grid>
          </div>)
          
       }
-       <Grid container   style={{display:"flex" ,marginBottom:"0.9rem"}}>
-          <Grid item xs ={1} md={3}> </Grid>
-          <Grid item xs ={10} md={6}>
-      
- <Button className= "loginbtn"
-            style={{textTransform:"capitalize",float:"left"}}
-            variant="outlined" 
-            color="Primary"
-            onClick={event =>  history.push('/dashboard/'+myId)}><ArrowBackIcon/> Back
-            </Button>
-         </Grid>
-       <Grid item xs ={1} md={3}> </Grid>
-       </Grid>
+      </Grid>
   
-      
+      </Grid>
  
     </div> );
 
