@@ -15,12 +15,7 @@ const ContactsApiRouter = require("./routes/ApiRoutes/ContactsApi");
 const FriendsApiRouter= require("./routes/ApiRoutes/FriendsApi");
 
 var app = express();
-// Serve static files from the React frontend app
-app.use(express.static(path.join(__dirname, 'frontend/myfrontend/build')))
-// Anything that doesn't match the above, send back index.html
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '/frontend/myfrontend/build/index.html'))
-})
+
 const server = require("http").createServer(app);
 const socketListener = require("socket.io")(server);
 const { socketHandler } = require("./socketHandler/ChatSockets.js");
@@ -32,15 +27,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.get("/", (req, res) => {
+/* app.get("/", (req, res) => {
   res.status(200).send("server is up and running");
-});
+}); */
 
 app.use('/api/users', usersRouter);
 app.use('/api/chatapi', ChatApiRouter);
 app.use('/api/contacts', ContactsApiRouter);
 app.use('/api/friends', FriendsApiRouter);
 //app.use('/api/chatapi/groupchat', GroupApiRouter);
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, 'frontend/myfrontend/build')))
+// Anything that doesn't match the above, send back index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/frontend/myfrontend/build/index.html'))
+})
 app.use(bodyParser.urlencoded({ extended: true }))
 
 // parse application/json
