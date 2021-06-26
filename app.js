@@ -35,7 +35,6 @@ app.use('/api/users', usersRouter);
 app.use('/api/chatapi', ChatApiRouter);
 app.use('/api/contacts', ContactsApiRouter);
 app.use('/api/friends', FriendsApiRouter);
-//app.use('/api/chatapi/groupchat', GroupApiRouter);
 // Serve static files from the React frontend app
 app.use(express.static(path.join(__dirname, 'frontend/myfrontend/build')))
 // Anything that doesn't match the above, send back index.html
