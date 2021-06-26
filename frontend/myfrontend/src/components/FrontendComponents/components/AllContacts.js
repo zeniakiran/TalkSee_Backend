@@ -10,7 +10,6 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {SocketContext} from '../../../context/SocketContext';
 import io from "socket.io-client";
 import Header from "./Header";
-import { grey } from '@material-ui/core/colors';
 import SearchIcon from '@material-ui/icons/Search';
 import SideBar from "./SideBar";
  
