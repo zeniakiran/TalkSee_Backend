@@ -14,7 +14,6 @@ import { grey } from '@material-ui/core/colors';
 import SearchIcon from '@material-ui/icons/Search';
 import SideBar from "./SideBar";
  
-
 const AllContact = ({match}) => {
     const myId=isAuthenticated()._id;
     let userEmail = isAuthenticated().email;
