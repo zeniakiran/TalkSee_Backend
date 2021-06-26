@@ -15,21 +15,15 @@ const ContactsApiRouter = require("./routes/ApiRoutes/ContactsApi");
 const FriendsApiRouter= require("./routes/ApiRoutes/FriendsApi");
 
 var app = express();
-
 const server = require("http").createServer(app);
 const socketListener = require("socket.io")(server);
 const { socketHandler } = require("./socketHandler/ChatSockets.js");
-
 app.use(cors());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-
-/* app.get("/", (req, res) => {
-  res.status(200).send("server is up and running");
-}); */
 
 app.use('/api/users', usersRouter);
 app.use('/api/chatapi', ChatApiRouter);
