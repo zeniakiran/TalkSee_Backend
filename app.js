@@ -7,6 +7,7 @@ var logger = require('morgan');
 var mongoose = require("mongoose");
 var config = require("./config/dev");
 var cors = require("cors")
+
 var usersRouter = require('./routes/ApiRoutes/UsersApi');
 var ChatApiRouter = require('./routes/ApiRoutes/ChatApi');
 //var GroupApiRouter = require('./routes/ApiRoutes/GroupApi');
@@ -14,6 +15,12 @@ const ContactsApiRouter = require("./routes/ApiRoutes/ContactsApi");
 const FriendsApiRouter= require("./routes/ApiRoutes/FriendsApi");
 
 var app = express();
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, 'frontend/myfrontend/build')))
+// Anything that doesn't match the above, send back index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/frontend/myfrontend/build/index.html'))
+})
 const server = require("http").createServer(app);
 const socketListener = require("socket.io")(server);
 const { socketHandler } = require("./socketHandler/ChatSockets.js");

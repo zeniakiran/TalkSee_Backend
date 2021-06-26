@@ -1,14 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { useEffect } from "react";
-import axios from "axios";
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 //import Pusher from 'pusher-js';
 //import Reducer from './Redux/reducers/chat_reducers';
-import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+ 
 //Pusher.logToConsole = true;
 
 //useEffect (()=>{

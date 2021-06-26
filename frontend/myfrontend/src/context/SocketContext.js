@@ -1,7 +1,7 @@
 import React ,{createContext,useEffect,useState,useRef} from 'react'
 import io from "socket.io-client";
 import { toast } from 'react-toastify';
-import { Slide, Zoom, Flip, Bounce } from 'react-toastify';
+import {  Bounce } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
   import { isAuthenticated } from "../components/FrontendComponents/clientStorages/auth";
 import friendService from "../services/friendService";
@@ -9,12 +9,10 @@ import chatservice from '../services/ChatService';
 import { Button } from '@material-ui/core';
 export const SocketContext = createContext();
 export function SocketProvider({id,children}) {
-    //const myId=isAuthenticated()._id;
-    const [obj, setObj] = useState({})
-     const [frndcounter,setFrndCounter]= useState(0)
-     const [msgCount,setMsgCount]=useState(0);
+   
+  const [frndcounter,setFrndCounter]= useState(0)
+  const [msgCount,setMsgCount]=useState(0);
   const [clientSocket, setSocket] = useState()
-  let count=0;
   let roomId = useRef()
   
 
