@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "nodemon app.js",
-    "heroku-postbuild": "cd frontend && cd myfrontend && npm install && npm run build"
+    "heroku-postbuild": "cd frontend/myfrontend && npm install && npm run build"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.3",
