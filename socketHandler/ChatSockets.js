@@ -152,7 +152,7 @@ const socketHandler = (clientSocket, serverSocket) => {
         }
       }
       else if(users.length===1){
-        console.log("lesss than 1")
+      //  console.log("lesss than 1")
         let obj= {username: payload.name, id:payload.id}
         users.push(obj);
       }

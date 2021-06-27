@@ -89,7 +89,7 @@ const AllFriendRequest = ({match}) => {
       {
       friendreqs.length === 0 ? 
         ( <div style= {{textAlign: "center",height:"100vh",
-    padding: "6rem", fontWeight:"bold"}}>No Friend Request</div>) 
+    padding: "6rem", fontWeight:"bold"}}>You have no friend request😞</div>) 
         :
         (
           <div>

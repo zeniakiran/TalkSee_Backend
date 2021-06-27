@@ -8,7 +8,7 @@ const PageTitle = ({name}) => {
       <Grid item xs={10} sm={8} xm={2} md={4}>
            <Typography variant="headline" 
          style={{ 
-          marginTop:"0.5rem",
+          marginTop:"1.5rem",
          textAlign:"center",
          fontSize:"4rem",
          color:brown[300],

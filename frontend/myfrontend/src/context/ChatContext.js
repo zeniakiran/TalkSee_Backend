@@ -3,11 +3,11 @@ import chatservice from '../services/ChatService'
 //import {showNotification} from '../components/FrontendComponents/Alerts/showMessage'
 //import Notification from '../components/FrontendComponents/Alerts/Notification'
 import { toast } from 'react-toastify';
-import { Slide, Zoom, Flip, Bounce } from 'react-toastify';
+import { Zoom } from 'react-toastify';
 export const ChatContext = createContext();
 
 export const ChatContextProvider = ({userId,setMsg,children}) =>{
-    let elem = null
+   
     let msg = ''
     useEffect(()=>{
         getUnreadMsgs(userId)

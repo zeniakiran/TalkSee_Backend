@@ -37,10 +37,13 @@ export function SocketProvider({id,children}) {
     chatservice.offlinemessages(isAuthenticated().email)
         .then((res)=>{  
                 setMsgCount(res.count)
+                console.log("Message Count is",msgCount);
                  localStorage.setItem("messagecount",JSON.stringify(res.count))
         })
         .catch((err)=>console.log(err))}
-  useEffect(()=>messageCounter,[msgCount])
+  useEffect(()=>messageCounter,[])
+   
+  
   const newMessageEvent = () => {
     if(clientSocket){
       clientSocket.on("newMessage", (payload) => {
@@ -94,6 +97,7 @@ export function SocketProvider({id,children}) {
             .catch((err=>{console.log(err)}))
   }
   useEffect(()=>getAllRequests,[frndcounter])
+     
  const getFriendRequest = () => {
     if(clientSocket)
     {

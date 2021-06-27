@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useContext,useRef } from "react";
+import React, { useEffect, useContext,useRef } from "react";
 import Header from "./Header";
 import { isAuthenticated } from "../clientStorages/auth";
 import { Button, Grid } from "@material-ui/core";
@@ -6,7 +6,6 @@ import {SocketContext} from '../../../context/SocketContext';
 //import {MyChatsContext} from '../../../context/MyChatsContext';
 import io from "socket.io-client";
 import { useHistory } from 'react-router-dom';
-import {ChatContext} from '../../../context/ChatContext';
 import ChatIcon from '@material-ui/icons/Chat';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
@@ -29,16 +28,18 @@ const UserDashboard = ({uuId}) => {
   const myId= isAuthenticated()._id;
  // const [count,setCount]= useState(0)
   //const [friendCount,setFriendCount]=useState(0);
-  let showBtn = useRef(0)
+  //let showBtn = useRef(0)
   let userEmail = useRef()
   let history = useHistory()
   userEmail.current = JSON.parse(localStorage.getItem("user")).email
-  const {clientSocket,setSocket,messageEvent,roomJoin,friendReq,getRequest,frndcounter,msgCounter} = useContext(SocketContext);
+  const {clientSocket,setSocket,messageEvent,roomJoin,friendReq,getRequest,frndcounter,msgCounter,msgNotify,acceptRejectCounter} = useContext(SocketContext);
 
   let clientSocket1 = useRef()
    
    window.onload = () => {
        friendReq()
+       acceptRejectCounter()
+       msgNotify()
      messageEvent()
      getRequest()
     roomJoin(myId)

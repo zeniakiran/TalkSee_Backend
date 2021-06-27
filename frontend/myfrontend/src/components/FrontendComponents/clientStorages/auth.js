@@ -19,5 +19,7 @@ export const logout = (next) => {
   removeLocalStorage("recName");
   removeLocalStorage("profileUrl");
   removeLocalStorage("recLang");
+  removeLocalStorage("messagecount");
+  removeLocalStorage("friendRequests");
   next();
 };

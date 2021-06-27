@@ -44,22 +44,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 const LogIn = ({onIdSubmit,setId}) => {
   let history = useHistory();
-  const {setSocket,roomJoin,messageEvent, friendReq} = useContext(SocketContext);
+  const {setSocket,roomJoin,messageEvent, friendReq,msgNotify, acceptRejectCounter} = useContext(SocketContext);
   const classes = useStyles(); 
   const { dispatch } = useContext(DeletePermission);
   let clientSocket1 = React.useRef()
-  useEffect(() => {
-    if (isAuthenticated() && isAuthenticated().role === 1)
-      history.push("/admin/dashboard");
-    else if (isAuthenticated() && isAuthenticated().role === 0)
-      history.push("/user/dashboard");
-     
-      
-  }, [history]);
-  window.onload = () => {
+  
+ /* window.onload = () => {
     friendReq()
     messageEvent()
-   /* let did = isAuthenticated()._id;
+    let did = isAuthenticated()._id;
     roomJoin(did)
     clientSocket1 = io("http://127.0.0.1:5000")
  
@@ -70,14 +63,14 @@ const LogIn = ({onIdSubmit,setId}) => {
         s.emit("adduser",{id:s.id, name: isAuthenticated().email})
       });
       return s;
-    })*/
+    })
   }
   
 
   useEffect(()=>{
    friendReq()
  
-  },[])
+  },[])*/
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -121,7 +114,7 @@ const LogIn = ({onIdSubmit,setId}) => {
       login(data)
         .then((response) => {
           authentication(response.data.token, response.data.user);
-          console.log(response)
+          //console.log(response)
           if (isAuthenticated() && isAuthenticated().role === 1)
             history.push("/dashboard/"+isAuthenticated()._id);
           else {
@@ -131,6 +124,9 @@ const LogIn = ({onIdSubmit,setId}) => {
          var del=  JSON.parse(localStorage.getItem("deletion"));
          if (del == "")
             dispatch({ type: "updatePermission", value: false })
+           msgNotify()
+     acceptRejectCounter()
+      friendReq()
          
            
         })
