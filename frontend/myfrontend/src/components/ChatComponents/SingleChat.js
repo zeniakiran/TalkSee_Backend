@@ -19,10 +19,7 @@ const useStyles = makeStyles((theme) => ({
   subheaderText: {
     color: theme.palette.primary.dark,
   },
-  list: {
-    maxHeight: "calc(100vh - 112px)",
-    overflowY: "auto",
-  },
+   
    
   listText: {
     fontSize: "1.5rem",
@@ -36,8 +33,13 @@ const useStyles = makeStyles((theme) => ({
   listText1: {
     fontSize: "1.3rem",
     fontFamily: "Roboto",
-    color: "gray",
+    color: "#808284",
+    width:"80%",
    marginLeft: "0.5rem",
+   display:"block",
+  cursor:"pointer",
+  overflow:"hidden",
+  textOverflow:"ellipsis"
     
     
   },
@@ -108,19 +110,17 @@ const {msgNotify}=useContext(SocketContext);
              <Paper style={{padding:  '12px 10px', marginBottom:"1rem" }}  >
               <Grid container>
                <Grid item xs={1}  >
-                  <img src={r.img} alt='img'    style={{ height: "50px", width: "50px", borderRadius: "50%",display:"inline" }}/>
+                  <img src={r.img} alt='img'    style={{ height: "50px", width: "50px", borderRadius: "30%",display:"inline" }}/>
                </Grid>
            <Grid item    xs ={11}  >
+
               <Typography className={classes.listText}>{r.name}</Typography>
                  {props.lastMsg.emails.forEach((u, ind) => {
-                  //console.log("inside for each lastMsg", u,ind)
-                  //console.log("inside map:",props.lastMsg.types[ind])
-                  //console.log("inside map:",props.lastMsg.senders[ind])
                    if (u === r.email) {
                     if (props.lastMsg.types[ind] === "read") {
                       //console.log("in 1",props.lastMsg.msgs[ind])
                       elem = (
-                        <div>
+                        <div >
                             <Typography
                               className={classes.listText1}
                               onClick={() =>
@@ -184,7 +184,7 @@ const {msgNotify}=useContext(SocketContext);
                         <Typography className={classes.listTime}>
                             {format(props.lastMsg.time[ind])}
                         </Typography>
-                        </div>
+                        </div> 
                         
                       );
                     } else {
@@ -215,15 +215,6 @@ const {msgNotify}=useContext(SocketContext);
 
                 {elem}
            </Grid>
-               
-               
-                
-              <div>
-                {/*  {setText(r,chatRecipients.lastMsg[index],chatRecipients.msgType[index])}
-                {elem}*/
-                 }
-              </div>
-              
           
            </Grid>
           </Paper>

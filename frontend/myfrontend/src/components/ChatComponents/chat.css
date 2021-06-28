@@ -242,6 +242,7 @@ img {
 .chat-message {
   display: flex;
   align-items: flex-start;
+  margin-bottom: 12px;
 }
 .chat-message.is-received + .is-received {
   margin-top: -16px !important;
@@ -255,11 +256,13 @@ img {
   position: relative;
   display: block;
   width: auto;
-  max-width: 320px;
+  max-width: 300px;
   padding: 10px;
   border-radius: 3px;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   line-height: 1.4;
+  white-space: initial;
+  word-break: break-all;
 }
 .chat-message.is-received .message-block .message-text {
   color: rgb(247, 245, 245);

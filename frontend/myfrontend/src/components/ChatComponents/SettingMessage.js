@@ -44,8 +44,8 @@ console.log(props.message.msgId)
           
         </div>
         <Grid container >
-              <Grid item xs={6} md={3}>  
-              <div  style={{marginLeft:"15px",marginTop:"12px",marginBottom:"8px"}}> 
+              <Grid item xs={6} md={4}>  
+              <div  style={{ margin:"12px 15px 4px 8px",overflow:"hidden"}}> 
                 <Player   >
                  <source src={props.message.messageVideo} />
               </Player>
@@ -53,7 +53,7 @@ console.log(props.message.msgId)
               
                 </div>
                 </Grid>
-              <Grid item xs={6} md={9}  >  {
+              <Grid item xs={6} md={8}  >  {
             props.isDel ?
             <Button className="Allbtn"  style={{textTransform:"capitalize" ,marginTop:"0.8rem", color:"#EC5454",fontSize:"1.2rem"}}>
               <i class="fas fa-trash-alt"   onClick={()=>handleClickOpen(props.message.msgId)}></i>
@@ -64,7 +64,7 @@ console.log(props.message.msgId)
               </Grid>
                <div class="chat-message is-received">
                 <div class="message-block">
-               <div class="message-text">{props.message.messageBody}</div>
+               <div class="message-text"><span>{props.message.messageBody}</span></div>
                    <span className="received_time_date"> {props.message.time}</span>
                 </div>
                 </div>
@@ -79,15 +79,15 @@ console.log(props.message.msgId)
         
          
           <Grid container >
-              <Grid item xs={6} md={9}>  {
+              <Grid item xs={6} md={8}>  {
             props.isDel ?
             <Button className="Allbtn" style={{textTransform:"capitalize" ,float:"right",marginTop:"0.8rem",color:"#EC5454",fontSize:"1.2rem"}}  >
                <i class="fas fa-trash-alt"  onClick={()=>handleClickOpen(props.message.msgId)}></i>
             </Button>
             : null
                }</Grid>
-              <Grid item xs={6} md={3}  >
-                 <div style={{marginRight:"15px",marginTop:"12px",marginBottom:"8px"}}> 
+              <Grid item xs={6} md={4}  >
+                 <div style={{ margin:"12px 15px 4px 8px",overflow:"hidden"}}> 
                 <Player   >
                   <source src={props.message.messageVideo} />
               </Player>
