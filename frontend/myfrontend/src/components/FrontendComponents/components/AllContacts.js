@@ -17,6 +17,7 @@ const AllContact = ({match}) => {
     const myId=isAuthenticated()._id;
     let userEmail = isAuthenticated().email;
     let history = useHistory()
+    const [loading,setLoading]=useState(false);
      const [searchTerm, setSearchTerm] = useState("");
     const onChangeSearch = (event) => 
         setSearchTerm(event.currentTarget.value)
@@ -51,7 +52,8 @@ const AllContact = ({match}) => {
      
   const getSingleContact = () => {
     contactService.getSingleContact(myId)
-    .then((data) => { setContacts(data);})
+    .then((data) => { setContacts(data);
+    setLoading(true)})
     .catch((err) => {console.log(err);});
   };
 
@@ -77,10 +79,11 @@ const AllContact = ({match}) => {
           </Hidden>
            <Grid item xs={12} md={10}>
       <PageTitle name= {"Add Friend"}/>
-      {
+      {loading?
+      <div>{
       contacts.length === 0 ? 
-        ( <div style= {{textAlign: "center", height:"100vh",
-    padding: "6rem", fontWeight:"bold"}}>No User Found</div>) 
+        ( <div style= {{textAlign: "center", fontSize:"1.4rem",
+    padding: "6rem", fontWeight:"bold"}}>No TalkSee User Found😞</div>) 
         :
         (<div >
           
@@ -125,6 +128,15 @@ const AllContact = ({match}) => {
          
        </div> )
           }
+          </div>:
+          
+       <div class="d-flex justify-content-center">
+         <strong style={{marginRight:"1rem"}}>Loading...</strong>
+  <div class="spinner-border" role="status">
+    
+  </div>
+</div>
+  }
         
         
       

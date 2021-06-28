@@ -15,6 +15,7 @@ import SideBar from "./SideBar";
  
 const AllFriendRequest = ({match}) => {
      const myId=isAuthenticated()._id;
+     const[loading,setLoading]=useState(false);
      const [friendreqs, setFrndRequest] =React.useState([]);
       const [searchTerm, setSearchTerm] = useState("");
     const onChangeSearch = (event) => 
@@ -48,6 +49,7 @@ const AllFriendRequest = ({match}) => {
      {
       friendService.getFriendRequest(myId).then((data)=>{
                 setFrndRequest(data)
+                setLoading(true);
                 acceptRejectCounter();
               })
             .catch((err=>{console.log(err)}))
@@ -86,9 +88,10 @@ const AllFriendRequest = ({match}) => {
           </Hidden>
            <Grid item xs={12} md={10}>
       <PageTitle name= {"Friend Requests"}/>
-      {
+      {loading?
+      <div> {
       friendreqs.length === 0 ? 
-        ( <div style= {{textAlign: "center",height:"100vh",
+        ( <div style= {{textAlign: "center",fontSize:"1.4rem",
     padding: "6rem", fontWeight:"bold"}}>You have no friend request😞</div>) 
         :
         (
@@ -130,6 +133,15 @@ const AllFriendRequest = ({match}) => {
         </div> )
          
       }
+       </div>:
+          
+       <div class="d-flex justify-content-center">
+         <strong style={{marginRight:"1rem"}}>Loading...</strong>
+  <div class="spinner-border" role="status">
+    
+  </div>
+</div>
+  }
          </Grid>
   
       </Grid>

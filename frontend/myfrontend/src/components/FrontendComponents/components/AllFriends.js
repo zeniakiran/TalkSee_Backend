@@ -17,6 +17,7 @@ import SideBar from "./SideBar";
 
 const AllFriends = (props) => {
      const myId=isAuthenticated()._id;
+     const [loading,setLoading]=useState(false);
      const [friends, setFriends] =React.useState([]);
      let history = useHistory()
       const [searchTerm, setSearchTerm] = useState("");
@@ -48,7 +49,8 @@ const AllFriends = (props) => {
      {
        friendService.getAllFriends(myId)
         .then((data)=>{
-         setFriends(data);})
+         setFriends(data);
+        setLoading(true);})
       .catch((err=>{console.log(err)}))
    
      }
@@ -88,10 +90,11 @@ const AllFriends = (props) => {
           </Hidden>
            <Grid item xs={12} md={10}>
       <PageTitle name= {"My Friends"}/>
-     {
+    {loading?
+      <div> {
       friends.length === 0 ? 
-        ( <div style= {{textAlign: "center",height:"100vh",
-    padding: "6rem", fontWeight:"bold"}}>No Friend Found</div>) 
+        ( <div style= {{textAlign: "center",fontSize:"1.4rem",
+    padding: "6rem", fontWeight:"bold"}}>You have no TalkSee Friend😞</div>) 
         :
         (
           <div>
@@ -133,6 +136,15 @@ const AllFriends = (props) => {
          </div>)
          
       }
+       </div>:
+          
+       <div class="d-flex justify-content-center">
+         <strong style={{marginRight:"1rem"}}>Loading...</strong>
+  <div class="spinner-border" role="status">
+    
+  </div>
+</div>
+  }
       </Grid>
   
       </Grid>
