@@ -23,6 +23,7 @@ const AllChats = (props) => {
   const classes = useStyles();
   let history = useHistory();
   const { clientSocket } = useContext(SocketContext);
+   const [loading,setLoading]=useState(false);
   let uId = JSON.parse(localStorage.getItem("user")).email;
   const {setSocket,roomJoin,messageEvent, friendReq} = useContext(SocketContext);
   let emails = useRef([]);
@@ -77,10 +78,11 @@ const AllChats = (props) => {
           console.log("emails after sorting", emails.current);
           userservice
             .getUserByEmail({ userArray: emails.current })
-            .then((datafromdb) => {
+            .then(
+              (datafromdb) => {
               recData = datafromdb;
               //console.log("recdata", recData);
-              setData((d) => {
+              setData((d) => {//userdta
                 d.uData = recData;
                 return d;
               });
@@ -92,7 +94,7 @@ const AllChats = (props) => {
               .then((data1) => {
                 //console.log("data1", data1);
                 if(data1){
-                  setLastMsg((msg) => {
+                  setLastMsg((msg) => {//lastMsg
                     if (
                       msg.msgs.length >= 1 &&
                       msg.emails.length >= 1 &&
@@ -136,9 +138,11 @@ const AllChats = (props) => {
                       return myMsg
                     }
                   });
-                }
-
-              })
+                }//lastmsg bnd hori
+setLoading(true);
+              }
+              
+              )
               .catch((err) => console.log(err));
           });
 
@@ -334,6 +338,8 @@ const AllChats = (props) => {
           </Hidden>
        <Grid item xs={12} md={10}>
       <PageTitle name={"My Chats"} />
+       {loading?
+      <div> 
       {usersData.uData.length !== 0  && lastMsg.msgs.length !==0? (
         <div>
             <Grid container   style={{marginTop:"0.9rem" }}>
@@ -348,6 +354,14 @@ const AllChats = (props) => {
       ) : (
         <h5 style={{ textAlign: "center" }}>No Chats Yet!</h5>
       )}
+      </div>:
+      <div class="d-flex justify-content-center">
+         <strong style={{marginRight:"1rem"}}>Loading...</strong>
+  <div class="spinner-border" role="status">
+    
+  </div>
+</div>
+  }
       </Grid>
        </Grid>
     </div>
