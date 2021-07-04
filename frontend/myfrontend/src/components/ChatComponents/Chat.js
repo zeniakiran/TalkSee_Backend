@@ -223,7 +223,6 @@ export default function SingleChat(props) {
  */
   const searchChatHandler = (keywords)=>{
     setSearchTerm((term)=>{
-      //console.log("keywords",term)
       term = keywords
       return term
     })
@@ -240,20 +239,22 @@ export default function SingleChat(props) {
       console.log("no chat")
     }
 }, [searchTerm]);
-
   
   if (chat.messages === undefined) {
-    
     elem = (
        <div class="d-flex justify-content-center">
          <strong style={{marginRight:"1rem"}}>Loading...</strong>
   <div class="spinner-border" role="status">
-    
   </div>
 </div>
     );
-  } else {
-    if(searchTerm !== "" && searchChats.messages !== undefined){
+  }else if(chat.messages.length == 0 ){
+  elem = (<div  style= {{textAlign: "center",fontSize:"1.3rem",height:"100%", 
+  backgroundImage: "linear-gradient(to right, #CECECE, #ebebeb)"
+     }}><p style={{position:"relative",top:"40%"}}>Say Hi👋, to <strong>{recipientInfo.current.name}</strong></p></div>)
+  } 
+  else {
+         if(searchTerm !== "" && searchChats.messages !== undefined){
       elem = (searchChats.messages.map((msg) =>{
         return <SettingMessage message={msg} user={user.current.uId} isDel={isDel} term={searchTerm}/>;
       })
@@ -270,7 +271,6 @@ export default function SingleChat(props) {
     }
 
     if(searchChats.messages.length === 0){
-      console.log("no match")
       elem = (
         <h5 style={{ textAlign: "center" }}>No match found!</h5>
       )
