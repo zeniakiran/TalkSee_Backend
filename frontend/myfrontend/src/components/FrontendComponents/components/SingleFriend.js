@@ -4,21 +4,29 @@ import friendService from "../../../services/friendService";
 import { useHistory } from 'react-router-dom';
 import React from "react";
 import {   red  ,lightGreen} from '@material-ui/core/colors';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import WarningIcon from '@material-ui/icons/Warning';
 const SingleFriend = (props) => {
     const { friend ,onRemove, chatRec} = props;
-    console.log(chatRec)
+    const [show,setShow] = React.useState(false);
+    const [friends,setFriends]=React.useState();
     const myId=isAuthenticated()._id;
-    //const myEmail= isAuthenticated().email;
     const friendEmail =  friend.email;
-     const RemoveFriend =()=>{
+     const RemoveFriend =(friend)=>{
          friendService.deleteFriend({friendId: friend.id, myId}) 
           .then((data) => {
-            //console.log(data)
            onRemove()
              localStorage.setItem("user",JSON.stringify(data));
              })
-         .catch((err) => {console.log(err);});
+         .catch((err) => {console.log(err);}); 
       }
+       const handleClose = () => {
+        setShow(false);
+    };
     const chatButtonHandler = (fr)=>{
       console.log("Fr",fr)
       console.log("pth","/chat/"+friendEmail+'/ '+fr.id)
@@ -28,6 +36,12 @@ const SingleFriend = (props) => {
       localStorage.setItem("profileUrl",fr.profileImg)
       history.push("/chat/"+friendEmail+' '+fr.id)
     } 
+    const handleClickOpen= (frnd)=>{
+       setShow(true)
+  setFriends(frnd);
+  console.log(frnd);
+   
+    }
     let history = useHistory()
     return (
        <Paper style={{padding:  '20px 10px', marginBottom:"1rem" }}  >
@@ -46,17 +60,39 @@ const SingleFriend = (props) => {
             >Chat</Button>
  
             <Button className= "loginbtn"
+              onClick={()=>handleClickOpen(friend)}
              style={{  backgroundColor:red[400],color:"white" }}
             variant="contained" 
-             onClick ={RemoveFriend}
             >Remove</Button>
-           </Grid>
+            </Grid>
+            {show?
+   <Dialog open={show} onClose={handleClose} 
+    aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title"><WarningIcon  style={{color:"red",marginRight:"0.3rem",paddingBottom:'0.3rem'}}/><p style={{fontWeight:"bold",display:"inline" }}>Remove Friend Warning</p></DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+           <strong>{friend.name}</strong>  will no longer be your friend. Are you sure you want to continue?
+          </DialogContentText>
+          <hr/>
+        </DialogContent>
+        <DialogActions style={{padding:"0rem 1rem 1rem 1rem"}}>
+          <Button onClick={handleClose}  
+          style={{backgroundColor:"gray",color:"white"}}>
+            Cancel
+          </Button>
+          <Button onClick={()=>RemoveFriend(friends)} 
+           style={{backgroundColor:"#0e7be9",color:"white"}}>
+            Yes,Continue
+          </Button>
+        </DialogActions>
+      </Dialog> 
+    :null}
          </Grid>
              
         
       
                </Paper> 
-   
+  
      );
 }
  

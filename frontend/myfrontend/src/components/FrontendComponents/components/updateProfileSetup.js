@@ -317,7 +317,10 @@ const updateProfile =()=>{
   <div className="modal-dialog modal-dialog-centered" role="document">
     <div className="modal-content">
       <div className="modal-header">
-        <h3 className="modal-title" id="exampleModalLongTitle">Take Photo</h3>
+        <div className="modal-title">
+        <h3  id="exampleModalLongTitle">Take Photo</h3>
+        <p style={{color:"red"}}><i>Your picture's quality will be low</i></p>
+        </div>
         <button type="button" className="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

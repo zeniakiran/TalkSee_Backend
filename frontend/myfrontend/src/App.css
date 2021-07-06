@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=PT+Serif:ital@1&display=swap'");
 * {
   padding: 0px;
   margin: 0px;
@@ -304,4 +305,195 @@ body {
   font-size: 12px;
   margin-top: -10px;
   margin-left: -3px;
+}
+/**Dashboard Designing*/
+/**MyChats*/
+@media only screen and (min-width: 1100px) {
+  .myChats {
+    margin-top: 2rem;
+    padding: 1rem;
+    text-align: center;
+    width: 250px;
+    height: 240px;
+    color: black;
+    border-radius: 0.7rem;
+    background-color: white;
+    position: relative;
+    animation: mychats 5s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes mychats {
+    from {
+      background-color: rgba(0, 0, 0, 0.637);
+      left: -200px;
+      top: -544px;
+    }
+    to {
+      background-color: white;
+      left: 40px;
+      top: -544px;
+    }
+  }
+  .myContacts {
+    margin-top: 2rem;
+    padding: 1rem;
+    text-align: center;
+    width: 250px;
+    height: 240px;
+    color: black;
+    border-radius: 0.7rem;
+    background-color: white;
+    position: relative;
+    animation: mycontact 5s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes mycontact {
+    from {
+      background-color: rgba(0, 0, 0, 0.637);
+      left: 0px;
+      top: -272px;
+    }
+    to {
+      background-color: white;
+      left: 350px;
+      top: -272px;
+    }
+  }
+  .mySettings {
+    margin-top: 2rem;
+    padding: 1rem;
+    text-align: center;
+    width: 250px;
+    height: 240px;
+    color: black;
+    border-radius: 0.7rem;
+    background-color: white;
+    position: relative;
+    animation: mysetting 5s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes mysetting {
+    from {
+      background-color: rgba(0, 0, 0, 0.637);
+      left: -100px;
+      top: 0px;
+    }
+    to {
+      background-color: white;
+      left: 640px;
+      top: 0px;
+    }
+  }
+  .dashboardDiv {
+    overflow-y: hidden;
+  }
+}
+
+.myChaticon {
+  color: #b2ff59 !important;
+  font-size: 7rem;
+  text-align: center;
+}
+.msgCounter {
+  margin-top: -25px;
+  margin-left: 0.5rem;
+}
+
+/*My Contacts*/
+
+.myContacticon {
+  color: #64ffda !important;
+  font-size: 7rem;
+}
+.frndcounter {
+  margin-top: -25px;
+  margin-left: 0.5rem;
+}
+
+/**My Settings*/
+
+.mySettingsicon {
+  color: #ffab40 !important;
+  font-size: 7rem;
+}
+
+.myDashboardBtn {
+  margin-top: 2rem !important;
+  text-transform: capitalize !important;
+  font-size: 1.2rem !important;
+  font-family: "PT Serif" !important;
+}
+@media only screen and (max-width: 1099px) {
+  .mySettings,
+  .myChats,
+  .myContacts {
+    margin-top: 2rem;
+    padding: 1rem;
+    text-align: center;
+    color: black;
+    border-radius: 0.7rem;
+    background-color: white;
+  }
+  .myDashboardBtn {
+    background-color: #424242 !important;
+    color: white !important;
+  }
+}
+.editProfileBtn {
+  padding: 13px 20px !important;
+  display: block !important;
+  background-color: #fbc02d !important;
+  margin-top: 2.3rem !important;
+  font-size: 1.4rem !important;
+  font-family: "PT Serif" !important;
+  color: white !important;
+  text-transform: capitalize !important;
+  animation: editProfile 3s;
+  border-radius: 1rem !important;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
+}
+.deleteAccountBtn {
+  padding: 13px 20px !important;
+  display: block !important;
+  background-color: #e53935 !important;
+  margin-top: 1.5rem !important;
+  font-size: 1.3rem !important;
+  font-family: "PT Serif" !important;
+  color: white !important;
+  border-radius: 1rem !important;
+  text-transform: capitalize !important;
+  animation: deleteAccount 3s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
+}
+.accountSettingIcons {
+  font-size: 1.5rem !important;
+  margin-top: -4px !important;
+}
+@media only screen and (min-width: 1100px) {
+  @keyframes editProfile {
+    from {
+      top: -15rem;
+    }
+    to {
+      top: 0rem;
+    }
+  }
+  @keyframes deleteAccount {
+    from {
+      bottom: -15rem;
+    }
+    to {
+      bottom: 0rem;
+    }
+  }
 }

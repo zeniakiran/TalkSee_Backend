@@ -1,26 +1,12 @@
 import React, { useEffect, useContext,useRef } from "react";
 import Header from "./Header";
 import { isAuthenticated } from "../clientStorages/auth";
-import { Button, Grid } from "@material-ui/core";
+import { Button, Grid,Hidden } from "@material-ui/core";
 import {SocketContext} from '../../../context/SocketContext';
-//import {MyChatsContext} from '../../../context/MyChatsContext';
 import io from "socket.io-client";
 import { useHistory } from 'react-router-dom';
-import ChatIcon from '@material-ui/icons/Chat';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
-import SettingsIcon from '@material-ui/icons/Settings';
-import GroupAddRoundedIcon from '@material-ui/icons/GroupAddRounded';
-import DeleteIcon from '@material-ui/icons/Delete';
 import Badge from '@material-ui/core/Badge';
-//import chatservice from '../../../services/ChatService';
-import accountService from '../../../services/accountService';
-//import friendService from '../../../services/friendService';
- //import { ToastContainer } from 'react-toastify';
-//import Toast from 'react-bootstrap/Toast' 
-import '../../ChatComponents/chat.css'
 import PageTitle from "./pageTitle";
-
 
 const UserDashboard = ({uuId}) => {
   //const {chatRecipients,setRecipients,getRecData} = useContext(MyChatsContext);
@@ -31,11 +17,13 @@ const UserDashboard = ({uuId}) => {
   //let showBtn = useRef(0)
   let userEmail = useRef()
   let history = useHistory()
+  let counte=0;
   userEmail.current = JSON.parse(localStorage.getItem("user")).email
   const {clientSocket,setSocket,messageEvent,roomJoin,friendReq,getRequest,frndcounter,msgCounter,msgNotify,acceptRejectCounter} = useContext(SocketContext);
-
+useEffect(()=>msgNotify,[])
+  useEffect(()=>acceptRejectCounter,[])
   let clientSocket1 = useRef()
-   
+   console.log(msgCounter);
    window.onload = () => {
        friendReq()
        acceptRejectCounter()
@@ -54,40 +42,6 @@ const UserDashboard = ({uuId}) => {
       return s;
     })
   };
-const DeleteAccount =()=>{
-accountService.deleteMyAccount(myId)
- .then((res) =>history.push('/signup'))
-  .catch((err) => console.log(err));
-}
- /* useEffect(()=>{
-    chatservice.offlinemessages(isAuthenticated().email)
-        .then((res)=>{
-            if(res.count > 0){
-              setObj((o)=>{
-                o = {sender: res.info.sender, receiver: res.info.receiver}
-                return o
-              })
-              //obj = {sender: res.info.sender, receiver: res.info.receiver}
-              setCount((c)=>{
-                c = res.count
-                return c
-              })
-       
-            }
-        })
-        .catch((err)=>console.log(err))
-
-  },[])
-useEffect(()=>{
-  friendService.getFriendRequestsCount(myId)
-  .then((res)=>{ 
-     if(res> 0)
-     setFriendCount(res)
-  })
-  .catch((err)=>console.log(err))
-},[])*/
-  
-  
    useEffect(()=>{
     if(clientSocket!==undefined){
         console.log(clientSocket)
@@ -107,131 +61,86 @@ useEffect(()=>{
     roomJoin(myId)
   },[]);
 
-  return <div style={{height:"100vh"}} className="back_divs">
+  return (<div style={{height:"100vh"}} className="back_divs dashboardDiv">
     <Header/>
     <PageTitle name={"Dashboard"}/>
-   {/* <ToastContainer/> */}
-     <Grid container>
-       <Grid item xs={1} md={4}></Grid>
-       <Grid item xs={10} md={4}>
-          <Button className= "loginbtn"
-             style={{padding:"10px 20px",display:"block",backgroundColor:"#C8906A"}}
-            variant="contained" 
-            color="Secondary"
-            fullWidth
-            onClick={event =>  history.push('/all-contacts/'+myId)}>
-              <PersonAddIcon className='chaticon'
-              color = "white"/> Add New friend
-            </Button>
-            <Button className= "loginbtn"
-             style={{ padding:"10px 40px",marginTop:"2rem",display:"block",backgroundColor:"#C0C86A"}}
-            variant="contained" 
-            color="Secondary"
-            fullWidth
-            onClick={event =>  history.push('/all-my-friends/'+myId)}>
-              < PeopleAltIcon className='chaticon'
-              color = "white"/> My Friends
-            </Button>
-           {/*  {
-    obj.sender !== undefined ?
-        obj.sender.forEach((o)=>
-        {
-            o !== userEmail.current ?
-            showBtn.current = showBtn.current + 1
-          :
-          showBtn.current = 0
-          })
-    :
-    null
-    } */}
-    
-        {
-          msgCounter >= 1 ?
-           <Button className= "loginbtn"
-             style={{ padding:"10px 20px" , marginTop:"2rem",display:"block",backgroundColor:"#D582BD"}}
+           <Grid container>
+               <Grid item xs={1} sm={3} md={2}  ></Grid>
+               <Grid item xs={10} sm={6} md={8} >
+                
+          <div className="mySettings"> 
+          <i class="fas fa-user-cog mySettingsicon"  ></i>
+         <Button className= "loginbtn myDashboardBtn"
            variant="contained" 
-            color="Secondary" 
             fullWidth
-             onClick={event =>  history.push('/mychats/'+myId)}>
-            <Badge badgeContent={msgCounter} color="secondary" style={{marginRight:"0.5rem"}}>
-              <ChatIcon className='chaticon'
-              onClick={event =>  history.push('/mychats/'+myId)}
-              color = "white"
-              />  
-            </Badge>
-            My Chats
+            size="large"
+             onClick={event =>  history.push('/my-account-settings/'+myId)}>
+          Account Settings
             </Button>
-          :
-         <Button className= "loginbtn"
-             style={{ padding:"10px 50px" ,marginTop:"2rem",display:"block",backgroundColor:"#D582BD"}}
-           variant="contained" 
-            color="Secondary" 
-            fullWidth
-             onClick={event =>  history.push('/mychats/'+myId)}>
-          <ChatIcon className='chaticon'
-              color = "white"
-              />  My Chats
-            </Button>
-            
-        }    
-         {
+            </div>
+{
           frndcounter >= 1 ?
-           <Button className= "loginbtn"
-             style={{ padding:"10px 20px" , marginTop:"2rem",display:"block",backgroundColor:"#8298D5"}}
-           variant="contained" 
-            color="Secondary" 
+          <div className="myContacts"> 
+          <i class="fas fa-address-book myContacticon"  ></i>
+           <Button className= "loginbtn myDashboardBtn"
+           variant="contained"
+            size="large"
+           
             fullWidth
-             onClick={event =>  history.push('/all-friend-requests/'+myId)}>
-            <Badge badgeContent={frndcounter} color="secondary" style={{marginRight:"0.5rem"}}>
-              <GroupAddRoundedIcon className='chaticon'
-              onClick={event =>  history.push('/all-friend-requests/'+myId)}
-              color = "white"
-              />  
+             onClick={event =>  history.push('/my-contact-list/'+myId)}>
+               
+            Contacts
+            <Badge badgeContent="1" className="msgCounter" color="Secondary">
             </Badge>
-            My Friend Requests
             </Button>
+            </div>
           :
-         <Button className= "loginbtn"
-             style={{ padding:"10px 50px" ,marginTop:"2rem",display:"block",backgroundColor:"#8298D5"}}
+          <div className="myContacts"> 
+           <i class="fas fa-address-book myContacticon"  ></i>
+         <Button className= "loginbtn myDashboardBtn"
            variant="contained" 
-            color="Secondary" 
             fullWidth
-             onClick={event =>  history.push('/all-friend-requests/'+myId)}>
-          <GroupAddRoundedIcon className='chaticon'
-              color = "white"
-              />  My Friend Requests
+            size="large"
+             onClick={event =>  history.push('/my-contact-list/'+myId)}>
+            Contacts
             </Button>
-            
-        }
-         <Button className= "loginbtn"
-             style={{ padding:"10px 27px",marginTop:"2rem",display:"block",backgroundColor:"#69B6CF"}}
+            </div>
+        }    
+         
+            {
+          msgCounter >= 1?
+          <div className="myChats"> 
+           <i className="fas fa-comments myChaticon"  ></i>
+           <Button className= "loginbtn myDashboardBtn"
+           variant="contained"
+            size="large"
+           
+            fullWidth
+             onClick={event =>  history.push('/mychats/'+myId)}>
+               
+            Chats
+            <Badge badgeContent="1" className="msgCounter" color="Secondary">
+            </Badge>
+            </Button>
+            </div>
+          :
+          <div className="myChats"> 
+           <i className="fas fa-comments myChaticon"  ></i>
+         <Button className= "loginbtn myDashboardBtn"
            variant="contained" 
-            color="Secondary"
             fullWidth
-            onClick={event =>  history.push('/update-my-profile-setup/'+myId)}>
-              <SettingsIcon className='chaticon'
-              color = "white"/>Update Profile
+            size="large"
+             onClick={event =>  history.push('/mychats/'+myId)}>
+            Chats
             </Button>
+            </div>
+        } 
        
-             <Button className= "loginbtn"
-             style={{padding:"10px 20px",marginTop:"2rem",display:"block",backgroundColor:"#C3767F"}}
-            variant="contained" 
-            color="Secondary"
-            fullWidth
-            onClick={DeleteAccount}>
-              <DeleteIcon className='chaticon'
-              color = "white"/> Delete Account
-            </Button>
-             
-       </Grid>
-        <Grid item xs={1} md={4}></Grid>
-     </Grid>
-    
-    
-    
-    
-    
-    </div>
+        </Grid>
+        <Grid item xs={1} sm={3} md={2} ></Grid>
+        </Grid>
+            
+            </div>)
 };
 
 export default UserDashboard;

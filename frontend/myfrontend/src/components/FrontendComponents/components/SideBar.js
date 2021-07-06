@@ -49,11 +49,7 @@ const firstName= isAuthenticated().firstName;
                   </Link>}
                  
             </li>
-            <li> 
-                <Link to={{pathname: `/update-my-profile-setup/${myId}`}} style={{textDecoration:"none"}} >
-                     <i class="fas fa-user-cog"  ></i> Profile Setting
-                  </Link>
-            </li>
+          
             <li>
               {frndcounter >=1   ?
                <Link to={{pathname: '/my-contact-list/'+myId}} style={{textDecoration:"none"}}  >
@@ -61,8 +57,13 @@ const firstName= isAuthenticated().firstName;
                   </Link>:
                    
                 <Link to={{pathname: '/my-contact-list/'+myId}} style={{textDecoration:"none"}}  >
-                     <i class="fas fa-address-book"></i> Contacts
+                     <i class="fas fa-address-book"></i> My Contacts
                   </Link>}
+            </li>
+              <li> 
+                <Link to={{pathname: `/my-account-settings/${myId}`}} style={{textDecoration:"none"}} >
+                     <i class="fas fa-user-cog"  ></i> Account Settings
+                  </Link>
             </li>
             
             
