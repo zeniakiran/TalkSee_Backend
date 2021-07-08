@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
  const config = require("../config/keys");
 const nodemailer = require('nodemailer');
 require('dotenv').config();
+const jwtPrivateKey = process.env.jwtPrivateKey;
+const jwtResetKey =process.env.jwtResetKey;
 exports.signupVerificationController = async (req, res) => {
   const { email,firstName, lastName, password,gender } = req.body;
   try {
@@ -22,7 +24,7 @@ exports.signupVerificationController = async (req, res) => {
         password,
         gender
       },
-      config.jwtPrivateKey,
+      jwtPrivateKey,
       {
         expiresIn: '10m'
       }
@@ -110,7 +112,7 @@ exports.signupVerificationController = async (req, res) => {
  exports.activationController = async (req, res) => {
   const { token } = req.body;
   if(token) {
-  jwt.verify(token, config.jwtPrivateKey, (err) => {
+  jwt.verify(token, jwtPrivateKey, (err) => {
       if (err) {
         return res.status(401).json({
           errorMessage: 'Link expired, Signup again'
@@ -175,7 +177,7 @@ exports.loginController = async (req, res) => {
     const payload = {
       user: { _id: user._id, },
      };
-    jwt.sign(payload, config.jwtPrivateKey, (err, token) => {
+    jwt.sign(payload, jwtPrivateKey, (err, token) => {
       if (err) console.log("JWT sign error in Login");
       const { _id, firstName,lastName, email, role,gender, profileImg,langPreference, friends, sentRequests,friendRequests } = user;
       console.log(firstName)
@@ -209,7 +211,7 @@ exports.forgotPasswordController = async (req, res) => {
        },
      };
      const token = jwt.sign(
-       payload,config.jwtResetKey,{expiresIn: '10m'}
+       payload,jwtResetKey,{expiresIn: '10m'}
      );
       let transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -295,7 +297,7 @@ exports.forgotPasswordController = async (req, res) => {
 
 try {
     if (resetPasswordLink) {
-      jwt.verify(resetPasswordLink, config.jwtResetKey, (err) => {
+      jwt.verify(resetPasswordLink, jwtResetKey, (err) => {
       if (err) {
         return res.status(401).json({
           errorMessage: 'Reset Password Link expired, Try again',

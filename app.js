@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 var mongoose = require("mongoose");
 var config = require("./config/dev");
 var cors = require("cors")
+const connectDB = require("./db/db");
 
 var usersRouter = require('./routes/ApiRoutes/UsersApi');
 var ChatApiRouter = require('./routes/ApiRoutes/ChatApi');
@@ -18,14 +19,13 @@ const server = require("http").createServer(app);
 const socketListener = require("socket.io")(server);
 const { socketHandler } = require("./socketHandler/ChatSockets.js");
 app.use(cors());
+connectDB();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-/* app.get("/", (req, res) => {
-  res.status(200).send("server is up and running");
-}); */
+ 
 app.use('/api/users', usersRouter); 
 app.use('/api/chatapi', ChatApiRouter);
 app.use('/api/contacts', ContactsApiRouter);
@@ -38,15 +38,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/frontend/myfrontend/build/index.html'))
 })
 }
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json())
-
-const port = process.env.PORT || 5000; // process.env.port is Heroku's port if you choose to deploy the app there
-console.log(config.mongoURI)
-mongoose.connect(config.mongoURI, 
-{ useNewUrlParser: true , useUnifiedTopology: true })
-.then(()=>{console.log("Connected to Database")})
-.catch((err)=>{console.log(err + "Error in App")})
+ 
 var i =0
 socketListener.on("connection", (clientSocket) => {
   i=i+1
@@ -60,6 +52,7 @@ socketListener.on("connection", (clientSocket) => {
 socketListener.on('disconnect', () => {
   socketListener.removeAllListeners();
 });
+const port = process.env.PORT || 5000; // process.env.port is Heroku's port if you choose to deploy the app there
 
 server.listen(port, () =>
   console.log(`Server up and running on port ${port} !`)
