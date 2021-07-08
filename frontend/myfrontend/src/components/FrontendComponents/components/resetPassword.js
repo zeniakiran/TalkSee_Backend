@@ -229,7 +229,7 @@ const ResetPassword = ({ match }) => {
        
   );   
   return (
-  <div>
+  <div className="login_div">
         {loading && <LinearBuffer />}
       {errorMessage && (
         <AlertBar type="error" message={errorMessage} autoClose={4000} />

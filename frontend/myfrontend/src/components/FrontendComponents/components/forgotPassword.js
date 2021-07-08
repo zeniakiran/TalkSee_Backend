@@ -115,7 +115,7 @@ const ResetPageForm = () =>(
     </Grid>
 </div>
 )
-return (<div>
+return (<div className="login_div">
     
     {loading && <LinearBuffer />}
      <PageTitle name= {"Forgot Password"}/>
