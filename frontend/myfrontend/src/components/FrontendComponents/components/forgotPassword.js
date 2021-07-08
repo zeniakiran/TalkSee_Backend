@@ -118,7 +118,7 @@ const ResetPageForm = () =>(
 return (<div className="login_div">
     
     {loading && <LinearBuffer />}
-     <PageTitle name= {"Forgot Password"}/>
+     <PageTitle  className="title" name= {"Forgot Password"}/>
       {errorMessage && (
         <AlertBar type="error" message={errorMessage} autoClose={4000} />
       )}

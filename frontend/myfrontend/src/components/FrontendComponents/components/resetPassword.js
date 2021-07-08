@@ -237,7 +237,7 @@ const ResetPassword = ({ match }) => {
       {successMsg && (
         <AlertBar type="success" message={successMsg} autoClose={4000} />
       )}
-       <PageTitle name= {"Reset Password"}/>
+       <PageTitle  className="title" name= {"Reset Password"}/>
       {ResetPasswordForm()}
       
   </div>)
