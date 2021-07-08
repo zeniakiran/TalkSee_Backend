@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-var logger = require('morgan');
+const morgan = require("morgan");
 var mongoose = require("mongoose");
 var config = require("./config/dev");
 var cors = require("cors")
@@ -19,6 +19,7 @@ const server = require("http").createServer(app);
 const socketListener = require("socket.io")(server);
 const { socketHandler } = require("./socketHandler/ChatSockets.js");
 app.use(cors());
+app.use(morgan("tiny"));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(express.json());
