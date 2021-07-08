@@ -31,11 +31,13 @@ app.use('/api/chatapi', ChatApiRouter);
 app.use('/api/contacts', ContactsApiRouter);
 app.use('/api/friends', FriendsApiRouter);
 // Serve static files from the React frontend app
+if(process.env.NODE_ENV == "production"){
 app.use(express.static(path.join(__dirname, 'frontend/myfrontend/build')))
 // Anything that doesn't match the above, send back index.html
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/frontend/myfrontend/build/index.html'))
 })
+}
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
