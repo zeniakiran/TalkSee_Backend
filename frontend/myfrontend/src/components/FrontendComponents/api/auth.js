@@ -6,7 +6,7 @@ export const signup = async (data) => {
       "Content-Type": "application/json",
     },
   };
-  const response = await axios.post("http://localhost:5000/api/users/signup", data);
+  const response = await axios.post("/api/users/signup", data);
   return response;
 };
 export const login = async (data) => {
@@ -15,6 +15,6 @@ export const login = async (data) => {
       "Content-Type": "application/json",
     },
   };
-  const response = await axios.post("http://localhost:5000/api/users/login", data);
+  const response = await axios.post("/api/users/login", data);
   return response;
 };
