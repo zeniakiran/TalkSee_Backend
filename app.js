@@ -42,6 +42,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 const port = process.env.PORT || 5000; // process.env.port is Heroku's port if you choose to deploy the app there
+console.log(config.mongoURI);
 mongoose.connect(config.mongoURI, 
 { useNewUrlParser: true , useUnifiedTopology: true })
 .then(()=>{console.log("Connected to Database")})
