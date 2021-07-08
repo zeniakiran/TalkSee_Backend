@@ -3,7 +3,6 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const morgan = require("morgan");
 var mongoose = require("mongoose");
 var config = require("./config/dev");
 var cors = require("cors")
@@ -19,7 +18,6 @@ const server = require("http").createServer(app);
 const socketListener = require("socket.io")(server);
 const { socketHandler } = require("./socketHandler/ChatSockets.js");
 app.use(cors());
-app.use(morgan("tiny"));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(express.json());
@@ -42,7 +40,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 const port = process.env.PORT || 5000; // process.env.port is Heroku's port if you choose to deploy the app there
-console.log(config.mongoURI);
+console.log(config.mongoURI)
 mongoose.connect(config.mongoURI, 
 { useNewUrlParser: true , useUnifiedTopology: true })
 .then(()=>{console.log("Connected to Database")})
