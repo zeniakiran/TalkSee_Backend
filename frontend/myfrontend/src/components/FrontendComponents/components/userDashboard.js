@@ -1,7 +1,7 @@
 import React, { useEffect, useContext,useRef } from "react";
 import Header from "./Header";
 import { isAuthenticated } from "../clientStorages/auth";
-import { Button, Grid,Hidden } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import {SocketContext} from '../../../context/SocketContext';
 import io from "socket.io-client";
 import { useHistory } from 'react-router-dom';
@@ -90,7 +90,7 @@ useEffect(()=>msgNotify,[])
              onClick={event =>  history.push('/my-contact-list/'+myId)}>
                
             Contacts
-            <Badge badgeContent="1" className="msgCounter" color="Secondary">
+            <Badge badgeContent={frndcounter } className="msgCounter" color="Secondary">
             </Badge>
             </Button>
             </div>
@@ -119,7 +119,7 @@ useEffect(()=>msgNotify,[])
              onClick={event =>  history.push('/mychats/'+myId)}>
                
             Chats
-            <Badge badgeContent="1" className="msgCounter" color="Secondary">
+            <Badge badgeContent={msgCounter} className="msgCounter" color="Secondary">
             </Badge>
             </Button>
             </div>

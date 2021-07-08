@@ -31,51 +31,45 @@ const ContactManagement = () => {
             <Grid container style={{marginTop:"1.5rem"}}>
                 <Grid item xs={1} md={3}></Grid>
                  <Grid item xs={10} md={6}>
-             <Button className= "loginbtn"
-             style={{ padding:"10px 40px", display:"block",backgroundColor:"#D03384",marginTop:"1.5rem"}}
-            variant="contained" 
-            color="Secondary"
+             <Button className= "loginbtn myFriendsBtn"
+               variant="contained" 
             fullWidth
             onClick={event =>  history.push('/all-my-friends/'+myId)}>
-              < PeopleAltIcon className='chaticon'
+              < PeopleAltIcon className='contactManagementIcon'
               color = "white"/> My Friends
             </Button>
              {
-          frndcounter >= 1 ?
-           <Button className= "loginbtn"
-             style={{ padding:"10px 20px" ,display:"block",backgroundColor:"#D03384",marginTop:"1.5rem"}}
-           variant="contained" 
-            color="Secondary" 
+          frndcounter >= 1?
+           <Button className= "loginbtn friendRequestBtn"
+               variant="contained" 
              fullWidth
              onClick={event =>  history.push('/all-friend-requests/'+myId)}>
-            <Badge badgeContent={frndcounter} color="secondary" style={{marginRight:"0.5rem"}}>
-              <GroupAddRoundedIcon className='chaticon'
+               <GroupAddRoundedIcon className='contactManagementIcon'
               onClick={event =>  history.push('/all-friend-requests/'+myId)}
-              color = "white"
               />  
-            </Badge>
+              <Badge badgeContent= {frndcounter} color="secondary" style={{margin:" -28px 0.8rem 0 -3px"}}></Badge>
             My Friend Requests
             </Button>
           :
-         <Button className= "loginbtn"
-             style={{ padding:"10px 50px" , display:"block",backgroundColor:"#D03384",marginTop:"1.5rem"}}
-           variant="contained" 
+         <Button className= "loginbtn friendRequestBtn"
+              variant="contained" 
             color="Secondary" 
             fullWidth
              onClick={event =>  history.push('/all-friend-requests/'+myId)}>
-          <GroupAddRoundedIcon className='chaticon'
-              color = "white"
-              />  My Friend Requests
+              <GroupAddRoundedIcon className='contactManagementIcon'
+              onClick={event =>  history.push('/all-friend-requests/'+myId)}
+              />  
+              
+             My Friend Requests
             </Button>
             
         }
-        <Button className= "loginbtn"
-             style={{padding:"10px 20px",display:"block",backgroundColor:"#D03384",marginTop:"1.5rem"}}
-            variant="contained" 
+        <Button className= "loginbtn addFriendBtn"
+               variant="contained" 
             color="Secondary"
              fullWidth
             onClick={event =>  history.push('/all-contacts/'+myId)}>
-              <PersonAddIcon className='chaticon'
+              <PersonAddIcon className='contactManagementIcon'
               color = "white"/> Add New friend
             </Button>
             </Grid>

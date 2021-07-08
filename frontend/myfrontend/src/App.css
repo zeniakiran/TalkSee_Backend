@@ -446,31 +446,33 @@ body {
   }
 }
 .editProfileBtn {
-  padding: 13px 20px !important;
+  padding: 10px 18px !important;
   display: block !important;
-  background-color: #fbc02d !important;
+  /* background: linear-gradient(to top, #fdd835 0%, #ff9999 120%) !important;*/
+  background-color: rgb(230, 183, 97) !important;
   margin-top: 2.3rem !important;
-  font-size: 1.4rem !important;
+  font-size: 1.2rem !important;
   font-family: "PT Serif" !important;
   color: white !important;
   text-transform: capitalize !important;
-  animation: editProfile 3s;
+  animation: editProfile 2s;
   border-radius: 1rem !important;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
   animation-timing-function: ease-in-out;
 }
 .deleteAccountBtn {
-  padding: 13px 20px !important;
+  padding: 10px 18px !important;
   display: block !important;
-  background-color: #e53935 !important;
+  /* background: linear-gradient(to top, #ff0000e1 0%, #ff9999 90%) !important;*/
+  background-color: #f75246 !important;
   margin-top: 1.5rem !important;
-  font-size: 1.3rem !important;
+  font-size: 1.2rem !important;
   font-family: "PT Serif" !important;
   color: white !important;
   border-radius: 1rem !important;
   text-transform: capitalize !important;
-  animation: deleteAccount 3s;
+  animation: deleteAccount 2s;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
   animation-timing-function: ease-in-out;
@@ -494,6 +496,96 @@ body {
     }
     to {
       bottom: 0rem;
+    }
+  }
+}
+.contactManagementIcon {
+  font-size: 1.5rem !important;
+  margin-top: -4px !important;
+  margin-right: 0.4rem;
+}
+
+.friendRequestBtn {
+  padding: 10px 18px !important;
+  display: block !important;
+  /*background-color: #78909c !important;*/
+  background-color: #db7aa3 !important;
+  margin-top: 1.5rem !important;
+  font-size: 1.2rem !important;
+  font-family: "PT Serif" !important;
+  color: white !important;
+  border-radius: 1rem !important;
+  text-transform: capitalize !important;
+  animation: friendRequest 2s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
+}
+.myFriendsBtn {
+  padding: 10px 18px !important;
+  display: block !important;
+  /* background: linear-gradient(to top, #fd7ba6 0%, #e9ff25 70%) !important; #9ccc65*/
+  background-color: #51b7bb !important;
+  margin-top: 1.5rem !important;
+  font-size: 1.2rem !important;
+  font-family: "PT Serif" !important;
+  color: white !important;
+  border-radius: 1rem !important;
+  text-transform: capitalize !important;
+  animation: myFriend 2s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
+}
+.addFriendBtn {
+  padding: 10px 18px !important;
+  display: block !important;
+  /*background: linear-gradient(to top, #fd7ba6 0%, #ff4810 100%) !important; #ec407a*/
+  background-color: #b97ebe !important;
+  margin-top: 1.5rem !important;
+  font-size: 1.2rem !important;
+  font-family: "PT Serif" !important;
+  color: white !important;
+  border-radius: 1rem !important;
+  text-transform: capitalize !important;
+  animation: addFriend 2s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
+}
+@media only screen and (min-width: 1100px) {
+  @keyframes friendRequest {
+    from {
+      left: 22%;
+      width: 60%;
+      height: auto;
+      opacity: 0.3;
+    }
+    to {
+      left: 0rem;
+      width: 100%;
+      height: auto;
+      opacity: 1;
+    }
+  }
+  @keyframes addFriend {
+    from {
+      top: -15rem;
+      opacity: 0.3;
+    }
+    to {
+      top: 0rem;
+      opacity: 1;
+    }
+  }
+  @keyframes myFriend {
+    from {
+      bottom: -15rem;
+      opacity: 0.3;
+    }
+    to {
+      bottom: 0rem;
+      opacity: 1;
     }
   }
 }
