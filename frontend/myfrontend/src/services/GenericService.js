@@ -1,5 +1,5 @@
 import axios from "axios";
-axios.defaults.baseURL = "http://localhost:5000/api/";
+axios.defaults.baseURL = "/api/";
 axios.defaults.headers.common["x-auth-token"] = localStorage.getItem("token");
 class GenericService {
     get = (url) => {
