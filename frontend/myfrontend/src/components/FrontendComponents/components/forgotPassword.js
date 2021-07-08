@@ -64,7 +64,7 @@ const ResetPageForm = () =>(
     <Grid container >
           <Grid item xs={1} sm={3} md={4}></Grid>
           <Grid item xs={10} sm ={6} md={4} >
-        <Paper style={{padding: '30px 50px'}} >
+        <Paper className="Login-container" style={{padding: '30px 50px'}} >
           <Button  
             className= "loginbtn"
             href="/login"
