@@ -33,7 +33,7 @@ const AllFriends = (props) => {
        messageEvent()
       let did = JSON.parse(localStorage.getItem('user'))._id
       roomJoin(did)
-      clientSocket1 = io("http://127.0.0.1:5000")
+      clientSocket1 = io("/")
       setSocket((s)=>{
         s = clientSocket1
         s.on('connect' , () => {

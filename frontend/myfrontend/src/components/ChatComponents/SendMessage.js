@@ -7,7 +7,7 @@ export default function SendMessage(props) {
   console.log("rec",props.recipientId)
 
     useEffect(() => {
-            clientSocket.current = io("http://127.0.0.1:5000");
+            clientSocket.current = io("/");
                     clientSocket.current.emit(
                       "roomJoin",
                       { from: props.userId, to: props.recipientId },
