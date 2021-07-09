@@ -31,7 +31,6 @@ import AlertBar from "../Alerts/AlertBar";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { signup } from "../api/auth";
-import PageTitle from "./pageTitle";
 import { isAuthenticated } from "../clientStorages/auth";
  
 

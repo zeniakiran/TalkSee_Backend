@@ -231,7 +231,7 @@ const SetProfile =()=>{
   <div className="profile-page">
       <div className="profile-container">
           <div className="img-holder">
-             <img src={img} className="profile-img"/>
+             <img src={img} className="profile-img" alt="profile-img"/>
               </div>
              <input type="file" accept="image/*" name="image-upload" id="input" onChange={uploadImage}  />
              <div className="label">

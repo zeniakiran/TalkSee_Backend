@@ -1,41 +1,31 @@
-import React, { useEffect, useState,useContext,useRef } from "react";
+import React, { useEffect,useContext,useRef } from "react";
 import Header from "./Header";
 import { isAuthenticated } from "../clientStorages/auth";
-import { Button, Grid,Hidden } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import {SocketContext} from '../../../context/SocketContext';
-import {ChatContext} from '../../../context/ChatContext';
 import io from "socket.io-client";
 import { useHistory } from 'react-router-dom';
-import ChatIcon from '@material-ui/icons/Chat';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
-import SettingsIcon from '@material-ui/icons/Settings';
-import GroupAddRoundedIcon from '@material-ui/icons/GroupAddRounded';
-import DeleteIcon from '@material-ui/icons/Delete';
 import Badge from '@material-ui/core/Badge';
-import chatservice from '../../../services/ChatService';
-import accountService from '../../../services/accountService';
-import friendService from '../../../services/friendService';
- //import { ToastContainer } from 'react-toastify';
-//import Toast from 'react-bootstrap/Toast' 
 import '../../ChatComponents/chat.css'
 import PageTitle from "./pageTitle";
-
+ //import { ToastContainer } from 'react-toastify';
+//import Toast from 'react-bootstrap/Toast' 
 
 const UserDashboard = ({setLogin,setUsers}) => {
-  //const {chatRecipients,setRecipients,getRecData} = useContext(MyChatsContext);
-  //const [obj, setObj] = useState({})
+  /* const {chatRecipients,setRecipients,getRecData} = useContext(MyChatsContext);
+  const [obj, setObj] = useState({})
+  const {count, obj} = useContext(ChatContext);
+  const [msgCounter,setMsgCounter]= useState(0)
+  const [friendCount,setFriendCount]=useState(0); */
   const myId= isAuthenticated()._id;
-  //const [msgCounter,setMsgCounter]= useState(0)
-  //const [friendCount,setFriendCount]=useState(0);
-  let showBtn = useRef(0)
+  const IP_URL = localStorage.getItem('IP_URL')
   let userEmail = useRef()
   let history = useHistory()
   userEmail.current = JSON.parse(localStorage.getItem("user")).email
-  const IP_URL = localStorage.getItem('IP_URL')
+  
   console.log(userEmail)
   const {clientSocket,setSocket,messageEvent,roomJoin,friendReq,getRequest,frndcounter,msgNotify,msgCounter,acceptRejectCounter} = useContext(SocketContext);
-  //const {count, obj} = useContext(ChatContext);
+  
 
   console.log("counter in dashbord",msgCounter)
   let clientSocket1 = useRef()
@@ -101,7 +91,6 @@ const UserDashboard = ({setLogin,setUsers}) => {
     if(clientSocket!==undefined){
         console.log(clientSocket)
         clientSocket.emit("adduser",{id:clientSocket.id, name: userEmail.current}, (usersArray)=>{
-          //console.log("users array",usersArray)
           setUsers((u)=>{
             u = usersArray
             console.log("users array",usersArray)
