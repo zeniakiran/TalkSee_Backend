@@ -1,7 +1,6 @@
 import axios from "axios";
-const IP_URL = localStorage.getItem('IP_URL')
-console.log(process.env.REACT_APP_IP_URL+"api/")
-axios.defaults.baseURL = process.env.REACT_APP_IP_URL+"api/";
+//axios.defaults.baseURL = process.env.REACT_APP_IP_URL+"api/";
+axios.defaults.baseURL = process.env.REACT_APP_IP_URL
 axios.defaults.headers.common["x-auth-token"] = localStorage.getItem("token");
 class GenericService {
     get = (url) => {
