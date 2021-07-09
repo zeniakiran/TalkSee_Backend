@@ -247,7 +247,7 @@ const LogIn = ({onIdSubmit,setId}) => {
       {loading && <LinearBuffer />}
     
            
-             <LogoPage className="title" name= {"TalkSee"}/>
+             <LogoPage className="title" name= {"TalkSee"} logo ={true}/>
                   {LogInForm()} 
       
      

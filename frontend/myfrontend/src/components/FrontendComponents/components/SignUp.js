@@ -332,7 +332,7 @@ const SignUp = () => {
       {successMsg && (
         <AlertBar type="success" message={successMsg} autoClose={4000} />
       )}
-       <LogoPage className="title" name= {"TalkSee"}/>
+       <LogoPage className="title" name= {"TalkSee"} logo ={true}/>
       {SignUpForm()}
     </div>
   );

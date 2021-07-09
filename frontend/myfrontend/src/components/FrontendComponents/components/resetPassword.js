@@ -24,6 +24,7 @@ import PageTitle from "./pageTitle";
 import { makeStyles } from "@material-ui/core/styles";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { useHistory } from 'react-router-dom';
+import LogoPage from "./LogoPage";
 
  const useStyles = makeStyles((theme) => ({
   textfield: {
@@ -237,7 +238,7 @@ const ResetPassword = ({ match }) => {
       {successMsg && (
         <AlertBar type="success" message={successMsg} autoClose={4000} />
       )}
-       <PageTitle  className="title" name= {"Reset Password"}/>
+       <LogoPage className="title" name= {"Reset Password"} logo ={false}/>
       {ResetPasswordForm()}
       
   </div>)

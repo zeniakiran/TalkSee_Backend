@@ -9,6 +9,7 @@ import AlertBar from "../Alerts/AlertBar";
 import EmailIcon from '@material-ui/icons/Email';
 import PageTitle from "./pageTitle";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import LogoPage from "./LogoPage";
  
 const ForgotPassword = () => {
       
@@ -118,7 +119,7 @@ const ResetPageForm = () =>(
 return (<div className="login_div">
     
     {loading && <LinearBuffer />}
-     <PageTitle  className="title" name= {"Forgot Password"}/>
+     <LogoPage className="title" name= {"Forgot Password"} logo ={false}/>
       {errorMessage && (
         <AlertBar type="error" message={errorMessage} autoClose={4000} />
       )}
