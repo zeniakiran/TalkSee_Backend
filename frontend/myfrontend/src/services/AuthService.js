@@ -1,4 +1,4 @@
-import GenericService from "./GenericService.js";
+/* import GenericService from "./GenericService.js";
 import jwtDecode from "jwt-decode";
 class AuthService extends GenericService{
     login = (email, password) => new Promise ((resolve,reject)=>{
@@ -34,4 +34,4 @@ class AuthService extends GenericService{
     
 
 let authservice = new AuthService();
-export default authservice;
+export default authservice; */

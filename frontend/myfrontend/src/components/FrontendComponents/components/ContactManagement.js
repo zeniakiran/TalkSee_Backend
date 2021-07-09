@@ -24,7 +24,7 @@ const ContactManagement = () => {
      messageEvent()
      let did = JSON.parse(localStorage.getItem('user'))._id
      roomJoin(did)
-     clientSocket1 = io(process.env.REACT_APP_IP_URL)
+     clientSocket1 = io('/')
      setSocket((s)=>{
        s = clientSocket1
        s.on('connect' , () => {

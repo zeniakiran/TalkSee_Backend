@@ -23,7 +23,6 @@ import isEmpty from "validator/lib/isEmpty";
 import AlertBar from "../Alerts/AlertBar";
 import LinearBuffer from "../Alerts/ProgressBar";
 import { login } from "../api/auth";
-import PageTitle from "./pageTitle";
 import io from "socket.io-client";
 import LogoPage from "./LogoPage"
 //import { toast } from "react-toastify";
