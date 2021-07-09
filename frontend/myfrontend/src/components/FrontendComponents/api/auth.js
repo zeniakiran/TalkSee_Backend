@@ -16,6 +16,6 @@ export const login = async (data) => {
       "Content-Type": "application/json",
     },
   };
-  const response = await axios.post(process.env.REACT_APP_IP_URL+"api/users/login", data);
+  const response = await axios.post("/api/users/login", data);
   return response;
 };
