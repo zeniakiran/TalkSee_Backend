@@ -11,7 +11,6 @@ export const signup = async (data) => {
   return response;
 };
 export const login = async (data) => {
-  //console.log(process.env.REACT_APP_IP_URL)
   const config = {
     headers: {
       "Content-Type": "application/json",

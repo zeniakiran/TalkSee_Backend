@@ -182,11 +182,11 @@ export default function SingleChat(props) {
       lang: recipientInfo.current.lang,
       userImgUrl: user.current.uImg,
     };
-    axios.post(process.env.REACT_APP_IP,data) // flask ka post method call kre ga
-    .then((response )=> {
+   // axios.post(process.env.REACT_APP_IP,data) // flask ka post method call kre ga
+   // .then((response )=> {
     setLoading(false);
-    console.log(" Response" ,response.data);
-    returndata = response.data
+   // console.log(" Response" ,response.data);
+   // returndata = response.data
     let messageS = {
       from: user.current.uId,
       to: recipient.current,
@@ -245,7 +245,7 @@ export default function SingleChat(props) {
         else console.log(err);
       }
     );
-  }).catch((err)=>console.log(err.body))
+  //}).catch((err)=>console.log(err.body))
     }
   };
   

@@ -20,7 +20,9 @@ const Settings = () => {
     const [show,setShow] = React.useState(false);
     const DeleteAccount =()=>{
 accountService.deleteMyAccount(myId)
- .then((res) =>{  logout(() => {
+ .then((res) =>{ 
+    setShow(false);
+     logout(() => {
       history.push("/signup");
     }
     );})
