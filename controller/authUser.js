@@ -83,7 +83,7 @@ exports.signupVerificationController = async (req, res) => {
                     <h1>TalkSee</h1>
                     <h2>Verify Email Address</h2> 
                     <p><i>Hey <strong>${firstName+" "+lastName}</strong>, To become a member of TalkSee family let's verify your account by clicking below button. Once it's done you will be able to register your account</i></p>
-                    <a class ="link" href="http://localhost:3000/user/activate/${token}" >Verify my email</a>
+                    <a class ="link" href="http://localhost:4000/user/activate/${token}" >Verify my email</a>
                     <hr />
                     </div>
                </body>
@@ -251,7 +251,7 @@ exports.forgotPasswordController = async (req, res) => {
                      <div class="card">
                      <h1>TalkSee</h1>
                      <h2>Click below link to reset your password</h2> 
-                     <p>http://localhost:3000/reset-password/${token}</p>
+                     <p>http://localhost:4000/reset-password/${token}</p>
                      <hr />
                      </div>
                 </body>
