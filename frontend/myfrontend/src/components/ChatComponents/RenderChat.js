@@ -3,30 +3,28 @@ import React , {useEffect,useState}from "react";
 import "./chat.css";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import IconButton from '@material-ui/core/IconButton';
-import { useHistory } from 'react-router-dom';
 import Alert from '../FrontendComponents/Alerts/AlertBar'
 import Menu from '@material-ui/core/Menu';
+import { useHistory } from 'react-router-dom';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import SearchIcon from '@material-ui/icons/Search';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Header from "../FrontendComponents/components/Header";
-import chatservice from "../../services/ChatService";
-import { toast } from 'react-toastify';
+import {Button, Grid ,Hidden,InputAdornment, TextField} from "@material-ui/core";
 import 'react-toastify/dist/ReactToastify.css';
 import CancelIcon from '@material-ui/icons/Cancel';
-import {Button, Grid ,Hidden,InputAdornment, TextField} from "@material-ui/core";
-import { grey } from '@material-ui/core/colors';
-import ReactTooltip from 'react-tooltip';
 import SideBar from "../FrontendComponents/components/SideBar";
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
-import {isAuthenticated} from '../FrontendComponents/clientStorages/auth';
+import {isAuthenticated} from '../FrontendComponents/clientStorages/auth'
+import { grey } from '@material-ui/core/colors';
+import ReactTooltip from 'react-tooltip';
+ 
+
 export default function RenderChat(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [isSearch, setSearch] = useState(false)
-  let history = useHistory()
-    const myId = isAuthenticated()._id;
   const open = Boolean(anchorEl);
   const options = [
     'Search',
@@ -34,7 +32,8 @@ export default function RenderChat(props) {
   ];
   const [openMenu, setMenu] = useState(true)
   const [open1, setOpen] = useState(false)
-
+  let history = useHistory()
+  let myId = isAuthenticated()._id
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
     //props.setMyOpen(true)
@@ -162,7 +161,53 @@ export default function RenderChat(props) {
     )
   }
   return (
-    <React.Fragment>
+    /* <React.Fragment> 
+       <div  style={{ height:"100vh"}} className="chat_div"> 
+      <Header setLogin={props.setLogin} />     
+        <ReactTooltip id='delete'/>
+            <Grid container spacing={0} style={{display:"flex"}}>
+              <Grid item xs ={1} md={2}></Grid>
+              <Grid item xs ={10} md={8} style={{marginTop:"1rem" }}>
+                <div className='profilediv'>
+
+              <img
+                className='profile'
+                src={props.recipientInfo.url}
+                alt='dp'
+              />
+ 
+              <span   style={{display:"inline",fontWeight:"bold", fontSize: "21px" }}>{props.recipientInfo.name}</span>
+              
+              {      
+                 elem
+              }
+            </div>
+            <div className="content_body ">
+              
+             {props.element}
+             {props.loading ? (
+              <div className='load'>
+                <CircularProgress color='secondary' />
+              </div>
+            ) : null}
+ 
+            </div>
+           { props.isFriend === true?
+            <TypeMessage sendMessage={props.sendMessage} />
+            :
+            <Alert
+            type='error' 
+            message='This person is not your friend anymore. Add them again to start a chat.'
+            autoClose={5000}
+            />
+          }
+              </Grid>
+              <Grid item xs ={1} md={2}></Grid>
+              </Grid>
+              </div>
+              </React.Fragment>
+  */
+  <React.Fragment>
        <div  style={{ height:"100vh"}} className="chat_div"> 
        <Grid container>
            <Hidden only={['sm', 'xs']}>

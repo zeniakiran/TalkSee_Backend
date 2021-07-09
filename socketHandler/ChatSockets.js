@@ -1,4 +1,7 @@
-let users=[{username:"",id:""}];
+const { checkPreferences } = require("joi");
+
+let users=[{username:"",id:"", status:""}];
+let counter = 0
 const socketHandler = (clientSocket, serverSocket) => {
   
     clientSocket.on("roomJoin", (payload, acknowledgeCb) => {
@@ -55,19 +58,16 @@ const socketHandler = (clientSocket, serverSocket) => {
                 messageVideo: payload.messageVideo,
                 translated: payload.translated,
                 time: payload.time,
-                type: "unread",
+                type: "offline",
               })
+              counter = counter + 1
+              /* clientSocket.to(payload.room).emit("messagecounter" , {
+                counter : counter
+              }) */
               
               cb(undefined);
-              /* serverSocket.to(u.id).emit("newMessage",{
-                notification: payload
-              }); */
-              /* serverSocket.to(u.id).emit("newRecipient",{
-                payload 
-              });  */
           }
           else{
-            console.log("no")
             userExists =userExists+1
           }
       })
@@ -90,6 +90,7 @@ const socketHandler = (clientSocket, serverSocket) => {
       else{
         console.log("user exists",userExists,users.length)
       }
+
     });
 
     clientSocket.on("messageSend1", (payload,cb)  =>{  
@@ -124,8 +125,8 @@ const socketHandler = (clientSocket, serverSocket) => {
       cb(undefined)  
     })
 
-    clientSocket.on('adduser', (payload)=> {
-      console.log("in add user",payload.id)
+    clientSocket.on('adduser', (payload,cb)=> {
+      console.log("in add user",serverSocket.sockets.clients().connected)
       let flag=0
       if(users.length>1){
         console.log("Length > 1")
@@ -135,7 +136,7 @@ const socketHandler = (clientSocket, serverSocket) => {
           else if(u.username === payload.name && u.id !== payload.id){
             var index=users.findIndex((o) => o.id === u.id)
             console.log("replaced user",users[index])
-            let obj= {username: payload.name, id:payload.id}
+            let obj= {username: payload.name, id:payload.id, status:"online"}
             users[index] = obj;
             flag++
             //console.log("update users",users)
@@ -143,7 +144,7 @@ const socketHandler = (clientSocket, serverSocket) => {
           
         })
         if(flag === 0){
-            let obj= {username: payload.name, id:payload.id}
+            let obj= {username: payload.name, id:payload.id, status:"online"}
             users.push(obj);
             console.log("in user",users)
         }
@@ -152,15 +153,29 @@ const socketHandler = (clientSocket, serverSocket) => {
         }
       }
       else if(users.length===1){
-      //  console.log("lesss than 1")
-        let obj= {username: payload.name, id:payload.id}
+        console.log("lesss than 1")
+        let obj= {username: payload.name, id:payload.id, status:"online"}
         users.push(obj);
       }
       else{
         console.log("length",users.length)
       }
+
+      cb(users)
+      
+    })
+
+    clientSocket.on('removeuser', (payload)=> {
+      console.log("users before",users)
+      users = users.filter((u)=>{
+        return u.id !== payload.id
+      })
+      console.log("after users",users)
+      
     })
   };
+
+  
   
   const sortList = (list) => {
     list.sort(function (a, b) {

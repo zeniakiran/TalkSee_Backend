@@ -14,7 +14,6 @@ const SingleFriendRequest = (props) => {
      friendService.rejectRequest({friendId: friendreq.id, myId}) 
       .then((data) => {
        onAcceptReject()
-       
          localStorage.setItem("user",JSON.stringify(data));
          })
      .catch((err) => {console.log(err);});
@@ -44,9 +43,8 @@ const SingleFriendRequest = (props) => {
       <Grid container style={{display:"flex"}}>
            <Grid item    xs ={12} sm={12} md={9}>
              <img src={friendreq.profileImg} 
-       style={{ marginRight:"0.5rem",height: "60px", width: "60px",borderRadius: "50%",display:"inline",padding:"0.2rem" }} alt="img"/>
-       <p  className="user_names" >{friendreq.name}</p>
-       
+              style={{ marginRight:"0.5rem",height: "60px", width: "60px",borderRadius: "50%",display:"inline",padding:"0.2rem" }} alt="img"/>
+              <p  className="user_names" >{friendreq.name}</p>
            </Grid>
            <Grid item   xs={12} sm={12} md={3}  >
              <Button className= "loginbtn"

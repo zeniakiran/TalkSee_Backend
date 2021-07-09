@@ -2,19 +2,28 @@ import React,{useEffect,useContext} from 'react';
 import { Link, withRouter, useHistory } from "react-router-dom";
 import {SocketContext} from '../../../context/SocketContext';
 import { isAuthenticated, logout } from "../clientStorages/auth";
- 
 
 const SideBar = ({ history }) => {
      history = useHistory();
     
       const myId = isAuthenticated()._id;
+      const myEmail= isAuthenticated().email
       const myProfileImg =isAuthenticated().profileImg;
-    
-const firstName= isAuthenticated().firstName;
-  const lastName = isAuthenticated().lastName;
-  const {clientSocket,setSocket,messageEvent,roomJoin,friendReq,getRequest,frndcounter,msgCounter} = useContext(SocketContext);
-     const handleLogOut = (evt) => {
+      const firstName= isAuthenticated().firstName;
+      const lastName = isAuthenticated().lastName;
+      const {clientSocket,setSocket,messageEvent,roomJoin,friendReq,getRequest,frndcounter,msgCounter} = useContext(SocketContext);
+      const handleLogOut = (evt) => {
     logout(() => {
+      localStorage.setItem('isLogin',false)
+      if(clientSocket!==undefined){
+        clientSocket.emit("removeuser",{id:clientSocket.id, name: myEmail})
+        clientSocket.off("newMessage");
+        clientSocket.off("newrequest");
+        clientSocket.off("messageSend1");
+      }
+      else{
+        console.log("no socket")
+      }
       history.push("/login");
     });
   };

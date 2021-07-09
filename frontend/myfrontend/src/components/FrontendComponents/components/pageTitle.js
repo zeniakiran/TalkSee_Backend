@@ -6,7 +6,7 @@ const PageTitle = ({name}) => {
      <Grid container >
       <Grid item xs={1} sm={2} xm={5} md={4}></Grid>
       <Grid item xs={10} sm={8} xm={2} md={4}>
-           <Typography variant="headline" 
+      <Typography variant="headline" 
          style={{ 
           marginTop:"1.5rem",
          textAlign:"center",

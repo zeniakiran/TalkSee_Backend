@@ -16,6 +16,7 @@ import {
   Paper,
   RadioGroup,
 } from "@material-ui/core";
+import LogoPage from "./LogoPage"
 import EmailIcon from '@material-ui/icons/Email';
 import LockIcon from '@material-ui/icons/Lock';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
@@ -32,7 +33,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { signup } from "../api/auth";
 import PageTitle from "./pageTitle";
 import { isAuthenticated } from "../clientStorages/auth";
-import LogoPage from "./LogoPage"
+ 
 
 const useStyles = makeStyles((theme) => ({
    
@@ -153,7 +154,7 @@ const SignUp = () => {
       <Grid container>
         <Grid item xs={1} sm={3} md={4}></Grid>
         <Grid item xs={10} sm ={6} md={4}>
-          <Paper  className="Login-container" style={{padding: '30px 30px'}} >
+        <Paper  className="Login-container" style={{padding: '30px 30px'}} >
               <Grid container style={{textAlign:"center"}}>
           <Grid item xs={6} >
             <Link className="header"  to="/login">Sign In</Link>      
@@ -332,7 +333,7 @@ const SignUp = () => {
       {successMsg && (
         <AlertBar type="success" message={successMsg} autoClose={4000} />
       )}
-       <LogoPage className="title" name= {"TalkSee"} logo ={true}/>
+       <LogoPage className="title" name= {"TalkSee"}/>
       {SignUpForm()}
     </div>
   );

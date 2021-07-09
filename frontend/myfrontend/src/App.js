@@ -15,7 +15,6 @@ import UpdateProfileSetup from "./components/FrontendComponents/components/updat
 import Chat from "./components/ChatComponents/Chat";
 import MyChats from "./components/ChatComponents/AllChats";
 import {SocketProvider} from './context/SocketContext';
-import {MyChatsProvider} from './context/MyChatsContext';
 import {ChatContextProvider} from './context/ChatContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 //import Notification from './components/FrontendComponents/Alerts/Notification'
@@ -32,52 +31,72 @@ import Settings from './components/FrontendComponents/components/Settings';
 const App =() =>{
   const [userId,setId] = useState()
   const [dId,setDid] = useState()
+  const [isLogin,setLogin] = useState(false)
+  const [users, setUsers] = useState([])
+  const IP_URL = 'http://192.168.10.4:5000/';
+  const IP = 'http://192.168.10.4:'
+  localStorage.setItem('IP_URL',IP_URL)
+  localStorage.setItem('IP',IP)
    /*const [msg, setMsg] = useState()
   //const {messageEvent} = useContext(SocketContext);
   useEffect(()=>{
     messageEvent()
 
   },[]) */
+
+
   return (
     <div className="App"> 
-    <MyChatsProvider userId={userId} >
-    <ChatContextProvider userId={userId} >
-    <SocketProvider id={dId} >
+    <ChatContextProvider userId={userId} isLogin={isLogin} users={users}>
+    <SocketProvider id={dId} email={userId} isLogin={isLogin}>
     <DeletePermissionProvider> 
-    <ToastContainer/>
+  <ToastContainer/>
     <Router>
       <Switch>
-            <Route path="/" exact><LogIn onIdSubmit={setId} setId={setDid}/></Route>
+            <Route path="/" exact><LogIn onIdSubmit={setId} setId={setDid} isLogin={isLogin} setLogin={setLogin}/></Route>
             <Route exact path="/signup" component={SignUp} />
-            <Route exact path="/login"><LogIn onIdSubmit={setId}  setId={setDid}/></Route>
+            <Route exact path="/login"><LogIn onIdSubmit={setId}  setId={setDid} isLogin={isLogin} setLogin={setLogin}/></Route>
             <Route exact path="/user/activate/:token" component={Activate} />
-            <UserRoute exact path="/dashboard/:id"  component ={UserDashboard} />
+            <UserRoute exact path="/dashboard/:id"><UserDashboard setLogin={setLogin} setUsers={setUsers} IP_URL={IP_URL}/></UserRoute>
             <Route exact path="/reset-password/:token" component={ResetPassword} />
             <Route exact path="/forgot-password" component={ForgotPassword} />
-            <Route exact path="/profile-setup/:token" component={ProfileSetup}/>
-            <UserRoute exact path="/update-my-profile-setup/:id" component={UpdateProfileSetup}/>
-            <UserRoute exact path ="/all-contacts/:id" component= {AllContact}/>
-            <UserRoute exact path = "/all-friend-requests/:id" component ={AllFriendRequest}/>
-            <UserRoute exact path ="/all-my-friends/:id" component ={AllFriends} />
-             <UserRoute exact path ="/profile/:id/:id" component ={Profile} />
-            <UserRoute exact path ="/my-contact-list/:id" component ={ContactManagement} />
+            <Route exact path="/profile-setup/:token"><ProfileSetup/></Route>
             <UserRoute exact path ="/my-account-settings/:id" component ={Settings} />
-            <Route exact path="/notfound" component={notFound} />
+            <UserRoute path="/update-my-profile-setup/:id" render={(props) => (
+              <UpdateProfileSetup {...props} key={props.location.key}/>
+            )} exact component={UpdateProfileSetup}>
+            </UserRoute>
+            <UserRoute path ="/all-contacts/:id" render={(props) => (
+              <AllContact {...props} key={props.location.key}/>
+            )} exact component={AllContact}>
+            </UserRoute>
+            <UserRoute path = "/all-friend-requests/:id"
+            render={(props) => (
+              <AllFriendRequest {...props} key={props.location.key}/>
+            )} exact component={AllFriendRequest}>
+            </UserRoute>
+            <UserRoute path ="/all-my-friends/:id"
+              render={(props) => (
+                <AllFriends {...props} key={props.location.key}/>
+              )} exact component={AllFriends}>
+              </UserRoute>
+             <UserRoute exact path ="/profile/:id/:id" component ={Profile} />
+            <UserRoute exact path="/notfound" component={notFound} />
             <UserRoute path="/chat/:id" render={(props) => (
-              <Chat {...props} key={props.location.key} />
+              <Chat {...props} key={props.location.key}/>
             )} exact component={Chat}>
             </UserRoute>
             <UserRoute path="/mychats/:id" render={(props) => (
-              <MyChats {...props} key={props.location.key}/>
+              <MyChats {...props} key={props.location.key} users = {users}/>
             )} exact component={MyChats}>
             </UserRoute>
+            <UserRoute exact path ="/my-contact-list/:id" component ={ContactManagement} />
             <Redirect to="/notfound" />  
       </Switch>
       </Router>
        </DeletePermissionProvider>  
     </SocketProvider>
     </ChatContextProvider>
-    </MyChatsProvider>
   
     </div>
   );

@@ -1,12 +1,15 @@
-import React, { useEffect, useRef, useState ,useContext} from "react";
+import React, { useEffect, useRef, useState,useContext } from "react";
+
 import { Grid, Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useHistory } from "react-router-dom";
 import chatservice from "../../services/ChatService";
 import { format } from "timeago.js";
-import "./chat.css";
 import {SocketContext} from '../../context/SocketContext';
+
+import "./chat.css";
+
 const useStyles = makeStyles((theme) => ({
   subheader: {
     display: "flex",
@@ -19,7 +22,10 @@ const useStyles = makeStyles((theme) => ({
   subheaderText: {
     color: theme.palette.primary.dark,
   },
-   
+  list: {
+    maxHeight: "calc(100vh - 112px)",
+    overflowY: "auto",
+  },
    
   listText: {
     fontSize: "1.5rem",
@@ -35,11 +41,11 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: "Roboto",
     color: "#808284",
     width:"80%",
-   marginLeft: "0.5rem",
-   display:"block",
-  cursor:"pointer",
-  overflow:"hidden",
-  textOverflow:"ellipsis"
+    marginLeft: "0.5rem",
+    display:"block",
+    cursor:"pointer",
+    overflow:"hidden",
+    textOverflow:"ellipsis"
     
     
   },
@@ -76,145 +82,147 @@ const SingleChat = (props) => {
   let elem = null;
   let user = JSON.parse(localStorage.getItem("user"));
   let messages = useRef([]);
-const {msgNotify}=useContext(SocketContext);
-  console.log("props",props.lastMsg)
-  const recipientClickHandler = (fr, type) => {
-    chatservice.getMessagesbyEmail(user.email, fr.email).then((res) => {
+  const {msgNotify}=useContext(SocketContext);
+  
+  const recipientClickHandler = (frEmail,frName, frId, frLang, frImg, type) => {
+    //console.log("fr",frEmail,frId,frName,frLang,frImg,type)
+    chatservice.getMessagesbyEmail(user.email, frEmail).then((res) => {
       messages.current = res;
       messages.current.map((m) => {
         if (m.type === "offline" && m.from !== user.email) {
           chatservice
             .changeMessageType({ type: "read" }, m._id)
             .then((res) => {
-              console.log("The response is here",res) 
-              msgNotify();})
+              msgNotify();
+            })
             .catch((err) => console.log(err));
         }
         console.log("user matched")
       });
     });
     //console.log("fr", fr);
-    localStorage.setItem("friendId", fr.id);
-    localStorage.setItem("recName", fr.name);
-    localStorage.setItem("recLang", fr.lang);
-    localStorage.setItem("profileUrl", fr.img);
-    history.push("/chat/" + fr.email + " " + fr.id);
-    
+    localStorage.setItem("friendId", frId);
+    localStorage.setItem("recName", frName);
+    localStorage.setItem("recLang", frLang);
+    localStorage.setItem("profileUrl", frImg);
+    history.push("/chat/" + frEmail + " " + frId);
   };
-
+  let myElem = null
+  let obj = {}
   return (
     <div>
-      {props.recipients.map((r, index) => {
+      {props.lastMsg.emails.map((r, ind) => {
+        console.log(ind)
+        
+          if (props.lastMsg.types[ind] === "read") {
+            //console.log("in 1",props.lastMsg.msgs[ind])
+            obj = {id: props.lastMsg.userId[ind], name: props.lastMsg.userName[ind], 
+              lang: props.lastMsg.userLang[ind], img: props.lastMsg.userImg[ind]}
+            elem = (
+              <div>
+                  <Typography
+                    className={classes.listText1}
+                    onClick={() =>
+                      recipientClickHandler(
+                        r,
+                        props.lastMsg.userName[ind],
+                        props.lastMsg.userId[ind],
+                        props.lastMsg.userLang[ind],
+                        props.lastMsg.userImg[ind],
+                        props.lastMsg.types[ind],
+                        
+                      )
+                    }
+                  >
+                    {props.lastMsg.msgs[ind]}
+                    
+                  </Typography>
+                  <Typography className={classes.listTime}>
+                  {format(props.lastMsg.time[ind])}
+                  </Typography>
+              </div>
+              
+            );
+          } else if (
+            props.lastMsg.types[ind] === "offline" &&
+            props.lastMsg.senders[ind] !== user.email
+          ) {
+            //console.log("in 3")
+            elem = (
+              <div>
+              <Typography
+             style={{ fontWeight: "bold", color: "black" }}
+                className={classes.listText1}
+                onClick={() =>
+                  recipientClickHandler(
+                    r,
+                    props.lastMsg.userName[ind],
+                    props.lastMsg.userId[ind],
+                    props.lastMsg.userLang[ind],
+                    props.lastMsg.userImg[ind],
+                    props.lastMsg.types[ind]
+                  )
+                }
+              >
+                {props.lastMsg.msgs[ind]}
+              </Typography>
+              <Typography className={classes.listTime}>
+                {format(props.lastMsg.time[ind])}
+              </Typography>
+              </div>
+              
+            );
+          } else {
+            console.log("in nothing", props.lastMsg.types[ind]);
+             console.log("in nothing1", props.lastMsg.senders[ind]);
+            elem = (
+              <div>
+                <Typography
+               //  style={{ fontWeight: "bold", color: "black" }}
+                  className={classes.listText1}
+                  onClick={() =>
+                    recipientClickHandler(
+                      r,
+                      props.lastMsg.userName[ind],
+                      props.lastMsg.userId[ind],
+                      props.lastMsg.userLang[ind],
+                      props.lastMsg.userImg[ind],
+                      props.lastMsg.types[ind],
+                    )
+                  }
+                >
+                  {props.lastMsg.msgs[ind]}
+                </Typography>
+                <Typography className={classes.listTime}>
+                    {format(props.lastMsg.time[ind])}
+                </Typography>
+              </div>
+            );
+          }
+        
+        //console.log("last Msg Obj",props.lastMsg)
         return (
-           
+             
              <Paper style={{padding:  '12px 10px', marginBottom:"1rem" }}  >
               <Grid container>
                <Grid item xs={1}  >
-                  <img src={r.img} alt='img'    style={{ height: "50px", width: "50px", borderRadius: "30%",display:"inline" }}/>
+                  <img src={props.lastMsg.userImg[ind]} alt='img'    style={{ height: "50px", width: "50px", borderRadius: "50%",display:"inline" }}/>
                </Grid>
            <Grid item    xs ={11}  >
-
-              <Typography className={classes.listText}>{r.name}</Typography>
-                 {props.lastMsg.emails.forEach((u, ind) => {
-                   if (u === r.email) {
-                    if (props.lastMsg.types[ind] === "read") {
-                      //console.log("in 1",props.lastMsg.msgs[ind])
-                      elem = (
-                        <div >
-                            <Typography
-                              className={classes.listText1}
-                              onClick={() =>
-                                recipientClickHandler(
-                                  r,
-                                  props.lastMsg.types[ind],
-                                  props.lastMsg.msgId[ind]
-                                )
-                              }
-                            >
-                              {props.lastMsg.msgs[ind]}
-                              
-                            </Typography>
-                            <Typography className={classes.listTime}>
-                            {format(props.lastMsg.time[ind])}
-                            </Typography>
-                        </div>
-                        
-                      );
-                    } else if (props.lastMsg.types[ind] === "unread") {
-                      //console.log("in 2")
-                      elem = (
-                        <div>
-                        <Typography
-                          style={{ fontWeight: "bold", color: "black" }}
-                          className={classes.listText1}
-                          onClick={() =>
-                            recipientClickHandler(
-                              r,
-                              props.lastMsg.types[ind],
-                              props.lastMsg.msgId[ind]
-                            )
-                          }
-                        >
-                          {props.lastMsg.msgs[ind]}
-                        </Typography>
-                        <Typography className={classes.listTime}>
-                            {format(props.lastMsg.time[ind])}
-                        </Typography>
-                        </div>
-                      );
-                    } else if (
-                      props.lastMsg.types[ind] === "offline" &&
-                      props.lastMsg.senders[ind] !== user.email
-                    ) {
-                      //console.log("in 3")
-                      elem = (
-                        <div>
-                        <Typography
-                       style={{ fontWeight: "bold", color: "black" }}
-                          className={classes.listText1}
-                          onClick={() =>
-                            recipientClickHandler(
-                              r,
-                              props.lastMsg.types[ind]
-                            )
-                          }
-                        >
-                          {props.lastMsg.msgs[ind]}
-                        </Typography>
-                        <Typography className={classes.listTime}>
-                            {format(props.lastMsg.time[ind])}
-                        </Typography>
-                        </div> 
-                        
-                      );
-                    } else {
-                      console.log("in nothing", props.lastMsg.types[ind]);
-                       console.log("in nothing1", props.lastMsg.senders[ind]);
-                      elem = (
-                        <div>
-                          <Typography
-                         //  style={{ fontWeight: "bold", color: "black" }}
-                            className={classes.listText1}
-                            onClick={() =>
-                              recipientClickHandler(
-                                r,
-                                props.lastMsg.types[ind],
-                              )
-                            }
-                          >
-                            {props.lastMsg.msgs[ind]}
-                          </Typography>
-                          <Typography className={classes.listTime}>
-                              {format(props.lastMsg.time[ind])}
-                          </Typography>
-                        </div>
-                      );
-                    }
-                  }
-                })}
+              <Typography className={classes.listText}>{props.lastMsg.userName[ind]}</Typography>
+                 
 
                 {elem}
            </Grid>
+               
+               
+                
+              <div>
+                {/*  {setText(r,chatRecipients.lastMsg[index],chatRecipients.msgType[index])}
+                {elem}*/
+                 }
+              </div>
+              
           
            </Grid>
           </Paper>

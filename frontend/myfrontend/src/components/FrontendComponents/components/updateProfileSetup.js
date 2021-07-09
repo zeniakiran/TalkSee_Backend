@@ -12,10 +12,10 @@ import axios from 'axios';
 import accountService from "../../../services/accountService";
 import { isAuthenticated } from "../clientStorages/auth";
 import {SocketContext} from '../../../context/SocketContext';
+import SideBar from "./SideBar";
  
 import io from "socket.io-client";
 import Webcam from "react-webcam";
-import SideBar from "./SideBar";
 const useStyles = makeStyles({
   
   textfield: {
@@ -28,11 +28,11 @@ const useStyles = makeStyles({
 
 
 
-const UpdateProfileSetup = ( ) => {
+const UpdateProfileSetup = ({setLogin}) => {
     const classes = useStyles();
     const myId=isAuthenticated()._id;
     let uId = JSON.parse(localStorage.getItem("user")).email;
-    const {setSocket,roomJoin,messageEvent, friendReq} = useContext(SocketContext);
+    const {clientSocket,setSocket,roomJoin,messageEvent, friendReq} = useContext(SocketContext);
     let clientSocket1 = useRef()
     const webcamRef = React.useRef(null);
     const [capturedPic, setCapturedPic]=React.useState(false);
@@ -161,7 +161,7 @@ const options = [
     messageEvent()
     let did = JSON.parse(localStorage.getItem('user'))._id
     roomJoin(did)
-    clientSocket1 = io("http://127.0.0.1:5000")
+    clientSocket1 = io('http://192.168.10.4:5000/')
     setSocket((s)=>{
       s = clientSocket1
       s.on('connect' , () => {
@@ -191,7 +191,7 @@ const capture =  React.useCallback(() => {
        setCapturedPic(true);
        const data = new FormData();
        data.append("file", imageSrc);
-       axios.post("http://127.0.0.1:5000/webcam-face-detection",data)
+       axios.post(process.env.REACT_APP_IP_FACEDET+"webcam-face-detection",data)
          .then(async (response) => {
           setValues({ ...values , errorMessage :"", successMsg:response.data.successMessage})
            setValues({...values, infoMessage: "Loading.... "});
@@ -217,7 +217,7 @@ const capture =  React.useCallback(() => {
            const imageFile = e.target.files[0];
            const data = new FormData();
            data.append("file", imageFile);
-           axios.post("http://127.0.0.1:5000/",data).
+           axios.post(process.env.REACT_APP_IP_FACEDET,data).
            then(async (response) => {
            setValues({ ...values , errorMessage :"", successMsg:response.data.successMessage})
             const compressedImage = await resizeFile(imageFile);
@@ -257,9 +257,10 @@ const updateProfile =()=>{
  
   const ProfilePage = () =>( 
     <Grid container>
-      <Grid item xs={1} sm={4} md={4}></Grid>
-      <Grid item xs={10} sm={4} md={4}>
+    <Grid item xs={1} sm={4} md={4}></Grid>
+    <Grid item xs={10} sm={4} md={4}>
   <div className="profile-page">
+    
       <div className="profile-container">
           <div className="img-holder">
              <img src={img} className="profile-img"/>
@@ -317,7 +318,7 @@ const updateProfile =()=>{
   <div className="modal-dialog modal-dialog-centered" role="document">
     <div className="modal-content">
       <div className="modal-header">
-        <div className="modal-title">
+      <div className="modal-title">
         <h3  id="exampleModalLongTitle">Take Photo</h3>
         <p style={{color:"red"}}><i>Your picture's quality will be low</i></p>
         </div>
@@ -353,14 +354,14 @@ const updateProfile =()=>{
   </Grid>
 )
 return (
- <div  style={{height:"100vh"}} className="back_divs">    
+    <div  style={{height:"100vh"}} className="back_divs">    
     {loading && <LinearBuffer />}
         <Grid container>
           <Hidden only={['xs', 'sm']}>
           <Grid item     md={2}><SideBar/></Grid>
           </Hidden>
            <Hidden only={['md', 'lg']}>
-          <Grid item xs={12} sm={12}><Header/></Grid>
+          <Grid item xs={12} sm={12}><Header setLogin={setLogin}/></Grid>
           </Hidden>
        <Grid item  xs={12} sm={12} md={10}>
      <PageTitle name= {"Update Profile "}/>
@@ -377,7 +378,7 @@ return (
       </Grid>
        </Grid>
     </div>
-    )
+     )
 };
 
 export default UpdateProfileSetup;

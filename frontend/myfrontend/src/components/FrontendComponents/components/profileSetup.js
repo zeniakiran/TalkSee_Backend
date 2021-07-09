@@ -301,7 +301,7 @@ const SetProfile =()=>{
   <div className="modal-dialog modal-dialog-centered" role="document">
     <div className="modal-content">
       <div className="modal-header">
-         <div className="modal-title">
+      <div className="modal-title">
         <h3  id="exampleModalLongTitle">Take Photo</h3>
         <p style={{color:"red"}} ><i>Your picture's quality will be low</i></p>
         </div>

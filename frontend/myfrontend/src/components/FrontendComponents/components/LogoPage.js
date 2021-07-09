@@ -2,7 +2,7 @@ import React from "react"
 import { Grid ,Typography} from "@material-ui/core"
 import { brown } from "@material-ui/core/colors";
 
-const LogoPage = ({ name,logo}) => {
+const LogoPage = ({ name }) => {
 return(
  <Grid container >
       <Grid item xs={1} sm={2} xm={5} md={4}></Grid>
@@ -17,10 +17,8 @@ return(
           marginBottom:"1rem",
          fontFamily:"Brush Script MT, Brush Script Std, cursive"}}
           component="h1">
-              {logo? <img className="loginImg" src={process.env.PUBLIC_URL + '/images/logo.png'} />
-         :null}
-         {name}
-                </Typography>
+               <img className="loginImg" src={process.env.PUBLIC_URL + '/images/logo.png'} />{name}
+          </Typography>
       
       </Grid>
       

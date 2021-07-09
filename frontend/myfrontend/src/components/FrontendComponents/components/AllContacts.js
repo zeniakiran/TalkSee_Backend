@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useRef,useState } from "react";
 import SingleContact from "./SingleContact";
 import contactService from "../../../services/contactService";
-import { Button, Grid ,Hidden,InputAdornment, TextField} from "@material-ui/core";
+import { Button, Grid,Hidden,InputAdornment, TextField  } from "@material-ui/core";
 import friendService from "../../../services/friendService";
 import PageTitle from "./pageTitle";
 import { isAuthenticated } from "../clientStorages/auth";
@@ -10,28 +10,31 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {SocketContext} from '../../../context/SocketContext';
 import io from "socket.io-client";
 import Header from "./Header";
+import { grey } from '@material-ui/core/colors';
 import SearchIcon from '@material-ui/icons/Search';
 import SideBar from "./SideBar";
- 
-const AllContact = ({match}) => {
+
+const AllContact = (props) => {
     const myId=isAuthenticated()._id;
     let userEmail = isAuthenticated().email;
+    const[loading,setLoading]=useState(false);
     let history = useHistory()
-    const [loading,setLoading]=useState(false);
      const [searchTerm, setSearchTerm] = useState("");
     const onChangeSearch = (event) => 
         setSearchTerm(event.currentTarget.value)
     const [contacts, setContacts] = React.useState([]);
     let roomId = useRef()
     let clientSocket1 = useRef()
-    roomId.current = '/'+match.params.id;
-    const {setSocket,roomJoin,messageEvent, friendReq} = useContext(SocketContext);
+    roomId.current = '/'+props.match.params.id;
+    const IP_URL = localStorage.getItem('IP_URL')
+    const {clientSocket,setSocket,roomJoin,messageEvent, friendReq} = useContext(SocketContext);
     window.onload = () => {
        friendReq()
       messageEvent()
       let did = JSON.parse(localStorage.getItem('user'))._id
       roomJoin(did)
-      clientSocket1 = io("/")
+      clientSocket1 = io(process.env.REACT_APP_IP_URL)
+      //clientSocket1 = io(IP_URL)
       setSocket((s)=>{
         s = clientSocket1
         s.on('connect' , () => {
@@ -53,7 +56,8 @@ const AllContact = ({match}) => {
   const getSingleContact = () => {
     contactService.getSingleContact(myId)
     .then((data) => { setContacts(data);
-    setLoading(true)})
+      setLoading(true)
+    })
     .catch((err) => {console.log(err);});
   };
 
@@ -69,13 +73,13 @@ const AllContact = ({match}) => {
     
    
     return ( 
-    <div style={{height:"100vh"}} className="back_divs"  >
+      <div style={{height:"100vh"}} className="back_divs"  >
        <Grid container>
        <Hidden only={['xs', 'sm']}>
           <Grid item xs ={5} md={2}><SideBar/></Grid>
           </Hidden>
             <Hidden only={['md', 'lg']}>
-          <Grid item xs={12} ><Header/></Grid>
+          <Grid item xs={12} ><Header setLogin={props.setLogin}/></Grid>
           </Hidden>
            <Grid item xs={12} md={10}>
       <PageTitle name= {"Add Friend"}/>
@@ -144,7 +148,8 @@ const AllContact = ({match}) => {
   
       </Grid>
              
-    </div> );
+    </div>
+    );
 }
  
 export default AllContact;

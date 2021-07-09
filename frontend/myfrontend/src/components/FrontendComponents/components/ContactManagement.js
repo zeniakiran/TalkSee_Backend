@@ -10,12 +10,34 @@ import { Button, Grid, Hidden } from "@material-ui/core";
 import { useHistory } from 'react-router-dom';
 import PageTitle from "./pageTitle";
 import SideBar from "./SideBar";
+import io from "socket.io-client";
+
 const ContactManagement = () => {
     let history = useHistory()
-    const {frndcounter}  = useContext(SocketContext);
+    let clientSocket1 = React.useRef()
+    const {setSocket,roomJoin,messageEvent, friendReq, frndcounter} = useContext(SocketContext);
     const myId= isAuthenticated()._id;
-    return(<div div style={{height:"100vh"}} className="back_divs">
-       
+    const myEmail = isAuthenticated().email
+
+    window.onload = () => {
+      friendReq()
+     messageEvent()
+     let did = JSON.parse(localStorage.getItem('user'))._id
+     roomJoin(did)
+     clientSocket1 = io(process.env.REACT_APP_IP_URL)
+     setSocket((s)=>{
+       s = clientSocket1
+       s.on('connect' , () => {
+         console.log("connected",s.id);
+         s.emit("adduser",{id:s.id, name: myEmail})
+         
+       });
+       return s;
+     })
+   };
+
+    return(
+    <div div style={{height:"100vh"}} className="back_divs">
     
      <Grid container>
          <Hidden only={['xs', 'sm']}>
@@ -26,7 +48,7 @@ const ContactManagement = () => {
           </Hidden>
           
        
-       <Grid item xs={12} md={10}>
+          <Grid item xs={12} md={10}>
             <PageTitle name={"My Contacts"}/> 
             <Grid container style={{marginTop:"1.5rem"}}>
                 <Grid item xs={1} md={3}></Grid>

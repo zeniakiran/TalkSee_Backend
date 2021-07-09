@@ -8,32 +8,34 @@ import { useHistory } from 'react-router-dom';
 import Header from "./Header";
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import {SocketContext} from '../../../context/SocketContext';
-import {MyChatsContext} from '../../../context/MyChatsContext';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { grey } from '@material-ui/core/colors';
 import io from "socket.io-client";
 import SearchIcon from '@material-ui/icons/Search';
 import SideBar from "./SideBar";
 
-const AllFriends = (props) => {
+const AllFriends = ({setLogin}) => {
+
+  console.log("props",setLogin)
      const myId=isAuthenticated()._id;
-     const [loading,setLoading]=useState(false);
      const [friends, setFriends] =React.useState([]);
+     const [loading,setLoading]=useState(false);
      let history = useHistory()
       const [searchTerm, setSearchTerm] = useState("");
     const onChangeSearch = (event) => 
         setSearchTerm(event.currentTarget.value)
      let clientSocket1 = useRef()
-      const {setSocket,roomJoin, messageEvent, friendReq} =  useContext(SocketContext);
+      const {clientSocket,setSocket,roomJoin, messageEvent, friendReq} =  useContext(SocketContext);
      let userEmail = useRef()
      userEmail.current = JSON.parse(localStorage.getItem("user")).email
+     const IP_URL = localStorage.getItem('IP_URL')
 
      window.onload = () => {
          friendReq()
        messageEvent()
       let did = JSON.parse(localStorage.getItem('user'))._id
       roomJoin(did)
-      clientSocket1 = io("/")
+      clientSocket1 = io(process.env.REACT_APP_IP_URL)
       setSocket((s)=>{
         s = clientSocket1
         s.on('connect' , () => {
@@ -50,7 +52,8 @@ const AllFriends = (props) => {
        friendService.getAllFriends(myId)
         .then((data)=>{
          setFriends(data);
-        setLoading(true);})
+         setLoading(true);
+        })
       .catch((err=>{console.log(err)}))
    
      }
@@ -59,34 +62,16 @@ const AllFriends = (props) => {
       getAllMyFriends()
       
     }, []);
-    useEffect(()=>{
-      //roomJoin(myId)
-      
-     },[])
+    
 
-     useEffect(()=>{
-      //messageEvent()
-      
-     },[])
-
-    useEffect(()=>{
-      /* if(clientSocket!==null){
-        console.log(props.clientSocket)
-        clientSocket.emit("adduser",{id:props.clientSocket.id, name: userEmail.current})
-      }
-      else{
-        console.log("no socket")
-      }  */
-    },[])
-
-     return ( 
-    <div style={{height:"100vh"}} className="back_divs">
+     return (
+      <div style={{height:"100vh"}} className="back_divs">
       <Grid container>
        <Hidden only={['xs', 'sm']}>
           <Grid item xs ={5} md={2}><SideBar/></Grid>
           </Hidden>
             <Hidden only={['md', 'lg']}>
-          <Grid item xs={12} ><Header/></Grid>
+          <Grid item xs={12} ><Header setLogin={setLogin}/></Grid>
           </Hidden>
            <Grid item xs={12} md={10}>
       <PageTitle name= {"My Friends"}/>
@@ -149,7 +134,9 @@ const AllFriends = (props) => {
   
       </Grid>
  
-    </div> );
+    </div> 
+    
+    );
 
 }
 export default AllFriends;

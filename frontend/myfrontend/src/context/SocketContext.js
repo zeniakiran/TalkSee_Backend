@@ -1,64 +1,96 @@
 import React ,{createContext,useEffect,useState,useRef} from 'react'
 import io from "socket.io-client";
 import { toast } from 'react-toastify';
-import {  Bounce } from 'react-toastify';
-  import 'react-toastify/dist/ReactToastify.css';
-  import { isAuthenticated } from "../components/FrontendComponents/clientStorages/auth";
+import { isAuthenticated } from "../components/FrontendComponents/clientStorages/auth";
 import friendService from "../services/friendService";
 import chatservice from '../services/ChatService';
-import { Button } from '@material-ui/core';
+import { Slide, Zoom, Flip, Bounce } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
+
 export const SocketContext = createContext();
-export function SocketProvider({id,children}) {
-   
+export function SocketProvider({id,email,isLogin,children}) {
+  
+  const [obj, setObj] = useState({})
   const [frndcounter,setFrndCounter]= useState(0)
   const [msgCount,setMsgCount]=useState(0);
   const [clientSocket, setSocket] = useState()
+  //let msgCount = useRef(0)
+  let count=0;
   let roomId = useRef()
   
-
   useEffect(() => {
+    
+    /* const socket = io(
+      process.env.REACT_APP_IP_URL,
+    ) */
     const socket = io(
-      '/',
-)
+      process.env.REACT_APP_IP_URL
+    )
     setSocket(socket)
     return () => socket.close()
-    /* clientSocket.current = io("http://127.0.0.1:5000");
-    clientSocket.current.on('connect' , () => {
-      console.log(clientSocket.current.id);
-    }); */
+    
   }, [])
 
   useEffect(()=>{
     roomId.current= '/'+id
     console.log(roomId)
   },[])
+
   const messageCounter=()=>{
 
-    chatservice.offlinemessages(isAuthenticated().email)
+    chatservice.offlinemessages(email)
         .then((res)=>{  
-                setMsgCount(res.count)
+          setObj((o)=>{
+            o = {sender: res.info.sender, receiver: res.info.receiver}
+            return o
+          })
+                setMsgCount((c)=>{   
+                      c= res.count
+                   return c
+                })
                 console.log("Message Count is",msgCount);
-                 localStorage.setItem("messagecount",JSON.stringify(res.count))
+                 localStorage.setItem("messagecount",JSON.stringify(msgCount))
         })
         .catch((err)=>console.log(err))}
-  useEffect(()=>messageCounter,[])
-   
+
+  //useEffect(()=>messageCounter,[])
+
+  useEffect(()=>{
+    console.log("is login", isLogin)
+    if(isLogin){
+    newMessageEvent()
+    friendReqEvent()
+    messageCounter()
+    console.log("new message event mounted")
+    }
+    else{
+      console.log("not mounted")
+    }
+  },[isLogin])
   
+
   const newMessageEvent = () => {
+    let counter = JSON.parse(localStorage.getItem("messagecount"))
+    console.log(" new msg event ")
     if(clientSocket){
       clientSocket.on("newMessage", (payload) => {
-      <Button onClick={()=>console.log("clicked")}>
-        {toast(payload.RecipientName +':'+
+      toast(payload.RecipientName +':'+
         payload.payload.messageBody, {
           onOpen: () => console.log('Called when I open'),
           position: toast.POSITION.TOP_LEFT,
-          toastId: '007',
+          //toastId: '007',
           transition: Bounce
-        })}
-      </Button>
+        })
       //count=count+1
       console.log("new message",payload)
-      messageCounter();
+      //messageCounter();
+      
+      setMsgCount((c)=>{
+        c =  c + 1
+        localStorage.setItem("messagecount",JSON.stringify(c))
+        localStorage.setItem("MyC",JSON.stringify(c))
+        return c
+      })
       })
     }
     else {
@@ -67,11 +99,6 @@ export function SocketProvider({id,children}) {
   //return () => {clientSocket.removeAllListeners("newMessage");}
   }
 
-  /* useEffect(()=>{
-    newMessageEvent()
-    console.log("2")
-  },[])
- */
   const roomJoin = (did) =>{
     //did = did || roomId.current
     did = '/'+did
@@ -89,27 +116,31 @@ export function SocketProvider({id,children}) {
       );
     }
   }
+
   const getAllRequests=()=>{
-           friendService.getFriendRequest(isAuthenticated()._id).then((data)=>{
-             setFrndCounter(data.length);
-             localStorage.setItem("friendRequests",JSON.stringify(data.length))
-            })
-            .catch((err=>{console.log(err)}))
-  }
-  useEffect(()=>getAllRequests,[frndcounter])
-     
- const getFriendRequest = () => {
+    friendService.getFriendRequest(id).then((data)=>{
+      setFrndCounter(data.length);
+      localStorage.setItem("friendRequests",JSON.stringify(data.length))
+     })
+     .catch((err=>{console.log(err)}))
+}
+  //useEffect(()=>getAllRequests,[frndcounter])
+
+  const getFriendRequest = () => {
     if(clientSocket)
     {
-       clientSocket.on("newRequest", (payload) => getAllRequests())
-       clientSocket.on("rejectRequest", (payload) => getAllRequests())
+    clientSocket.on("newRequest", () => getAllRequests())
+    clientSocket.on("rejectRequest", (payload) => getAllRequests())
     }
     else
-      console.log("no socket")}
-     
+    console.log("no socket")
+  }
+
   const friendReqEvent = () =>{
+    console.log("friend Req event")
     if(clientSocket){
       clientSocket.on("newRequest", (payload) => {
+          console.log("payload : ",payload)
           toast.info(
           payload.sender+ ' has sent you a friend request!', {
           position: toast.POSITION.TOP_LEFT,
@@ -117,7 +148,11 @@ export function SocketProvider({id,children}) {
           autoClose: 7000,
           transition: Bounce
         })
-      
+        setFrndCounter((c)=>{
+          c =  c + 1
+          localStorage.setItem("friendRequests",JSON.stringify(c))
+          return c;
+        })
       })
     }
     else{
@@ -136,7 +171,8 @@ export function SocketProvider({id,children}) {
     frndcounter:frndcounter,
     acceptRejectCounter:getAllRequests,
     msgCounter:msgCount,
-    msgNotify:messageCounter
+    msgNotify:messageCounter,
+    obj : obj
   }
   return (
     <SocketContext.Provider value={value}>

@@ -20,9 +20,7 @@ const Settings = () => {
     const [show,setShow] = React.useState(false);
     const DeleteAccount =()=>{
 accountService.deleteMyAccount(myId)
- .then((res) =>{ 
-   setShow(false);
-    logout(() => {
+ .then((res) =>{  logout(() => {
       history.push("/signup");
     }
     );})
@@ -40,8 +38,8 @@ accountService.deleteMyAccount(myId)
             <Hidden only={['md', 'lg']}>
           <Grid item xs={12} ><Header/></Grid>
           </Hidden>
-          
-       
+
+
        <Grid item xs={12} md={10}>
             <PageTitle name={"Account Settings "}/> 
             <Grid container style={{marginTop:"1.5rem"}}>
@@ -53,19 +51,19 @@ accountService.deleteMyAccount(myId)
            onClick={event =>  history.push('/update-my-profile-setup/'+myId)}>
               < EditIcon className='accountSettingIcons' /> Edit Profile
             </Button>
-             
+
         <Button className= "loginbtn deleteAccountBtn "
              onClick={(e)=>setShow(true)}
             variant="contained" 
              fullWidth>
               <DeleteIcon className='accountSettingIcons' /> Delete Account
             </Button>
-            
+
             </Grid>
             </Grid>
              <Grid item xs={1} md={3}></Grid>
        </Grid>
-       
+
        </Grid>
 
 

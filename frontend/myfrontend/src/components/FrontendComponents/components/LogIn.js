@@ -25,14 +25,16 @@ import LinearBuffer from "../Alerts/ProgressBar";
 import { login } from "../api/auth";
 import PageTitle from "./pageTitle";
 import io from "socket.io-client";
+import LogoPage from "./LogoPage"
 //import { toast } from "react-toastify";
 
 
 import {SocketContext} from '../../../context/SocketContext';
+import {ChatContext} from '../../../context/ChatContext';
 //import { v4 as uuidv4 } from 'uuid';
 import { authentication, isAuthenticated } from "../clientStorages/auth";
 import { DeletePermission } from "../../../context/DeletePermissionContext";
-import LogoPage from "./LogoPage"
+ 
 const useStyles = makeStyles((theme) => ({
    textField: {
     marginTop: theme.spacing(2),
@@ -42,35 +44,27 @@ const useStyles = makeStyles((theme) => ({
     
   }
 }));
-const LogIn = ({onIdSubmit,setId}) => {
+const LogIn = ({onIdSubmit,setId, isLogin,setLogin}) => {
   let history = useHistory();
-  const {setSocket,roomJoin,messageEvent, friendReq,msgNotify, acceptRejectCounter} = useContext(SocketContext);
+  const {setSocket,roomJoin,messageEvent, friendReq} = useContext(SocketContext);
   const classes = useStyles(); 
   const { dispatch } = useContext(DeletePermission);
+  const { getUnreadMsgs } = useContext(ChatContext);
   let clientSocket1 = React.useRef()
-  
- /* window.onload = () => {
+  useEffect(() => {
+    if (isAuthenticated() && isAuthenticated().role === 1)
+      history.push("/admin/dashboard");
+    else if (isAuthenticated() && isAuthenticated().role === 0)
+      history.push("/user/dashboard");
+     
+      
+  }, [history]);
+  /* window.onload = () => {
     friendReq()
     messageEvent()
-    let did = isAuthenticated()._id;
-    roomJoin(did)
-    clientSocket1 = io("http://127.0.0.1:5000")
- 
-    setSocket((s)=>{
-      s = clientSocket1
-      s.on('connect' , () => {
-        console.log("connected",s.id);
-        s.emit("adduser",{id:s.id, name: isAuthenticated().email})
-      });
-      return s;
-    })
+    //getUnreadMsgs()
   }
-  
-
-  useEffect(()=>{
-   friendReq()
- 
-  },[])*/
+   */
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -87,6 +81,15 @@ const LogIn = ({onIdSubmit,setId}) => {
     });
   };
 
+  useEffect(()=>{
+    console.log("helloooo")
+    //if(isLogin){
+      /* friendReq()
+      messageEvent() */
+    //}
+  // console.log("not authentiated")
+ 
+  },[])
   const handleClickShowPassword = () => {
     setValues({ ...values, showPassword: !values.showPassword });
   };
@@ -114,19 +117,25 @@ const LogIn = ({onIdSubmit,setId}) => {
       login(data)
         .then((response) => {
           authentication(response.data.token, response.data.user);
-          //console.log(response)
+          console.log(response)
           if (isAuthenticated() && isAuthenticated().role === 1)
             history.push("/dashboard/"+isAuthenticated()._id);
           else {
-        history.push("/dashboard/"+isAuthenticated()._id);};
+            /* friendReq()
+            messageEvent() */
+            setLogin((l)=>{
+              l = true
+              localStorage.setItem('isLogin',l)
+              return l
+            })
+            
+            history.push("/dashboard/"+isAuthenticated()._id);
+      };
           setValues({ ...values, loading: false });
           setId(isAuthenticated()._id)
          var del=  JSON.parse(localStorage.getItem("deletion"));
          if (del == "")
             dispatch({ type: "updatePermission", value: false })
-           msgNotify()
-     acceptRejectCounter()
-      friendReq()
          
            
         })
@@ -147,12 +156,11 @@ const LogIn = ({onIdSubmit,setId}) => {
   };
   
   const LogInForm = () => (
-    <div >
+    <div>
       <Grid container>
         <Grid item xs={1} sm={3} md={4}></Grid>
         <Grid item xs={10} sm={6} md={4}>
-         
-           <Paper  className="Login-container" style={{padding: '30px 50px'}} > 
+        <Paper  className="Login-container" style={{padding: '30px 50px'}} > 
             <Grid container style={{textAlign:"center"}}>
           <Grid item xs={6} >
             <Link className="active-header"  to="/login">Sign In</Link>      
@@ -187,7 +195,7 @@ const LogIn = ({onIdSubmit,setId}) => {
           
          <FormControl className={clsx(classes.margin, classes.textField)} fullWidth>
          <InputLabel htmlFor="standard-adornment-password"> 
-             <Typography variant="headline" style={{fontWeight:"bold",fontStyle:"italic"    }}> Password</Typography>
+         <Typography variant="headline" style={{fontWeight:"bold",fontStyle:"italic"    }}> Password</Typography>
              <Typography variant="headline" style={{color:"red",marginLeft:"0.4rem"}}>*</Typography>
          </InputLabel>
                     <Input
@@ -232,24 +240,19 @@ const LogIn = ({onIdSubmit,setId}) => {
             Sign in
           </Button>
            <Link to="/forgot-password" style={{textDecoration:"none",marginLeft:"1rem auto"}}  >Forgot Password?</Link>
-
    </Paper>
-   
          </Grid>
-        <Grid item xs={1} sm={3} md={4} >
+         <Grid item xs={1} sm={3} md={4} >
         </Grid>
-         
       </Grid>
     </div>
   );
   return (
     <div className="login_div">
       {loading && <LinearBuffer />}
-    
-           
-             <LogoPage className="title" name= {"TalkSee"} logo ={true}/>
+     
+      <LogoPage className="title" name= {"TalkSee"}/>
                   {LogInForm()} 
-      
      
       {errorMessage && (
         <AlertBar type="error" message={errorMessage} autoClose={4000} />

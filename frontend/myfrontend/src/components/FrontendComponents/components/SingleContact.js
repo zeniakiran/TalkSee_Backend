@@ -54,6 +54,7 @@ const SingleContact = (props) => {
              
          })
          .catch((err) => {console.log(err);});
+
          clientSocket.emit(
             "rejectfriendRequest",
             { myName,roomId },
@@ -79,7 +80,7 @@ const SingleContact = (props) => {
                 <Grid item xs={9} md={9}> 
             
              <div style={{display:"inline"}}><p  className="user_names"   >{contact.firstName + " "+ contact.lastName}</p>
-               <Typography style={{color:"gray",  fontStyle: "italic" , fontSize:"0.9rem" }}>{contact.email}</Typography>
+               <Typography style={{color:"gray", fontSize:"0.9rem" }}>{contact.email}</Typography>
                </div>
                </Grid>
                <Hidden only={['md', 'lg']}> 
@@ -100,7 +101,8 @@ const SingleContact = (props) => {
       </Grid>
      </Paper>       
    
-    </div>);
+    </div>
+    );
 }
  
 export default SingleContact;
