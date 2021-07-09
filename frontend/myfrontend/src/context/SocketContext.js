@@ -23,7 +23,8 @@ export function SocketProvider({id,email,isLogin,children}) {
     /* const socket = io(
       process.env.REACT_APP_IP_URL,
     ) */
-    const socket = io('/')
+    const socket = io(
+      process.env.REACT_APP_IP_URL)
     setSocket(socket)
     return () => socket.close()
     

@@ -1,6 +1,5 @@
 import React,{useContext,useState} from "react";
 import "./chat.css"
-import Checkbox from '@material-ui/core/Checkbox';
 import "video-react/dist/video-react.css"
 import { Button } from "@material-ui/core";
 import chatservice from "../../services/ChatService";
@@ -9,7 +8,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { Typography } from '@material-ui/core';
 import WarningIcon from '@material-ui/icons/Warning';
 import { DeletePermission } from "../../context/DeletePermissionContext";
 
@@ -17,7 +15,6 @@ import { DeletePermission } from "../../context/DeletePermissionContext";
 const DeleteMsg = (props) => {
  
    var boxchecked = JSON.parse(localStorage.getItem("deletion"));
-    const [open, setOpen] = useState(true);
      const { dispatch } = useContext(DeletePermission);
     const [checked , setChecked] = useState(boxchecked.state)
     const handleClose = () => {

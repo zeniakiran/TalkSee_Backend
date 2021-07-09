@@ -1,13 +1,10 @@
 import React, { useEffect, useContext, useRef,useState } from "react";
 import SingleFriendRequest from "./SingleFriendRequest";
 import friendService from "../../../services/friendService";
-import { Button, Grid,Hidden,InputAdornment, TextField  } from "@material-ui/core";
+import {  Grid,Hidden,InputAdornment, TextField  } from "@material-ui/core";
 import PageTitle from "./pageTitle";
 import { isAuthenticated } from "../clientStorages/auth";
-import { useHistory } from 'react-router-dom';
 import Header from "./Header";
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import { grey } from '@material-ui/core/colors';
 import {SocketContext} from '../../../context/SocketContext';
 import SearchIcon from '@material-ui/icons/Search';
 import io from "socket.io-client";
@@ -25,8 +22,8 @@ const AllFriendRequest = (props) => {
      const {setSocket,roomJoin,messageEvent,friendReq,getRequest,acceptRejectCounter} = useContext(SocketContext);
      let roomId = useRef()
      roomId.current = '/'+props.match.params.id
-     const IP_URL = localStorage.getItem('IP_URL')
-     let history = useHistory()
+    // const IP_URL = localStorage.getItem('IP_URL')
+      
 
      window.onload = () => {
         friendReq()

@@ -20,7 +20,6 @@ import equals from "validator/lib/equals";
 import LinearBuffer from "../Alerts/ProgressBar";
 import AlertBar from "../Alerts/AlertBar";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
-import PageTitle from "./pageTitle";
 import { makeStyles } from "@material-ui/core/styles";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { useHistory } from 'react-router-dom';

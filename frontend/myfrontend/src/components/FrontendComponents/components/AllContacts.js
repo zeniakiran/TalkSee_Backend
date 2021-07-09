@@ -1,16 +1,13 @@
 import React, { useEffect, useContext, useRef,useState } from "react";
 import SingleContact from "./SingleContact";
 import contactService from "../../../services/contactService";
-import { Button, Grid,Hidden,InputAdornment, TextField  } from "@material-ui/core";
+import {  Grid,Hidden,InputAdornment, TextField  } from "@material-ui/core";
 import friendService from "../../../services/friendService";
 import PageTitle from "./pageTitle";
 import { isAuthenticated } from "../clientStorages/auth";
-import { useHistory } from 'react-router-dom';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {SocketContext} from '../../../context/SocketContext';
 import io from "socket.io-client";
 import Header from "./Header";
-import { grey } from '@material-ui/core/colors';
 import SearchIcon from '@material-ui/icons/Search';
 import SideBar from "./SideBar";
 
@@ -18,7 +15,6 @@ const AllContact = (props) => {
     const myId=isAuthenticated()._id;
     let userEmail = isAuthenticated().email;
     const[loading,setLoading]=useState(false);
-    let history = useHistory()
      const [searchTerm, setSearchTerm] = useState("");
     const onChangeSearch = (event) => 
         setSearchTerm(event.currentTarget.value)
@@ -26,7 +22,7 @@ const AllContact = (props) => {
     let roomId = useRef()
     let clientSocket1 = useRef()
     roomId.current = '/'+props.match.params.id;
-    const IP_URL = localStorage.getItem('IP_URL')
+  //  const IP_URL = localStorage.getItem('IP_URL')
     const {clientSocket,setSocket,roomJoin,messageEvent, friendReq} = useContext(SocketContext);
     window.onload = () => {
        friendReq()
@@ -34,7 +30,6 @@ const AllContact = (props) => {
       let did = JSON.parse(localStorage.getItem('user'))._id
       roomJoin(did)
       clientSocket1 = io(process.env.REACT_APP_IP_URL)
-      //clientSocket1 = io(IP_URL)
       setSocket((s)=>{
         s = clientSocket1
         s.on('connect' , () => {
@@ -66,10 +61,10 @@ const AllContact = (props) => {
      getSingleContact();
  }, []);
  
-   useEffect(()=>{
+  /*  useEffect(()=>{
     //roomJoin(myId)
     //messageEvent()
-   },[])
+   },[]) */
     
    
     return ( 

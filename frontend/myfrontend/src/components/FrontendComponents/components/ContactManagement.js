@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useContext  } from "react";
+import React, { useContext  } from "react";
 import {SocketContext} from '../../../context/SocketContext';
 import Header from "./Header";
 import { isAuthenticated } from "../clientStorages/auth";

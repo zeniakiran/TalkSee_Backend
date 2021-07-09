@@ -26,10 +26,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-/* app.get("/", (req, res) => {
-  res.status(200).send("server is up and running");
-});
- */
+ 
 app.use('/api/users', usersRouter);
 app.use('/api/chatapi', ChatApiRouter);
 app.use('/api/contacts', ContactsApiRouter);

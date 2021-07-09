@@ -49,7 +49,7 @@ const UserDashboard = ({setLogin,setUsers}) => {
      messageEvent()
      getRequest()
     roomJoin(myId)
-    clientSocket1 = io('/')
+    clientSocket1 = io(process.env.REACT_APP_IP_URL)
   setSocket((s)=>{
       s = clientSocket1
       s.on('connect' , () => {

@@ -7,12 +7,10 @@ import isEmpty from "validator/lib/isEmpty";
 import LinearBuffer from "../Alerts/ProgressBar";
 import AlertBar from "../Alerts/AlertBar";
 import EmailIcon from '@material-ui/icons/Email';
-import PageTitle from "./pageTitle";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import LogoPage from "./LogoPage";
  
 const ForgotPassword = () => {
-      
  const [values, setValues] = useState({
     email: "",
     errorMessage: "",

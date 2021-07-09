@@ -4,12 +4,8 @@ import friendService from "../../../services/friendService";
 import { Button, Grid,Hidden,InputAdornment, TextField  } from "@material-ui/core";
 import PageTitle from "./pageTitle";
 import { isAuthenticated } from "../clientStorages/auth";
-import { useHistory } from 'react-router-dom';
 import Header from "./Header";
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import {SocketContext} from '../../../context/SocketContext';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import { grey } from '@material-ui/core/colors';
 import io from "socket.io-client";
 import SearchIcon from '@material-ui/icons/Search';
 import SideBar from "./SideBar";
@@ -20,7 +16,6 @@ const AllFriends = ({setLogin}) => {
      const myId=isAuthenticated()._id;
      const [friends, setFriends] =React.useState([]);
      const [loading,setLoading]=useState(false);
-     let history = useHistory()
       const [searchTerm, setSearchTerm] = useState("");
     const onChangeSearch = (event) => 
         setSearchTerm(event.currentTarget.value)
@@ -28,7 +23,7 @@ const AllFriends = ({setLogin}) => {
       const {clientSocket,setSocket,roomJoin, messageEvent, friendReq} =  useContext(SocketContext);
      let userEmail = useRef()
      userEmail.current = JSON.parse(localStorage.getItem("user")).email
-     const IP_URL = localStorage.getItem('IP_URL')
+    // const IP_URL = localStorage.getItem('IP_URL')
 
      window.onload = () => {
          friendReq()

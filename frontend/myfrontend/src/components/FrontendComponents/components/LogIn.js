@@ -250,7 +250,7 @@ const LogIn = ({onIdSubmit,setId, isLogin,setLogin}) => {
     <div className="login_div">
       {loading && <LinearBuffer />}
      
-      <LogoPage className="title" name= {"TalkSee"}/>
+      <LogoPage className="title" name= {"TalkSee"} logo={true}/>
                   {LogInForm()} 
      
       {errorMessage && (
