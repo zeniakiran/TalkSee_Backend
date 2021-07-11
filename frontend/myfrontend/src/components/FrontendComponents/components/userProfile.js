@@ -64,14 +64,14 @@ const UserProfile = (props) => {
             <ArrowBackIcon style={{fontWeight:"bold",marginRight:"0.3rem"}}/> Go Back
           </Button>
            {loading?
-          <Grid container>
+          <Grid container style={{marginTop:"1rem"}}>
               <Grid item xs={1} md={2}></Grid>
-              <Grid item xs={4} md={3}>
+              <Grid item xs={12} md={3}>
                   <img src={profile.profileImg}  
-          style={{   borderRadius: "20%"}} alt="img"/>
+          style={{   borderRadius: "20%",marginLeft:"1rem"}} alt="img"/>
        
               </Grid>
-              <Grid item xs={7} md={7} style={{padding:"2rem"}}>
+              <Grid item xs={12} md={7} style={{padding:"2rem"}}>
                   <div>
                   <Typography style={{display:"inline"}}> <strong>Name: </strong></Typography>
                   <Typography style={{display:"inline"}}>{profile.firstName + " " +profile.lastName}</Typography>
