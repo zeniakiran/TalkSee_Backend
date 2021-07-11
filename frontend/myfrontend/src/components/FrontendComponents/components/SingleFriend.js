@@ -78,14 +78,16 @@ const SingleFriend = (props) => {
       <Grid container style={{ display: "flex" }}>
         <Grid item xs={12} sm={12} md={9}>
           <img src={friend.profileImg}
-            style={{ marginRight: "0.5rem", height: "60px", width: "60px", borderRadius: "20%", display: "inline", padding: "0.2rem" }} alt="img" />
-          <p className="user_names"  >{friend.name}</p>
+          onClick={ (e) => history.push('/user-profile/'+friend.id)}
+            style={{ marginRight: "0.5rem", height: "60px", width: "60px", borderRadius: "20%", display: "inline", padding: "0.2rem",cursor:"pointer" }} alt="img" />
+          <p className="frnd_names"  >{friend.name}</p>
         </Grid>
         <Grid item xs={12} sm={12} md={3}  >
           <Button className="loginbtn"
             style={{ backgroundColor: lightGreen[700], color: "white", margin: "0.4rem" }}
             variant="contained"
             size="medium"
+            onClick={()=>chatButtonHandler(friend)}
           >Chat</Button>
 
           <Button className="loginbtn"

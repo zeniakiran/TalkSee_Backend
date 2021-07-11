@@ -16,9 +16,9 @@ const UserDashboard = ({setLogin,setUsers}) => {
   const [obj, setObj] = useState({})
   const {count, obj} = useContext(ChatContext);
   const [msgCounter,setMsgCounter]= useState(0)
-  const [friendCount,setFriendCount]=useState(0); */
+  const [friendCount,setFriendCount]=useState(0); 
+  const IP_URL = localStorage.getItem('IP_URL')*/
   const myId= isAuthenticated()._id;
-  const IP_URL = localStorage.getItem('IP_URL')
   let userEmail = useRef()
   let history = useHistory()
   userEmail.current = JSON.parse(localStorage.getItem("user")).email

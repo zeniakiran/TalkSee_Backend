@@ -2,9 +2,11 @@ import { Button,Grid,Paper,  } from "@material-ui/core";
 import { isAuthenticated } from "../clientStorages/auth";
 import friendService from "../../../services/friendService";
 import { lightBlue,grey} from '@material-ui/core/colors';
+import { useHistory } from 'react-router-dom';
 const SingleFriendRequest = (props) => {
   const { friendreq ,onAcceptReject} = props;
   const myId=isAuthenticated()._id;
+  let history = useHistory()
   const myName =isAuthenticated().firstName + " " +isAuthenticated().lastName;
   const myProfileImg =isAuthenticated().profileImg;
   const myEmail = isAuthenticated().email;
@@ -43,8 +45,9 @@ const SingleFriendRequest = (props) => {
       <Grid container style={{display:"flex"}}>
            <Grid item    xs ={12} sm={12} md={9}>
              <img src={friendreq.profileImg} 
-              style={{ marginRight:"0.5rem",height: "60px", width: "60px",borderRadius: "50%",display:"inline",padding:"0.2rem" }} alt="img"/>
-              <p  className="user_names" >{friendreq.name}</p>
+              onClick={ (e) => history.push('/user-profile/'+friendreq.id)}
+              style={{ marginRight:"0.5rem",height: "60px", width: "60px",borderRadius: "20%",display:"inline",padding:"0.2rem",cursor:"pointer" }} alt="img"/>
+              <p  className="frnd_names" >{friendreq.name}</p>
            </Grid>
            <Grid item   xs={12} sm={12} md={3}  >
              <Button className= "loginbtn"

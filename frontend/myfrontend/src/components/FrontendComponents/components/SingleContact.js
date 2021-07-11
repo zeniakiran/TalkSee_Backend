@@ -13,7 +13,6 @@ const SingleContact = (props) => {
     var userData=JSON.parse(localStorage.getItem("user")) 
     const [showAddBtn, setAddBtn]=useState(userData.sentRequests.includes(contact._id)?false:true)
     const { clientSocket } = useContext(SocketContext);
-    //const [showAddBtn, setAddBtn]=useState(state?!state.sentRequests.includes(contact._id):true);
     const myId=isAuthenticated()._id;
     const myName =isAuthenticated().firstName + " " +isAuthenticated().lastName;
     const myProfileImg =isAuthenticated().profileImg;
@@ -21,15 +20,12 @@ const SingleContact = (props) => {
     const myGender =isAuthenticated().gender;
     const myLangPreference =isAuthenticated().langPreference;
     const sentFriendRequest=() => {
-        console.log("contact Id",contact._id)
         friendService.sendRequest(
             {friendId:contact._id,
             myId,myName,myProfileImg,myEmail,myGender,myLangPreference})
          .then((data) => {
            localStorage.setItem("user",JSON.stringify(data));
-              // dispatch({type:"FRIEND_REQUESTED",payload:{sentRequests:data.sentRequests }})
-             setAddBtn(false)
-            
+                setAddBtn(false)
             })
          .catch((err) => {console.log(err);});
 
@@ -49,7 +45,6 @@ const SingleContact = (props) => {
             {friendId:contact._id,myId})
          .then((data) => {
              localStorage.setItem("user",JSON.stringify(data));
-            // dispatch({type:"FRIEND_REQUESTED",payload:{sentRequests:data.sentRequests }})
              setAddBtn(true)
              
          })
@@ -64,19 +59,14 @@ const SingleContact = (props) => {
             }
           );
     }
- 
-    const contactClickHandler = ()=>{
-        localStorage.setItem('contact',JSON.stringify(contact))
-        //console.log("clicked",'/profile'+props.roomId+'/'+contact._id)
-        history.push('/profile'+props.roomId+'/'+contact._id)
-    }
     return (
         <div>
-       <Paper style={{padding: '10px 20px', marginBottom:"1rem"}} //onClick={contactClickHandler}
+       <Paper style={{padding: '10px 20px', marginBottom:"1rem"}}
         >
             <Grid container>
-                 <Grid item xs={3} md={1}>  <img src={contact.profileImg}   
-          style={{ height: "60px", width: "60px", borderRadius: "20%" ,display:"inline" }} alt="img"/> </Grid>
+                 <Grid item xs={3} md={1}>  <img src={contact.profileImg}  
+                  onClick={ (e) => history.push('/user-profile/'+contact._id)}
+          style={{ height: "60px", width: "60px", borderRadius: "20%" ,display:"inline", cursor:"pointer"}} alt="img"/> </Grid>
                 <Grid item xs={9} md={9}> 
             
              <div style={{display:"inline"}}><p  className="user_names"   >{contact.firstName + " "+ contact.lastName}</p>
@@ -86,6 +76,7 @@ const SingleContact = (props) => {
                <Hidden only={['md', 'lg']}> 
                    <Grid item xs={3}></Grid></Hidden>
                <Grid item xs={9} md={2}>
+                   
         {showAddBtn ?  
          <Button className= "loginbtn"
              style={{marginTop:"0.7rem",backgroundColor:lightBlue[600],color:"white"}}
@@ -97,6 +88,7 @@ const SingleContact = (props) => {
             variant="contained" 
             onClick={cancelFriendRequest}>Requested</Button> 
              }
+              
              </Grid>
       </Grid>
      </Paper>       

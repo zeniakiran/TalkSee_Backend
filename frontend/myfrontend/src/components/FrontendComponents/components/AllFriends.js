@@ -83,9 +83,11 @@ const AllFriends = ({setLogin}) => {
           <Grid item xs ={1} md={1}> </Grid>
           <Grid item xs ={10} md={10}>
             <Grid container   style={{marginBottom:"1rem"}}>
-          <Grid item xs ={0} md={7}> </Grid>
-          <Grid item xs ={12} md={5}  >
+          <Grid item xs ={0} md={8}> </Grid>
+          <Grid item xs ={12} md={4}  >
             <TextField
+             style={{border:"1.8px solid black",borderRadius:"1rem",padding:"0.27rem 1rem"}}
+             
                 value={searchTerm}
                 onChange={onChangeSearch}
                 placeholder="Search by typing name"
@@ -96,6 +98,7 @@ const AllFriends = ({setLogin}) => {
              <SearchIcon style={{ color: "black" ,marginRight:"0.4rem",float:"right"}}/>
             </InputAdornment>
           ),
+           disableUnderline: true
          }}
             />
             </Grid>

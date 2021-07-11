@@ -27,7 +27,7 @@ import DeletePermissionProvider from './context/DeletePermissionContext';
 import UserRoute from './components/FrontendComponents/components/userRoutes';
 import ContactManagement from './components/FrontendComponents/components/ContactManagement';
 import Settings from './components/FrontendComponents/components/Settings';
-
+import UserProfile from './components/FrontendComponents/components/userProfile';
 const App =() =>{
   const [userId,setId] = useState()
   const [dId,setDid] = useState()
@@ -91,6 +91,7 @@ const App =() =>{
             )} exact component={MyChats}>
             </UserRoute>
             <UserRoute exact path ="/my-contact-list/:id" component ={ContactManagement} />
+             <UserRoute exact path ="/user-profile/:id" component ={UserProfile} />
             <Redirect to="/notfound" />  
       </Switch>
       </Router>

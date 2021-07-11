@@ -69,11 +69,7 @@ const useStyles = makeStyles((theme) => ({
   mygrid1: {
     padding: "20px",
   },
-  img: {
-    width: "4rem",
-    height: "4rem",
-    borderRadius: "60px",
-  },
+  
 }));
 const SingleChat = (props) => {
   const classes = useStyles();
@@ -205,7 +201,7 @@ const SingleChat = (props) => {
              <Paper style={{padding:  '12px 10px', marginBottom:"1rem" }}  >
               <Grid container>
                <Grid item xs={1}  >
-                  <img src={props.lastMsg.userImg[ind]} alt='img'    style={{ height: "50px", width: "50px", borderRadius: "50%",display:"inline" }}/>
+                  <img src={props.lastMsg.userImg[ind]} alt='img'    style={{ height: "50px", width: "60px", borderRadius: "20%",display:"inline",marginTop:"7px" }}/>
                </Grid>
            <Grid item    xs ={11}  >
               <Typography className={classes.listText}>{props.lastMsg.userName[ind]}</Typography>

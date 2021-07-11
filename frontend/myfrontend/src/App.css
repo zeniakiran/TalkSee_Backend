@@ -248,6 +248,13 @@ body {
   font-size: 1.2rem;
   font-weight: bold;
 }
+.frnd_names {
+  font-family: "Tangerine", serif;
+  display: inline;
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-left: 5px;
+}
 .login_div {
   position: relative;
   height: 100vh;

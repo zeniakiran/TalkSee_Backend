@@ -93,16 +93,18 @@ const AllContact = (props) => {
           <Grid item xs ={0} md={8}> </Grid>
           <Grid item xs ={12} md={4}  >
             <TextField
+            style={{border:"1.8px solid black",borderRadius:"1rem",padding:"0.27rem 1rem"}}
                 value={searchTerm}
                 onChange={onChangeSearch}
                 placeholder="Search by typing name"
-                 
+                  
         InputProps={{
           startAdornment: (
             <InputAdornment position="end">
              <SearchIcon style={{ color: "black" ,marginRight:"0.4rem",float:"right"}}/>
             </InputAdornment>
           ),
+           disableUnderline: true
          }}
             />
             </Grid>
@@ -131,9 +133,7 @@ const AllContact = (props) => {
           
        <div class="d-flex justify-content-center">
          <strong style={{marginRight:"1rem"}}>Loading...</strong>
-  <div class="spinner-border" role="status">
-    
-  </div>
+         <div class="spinner-border" role="status"></div>
 </div>
   }
         
