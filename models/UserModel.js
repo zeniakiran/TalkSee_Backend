@@ -53,8 +53,8 @@ const UserModel = mongoose.model("UserModel", userSchema);
 
 function validateSignup(data) {
   const schema = Joi.object({
-    firstname: Joi.string().alphanum().min(4).max(10).required(),
-    lastname: Joi.string().alphanum().min(4).max(10).required(),
+    firstName: Joi.string().alphanum().min(4).max(10).required(),
+    lastName: Joi.string().alphanum().min(4).max(10).required(),
     email: Joi.string().email({
       minDomainSegments: 2,
       tlds: { allow: ["com"] },

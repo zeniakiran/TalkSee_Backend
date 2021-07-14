@@ -60,7 +60,7 @@ const App =() =>{
             <UserRoute exact path="/dashboard/:id"><UserDashboard setLogin={setLogin} setUsers={setUsers} IP_URL={IP_URL}/></UserRoute>
             <Route exact path="/reset-password/:token" component={ResetPassword} />
             <Route exact path="/forgot-password" component={ForgotPassword} />
-            <Route exact path="/profile-setup/:token"><ProfileSetup/></Route>
+            <Route exact path="/profile-setup/:token" component={ProfileSetup}></Route>
             <UserRoute exact path ="/my-account-settings/:id" component ={Settings} />
             <UserRoute path="/update-my-profile-setup/:id" render={(props) => (
               <UpdateProfileSetup {...props} key={props.location.key}/>

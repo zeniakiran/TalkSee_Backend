@@ -6,7 +6,7 @@ import Select from "react-select";
 import { makeStyles } from '@material-ui/core/styles';
 import Resizer from 'react-image-file-resizer';
 import { grey, cyan} from '@material-ui/core/colors';
-import {Button} from "@material-ui/core";
+import {Button, Grid} from "@material-ui/core";
 import axios from 'axios';
 import accountService from "../../../services/accountService";
 import { useHistory } from 'react-router-dom';
@@ -333,7 +333,7 @@ const SetProfile =()=>{
 </div>             
   </div>
 )
-return (<div>
+return (<div  style={{height:"100vh"}} className="back_divs">
     
     {loading && <LinearBuffer />}
      <PageTitle name= {"Profile Setup"}/>
@@ -346,7 +346,13 @@ return (<div>
       {successMsg && (
         <AlertBar type="success" message={successMsg} autoClose={2500} />
       )}
-      {ProfilePage()}
+      <Grid container>
+        <Grid item xs={1} md={4}></Grid> 
+         <Grid item xs={10} md={4}>
+           {ProfilePage()}</Grid> 
+          <Grid item xs={1} md={4}></Grid> 
+      </Grid>
+      
     </div>
     )
 };
