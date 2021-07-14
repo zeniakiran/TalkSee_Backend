@@ -20,13 +20,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const AllChats = (props) => {
-  const classes = useStyles();
-  let history = useHistory();
+ 
   const { clientSocket } = useContext(SocketContext);
   let uId = JSON.parse(localStorage.getItem("user")).email;
   const {setSocket,roomJoin,messageEvent, friendReq} = useContext(SocketContext);
   let emails = useRef([]);
-  //let usersData = useRef([])
   const [usersData, setData] = useState({uData:[]});
   const [lastMsg, setLastMsg] = useState({
     msgs: [],
@@ -41,14 +39,10 @@ const AllChats = (props) => {
     userLang:[]
   });
   const [payload, setPayload] = useState()
-  //const [recipients, setRecipients] = useState([])
+  
   let roomId = useRef();
   let count = useRef(0);
-  let notPresent = useRef(0);
   roomId.current = "mychats/" + props.match.params.id;
-  let recData = [];
-  let recMsgs = [];
-  let dummy = [];
   const [loading,setLoading]=useState(false);
  let clientSocket1 = useRef()
 
@@ -61,7 +55,6 @@ const AllChats = (props) => {
     setSocket((s)=>{
       s = clientSocket1
       s.on('connect' , () => {
-        console.log("connected",s.id);
         s.emit("adduser",{id:s.id, name: uId})
 
       });
@@ -74,9 +67,9 @@ const AllChats = (props) => {
     lastMsg.types = []; lastMsg.senders = []; lastMsg.time = []; 
     chatservice
       .getChatRecipients(uId)
-      .then((data) => {
-        if (data.length > 0) {
-          
+      .then((data) => { 
+        
+        if (data.length > 0 && data !== 'No messages from current email') {
           emails.current = data.sort();
           emails.current = Array.from(new Set(emails.current));
           /* userservice
@@ -94,10 +87,10 @@ const AllChats = (props) => {
             chatservice
               .getLastMsg(uId, r)
               .then((data1) => {
-                console.log("data1", data1);
+               // console.log("my data1", data1);
                 if(data1){
                   setLastMsg((msg) => {
-                    console.log("msg",msg)
+                   // console.log("msg",msg)
                     if (
                       msg.msgs.length >= 1 &&
                       msg.emails.length >= 1 &&
@@ -161,15 +154,17 @@ const AllChats = (props) => {
                     }
                   });
                 }
-                setLoading(true);
+                setLoading(true) 
               })
               .catch((err) => console.log(err));
+              
           });
 
           //setLastMsg(recMsgs)
-
+        
           //console.log("recipients",lastMsg)
-        } else console.log("no data");
+        } else {setLoading(true); console.log("no data")};
+         
       })
       .catch((err) => console.log(err));
   };
@@ -255,6 +250,7 @@ const AllChats = (props) => {
     //email[index] = message.from
     //email = email.sort()
     setLastMsg((m) => {
+      
       //return { ...m, msgs: items, emails: email, types: mtypes, time: mTime, senders: sender };
       return { ...m, msgs: items, types: mtypes, time: mTime};
      
@@ -309,7 +305,8 @@ const AllChats = (props) => {
   <PageTitle name={"My Chats"} />
   {loading?
   <div>
-  {lastMsg.msgs.length !==0? (
+    
+  {lastMsg.msgs.length !==0 ? (
     <div>
         <Grid container   style={{marginTop:"0.9rem" }}>
       <Grid item xs ={1} md={1}> </Grid>
@@ -321,13 +318,14 @@ const AllChats = (props) => {
     </Grid>
     </div>
   ) : (
+    
     <h5 style={{ textAlign: "center" }}>No Chats Yet!</h5>
+    
   )}
   </div>:
       <div class="d-flex justify-content-center">
          <strong style={{marginRight:"1rem"}}>Loading...</strong>
   <div class="spinner-border" role="status">
-    
   </div>
 </div>
 }
