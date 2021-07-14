@@ -319,7 +319,8 @@ const AllChats = (props) => {
     </div>
   ) : (
     
-    <h5 style={{ textAlign: "center" }}>No Chats Yet!</h5>
+  <div style= {{textAlign: "center", fontSize:"1.4rem",
+    padding: "6rem",}}>You have no Chats yet😞</div>
     
   )}
   </div>:
