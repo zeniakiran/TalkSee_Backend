@@ -12,14 +12,11 @@ import WarningIcon from '@material-ui/icons/Warning';
 import chatservice from "../../../services/ChatService";
 import { red, lightGreen } from '@material-ui/core/colors';
 import { SocketContext } from '../../../context/SocketContext';
-
-
 const SingleFriend = (props) => {
   const { friend, onRemove, chatRec } = props;
   console.log(chatRec)
   const myId = isAuthenticated()._id;
   var userEmail = JSON.parse(localStorage.getItem("user")).email;
-  //const myEmail= isAuthenticated().email;
   const { msgNotify } = React.useContext(SocketContext);
   const friendEmail = friend.email;
   let messages = React.useRef([]);
@@ -29,7 +26,6 @@ const SingleFriend = (props) => {
   const RemoveFriend = (friend) => {
     friendService.deleteFriend({ friendId: friend.id, myId })
       .then((data) => {
-        //console.log(data)
         onRemove()
         localStorage.setItem("user", JSON.stringify(data));
         setShow(false)

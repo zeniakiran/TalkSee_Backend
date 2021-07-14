@@ -320,7 +320,7 @@ const AllChats = (props) => {
   ) : (
     
   <div style= {{textAlign: "center", fontSize:"1.4rem",
-    padding: "6rem",}}>You have no Chats yet😞</div>
+    padding: "6rem",}}>You have no chats yet😞</div>
     
   )}
   </div>:

@@ -161,7 +161,7 @@ const socketHandler = (clientSocket, serverSocket) => {
         console.log("length",users.length)
       }
 
-      cb(users)
+     // cb(users)
       
     })
 
